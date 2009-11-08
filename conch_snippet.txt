@@ -1,0 +1,30 @@
+&gt;&gt;&gt; from twisted.spread import pb
+&gt;&gt;&gt; from twisted.internet import reactor
+&gt;&gt;&gt; 
+&gt;&gt;&gt; factory = pb.PBClientFactory()
+&gt;&gt;&gt; server = None
+&gt;&gt;&gt; 
+&gt;&gt;&gt; def gotServer(serv):
+...     global server
+...     server = serv
+... 
+&gt;&gt;&gt; connection = reactor.connectTCP('localhost', 8000, factory)
+&gt;&gt;&gt; d = factory.getRootObject()
+&gt;&gt;&gt; d.addCallback(gotServer)
+&lt;Deferred at 0xc227a0  current result: None&gt;
+&gt;&gt;&gt; server.callRemote('GameStartRequest')
+&lt;Deferred #0&gt;
+Deferred #0 called back: 1
+&gt;&gt;&gt; up, right, down, left = 0,1,2,3
+&gt;&gt;&gt; server.callRemote('CharactorMoveRequest', up)
+&lt;Deferred #1&gt;
+Deferred #1 called back: 1
+&gt;&gt;&gt; server.callRemote('CharactorMoveRequest', right)
+&lt;Deferred #2&gt;
+Deferred #2 called back: 1
+&gt;&gt;&gt; server.callRemote('CharactorMoveRequest', down)
+&lt;Deferred #3&gt;
+Deferred #3 called back: 1
+&gt;&gt;&gt; server.callRemote('CharactorMoveRequest', left)
+&lt;Deferred #4&gt;
+Deferred #4 called back: 1

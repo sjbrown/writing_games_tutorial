@@ -1,0 +1,2015 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>sjbrown's Guide To Writing Games</title>
+
+<style type="text/css">
+body {
+        font-family: sans-serif;
+        font-family: "Bitstream Charter";
+        margin-top: 5px; 
+        margin-bottom: 3em;
+        margin-left: 3em;
+}
+body > h1 {
+        margin-top: 2em;
+        margin-left: -1em;
+}
+code {
+        margin-left: 1em;
+        margin-right: 1em;
+}
+pre.python   { text-align: left; padding: 0px}
+pre.python b { color: blue; font-weight: normal; }
+.diversion {
+        margin: 2em;
+        padding-left: 1em;
+        border-left: solid black thin;
+}
+.codeblock   { 
+        background-color: #F0F0FF; 
+        padding: 1em; 
+        width: 70%; 
+        margin: 0.8em;
+        border: dashed 1px #D0D0FF;
+}
+.snippet { 
+        background-color: #E9E9F0; 
+        padding: 0.5em; 
+        width: 70%; 
+        margin: 0.5em 
+}
+.console {
+        border: solid thin #aaaaaa;
+        margin: 1ex;
+        padding: 5px;
+        text-align: center;
+        float: left;
+}
+.clear {
+        clear: both;
+}
+pre.bash { 
+        padding: 8px;
+        text-align: left; 
+        padding: 0px;
+        color: white;
+        background-color: black;
+        width: 80ex;
+}
+.warning {
+        border-top: solid 4px #FF0000;
+        background-color: #FFFAFA;
+        margin-top: 30px;
+        margin-left: -10px;
+        padding: 10px;
+}
+.sourceLinks {
+        border: solid thin #0000FF;
+        margin: 1em;
+        padding: 1em;
+}
+.todo {
+        color: #AA6699;
+}
+img.figure {
+        vertical-align: middle;
+        margin-top: 1em;
+        margin-bottom: 1em;
+}
+img.internal {
+        float: left;
+        vertical-align: middle;
+        margin-right: 0.5em;
+        margin-bottom: 1em;
+}
+h3 { clear: both; }
+li.q { font-weight: bold; list-style-type: disc;}
+li.a { padding-bottom: 1em; list-style-type: circle;}
+</style>
+</head>
+<body>
+<!--
+<b style="color:red">NOTE: this tutorial is currently "in-progress". It's not
+done, but it covers a lot of ground and is "useful" in it's current state.
+Also, it is currently out-of-sync with the latest release of Twisted, so
+the later code will probably barf due to API changes if run against the
+current version of Twisted.</b>
+-->
+<h1>sjbrown's Writing Games Tutorial</h1>
+<p>By Shandy Brown.  Please send comments / corrections via email to sjbrown AT geeky DOT net</p>
+<p><b style="color:blue">Last Update:</b> August 2008
+</p>
+<hr>
+<a href="table.html">Table Of Contents</a>
+<hr>
+<!--
+<h1><a name="purpose">Purpose</a></h1>
+<span class="todo">[TODO]</span>
+<h1><a name="twitch">Twitch vs. Non-Twitch</a></h1>
+First of all, let me say what this guide is <b>not</b>. Some games you may be
+used to playing are known as "Twitch" games. In these games the speed by which
+you press the buttons or move your mouse have an effect on the outcome of the
+game. In "Street Fighter", if you press your punch button a couple miliseconds
+before your opponent, it can matter.
+<p>This guide will not be dealing with such games. Some (perhaps all) of the
+ideas covered here may be applicable to Twitch games, but that is not the
+focus. This guide is most applicable to games where it is acceptable to have
+a slight (if imperceptable) lag between user input and screen response.</p>
+<p>Now, some might be thinking "Oh, this doesn't apply to me then, I want to
+make a Shooter / Real Time Strategy / etc.". However those kind of games might
+not be "Twitch" games. I recommend going ahead and trying to use this Guide.
+You'll have a better idea later if your game has such dire latency
+requirements.</p>
+-->
+<h1><a name="know">What You Should Know</a></h1>
+This guide assumes a certain level of knowledge. If you find it confusing, 
+either you should brush up on some of these concepts, or I should become a 
+better writer.  It kind of puts us into an arms race of laziness.
+<h2><a name="oop">Object Oriented Programming</a></h2>
+It is expected the reader is comfortable in an object oriented environment.
+All the important code is structured with classes.
+<h2><a name="patterns">Design Patterns</a></h2>
+This guide makes use of the Design Patterns "Model View Controller" (MVC),
+"Mediator", and "Lazy Proxy". 
+If this sounds foreign to you, I recommend checking out the book
+"Design Patterns" by Gamma et al. or just surfing the web for tutorials. You
+may be able to follow along without having previous exposure to Design
+Patterns, as their purpose is quickly evident to people familiar with object
+oriented programming.
+<h1><a name="part1">PART 1</a></h1>
+<h1><a name="example">Example Goal</a></h1>
+It's always a good idea to sketch out your game either with pictures or text
+before you begin coding.
+<p>We will start by trying to create a program where a little man moves around
+a grid of nine squares. This is a overly simple example, but easily extendable
+so we won't get tied up in the game rules, instead we can focus on the
+structure of the code.</p>
+<center><img src="mockup.png" alt="example applicaton" width="400" height=
+"400"></center>
+<h1><a name="architecture">The Architecture</a></h1>
+<h2><a name="mvc">Model View Controller</a></h2>
+The choice of MVC should be pretty obvious where a graphical game is
+concerned. The primary Model will be discussed later under the heading
+<a href="#hModel">The Game Model</a>. The primary View will be a PyGame window
+displaying graphics on the monitor. The primary Controller will be the
+keyboard, supported by PyGame's internal pygame.event module.
+<p>We haven't even got to the Model yet, and already we have a difficulty. If
+you are familiar with using PyGame, you are probably used to seeing a main
+loop like this:</p>
+<div class="codeblock">
+<pre class="python">
+ <b>#<i>stolen from the ChimpLineByLine example at pygame.org</i></b>
+ main():
+    ...
+    while 1:
+
+        <b>#Handle Input Events</b>
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                return
+            elif event.type == MOUSEBUTTONDOWN:
+                fist.punch()
+            elif event.type == MOUSEBUTTONUP:
+                fist.unpunch()
+
+        <b>#Draw Everything</b>
+        allsprites.update()
+        screen.blit(background, (0, 0))
+        allsprites.draw(screen)
+        pygame.display.flip()
+</pre></div>
+In this example, the Controller (the "Handle Input Events" part) and the View
+(the "Draw Everything" part) are tightly coupled, and this is generally how
+PyGame works, at every iteration of the main loop, it is expected that we will
+check for input events, update all the visible sprites, and redraw the screen.
+However the MVC pattern requires the View and the Controller to be separate.
+Our solution is to introduce a Tick() function that the constantly looping
+main loop can call for both the View and the Controller. That way there will
+not be View-specific code in the same location as Controller-specific code.
+Here is a rough example:
+<div class="codeblock">
+<pre class="python">
+ ControllerTick():
+    <b>#Handle Input Events</b>
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            return False
+        elif event.type == MOUSEBUTTONDOWN:
+            fist.punch()
+        elif event.type == MOUSEBUTTONUP:
+            fist.unpunch()
+    return True
+
+ ViewTick():
+    <b>#Draw Everything</b>
+    ...
+
+ main():
+    ...
+    while 1:
+
+        if not ControllerTick():
+            return
+
+        ViewTick()
+</pre></div>
+Here is some more info on the MVC pattern: 
+<a href=
+"http://en.wikipedia.org/wiki/Model-view-controller">MVC @ Wikipedia</a>
+<a href=
+"http://ootips.org/mvc-pattern.html">MVC @ ootips.org</a>
+
+<div class="diversion">
+<h3><a name="caveat">Rationale</a></h3>
+Readers with some experience writing games may be balking at this point, 
+thinking MVC is more complex than necessary, and that it will add 
+unneeded overhead, especially when the goal is to create a simple, 
+arcade-style game.  Now historically, arcade games were just that, games
+written for arcade machines.  The code ran "close to the metal", and
+would squeeze all the resources of the machine just to get a 3-color
+ghost to flash blue every other frame.  In the 21st century,
+we have resource-rich
+personal computers where applications run a couple layers above the 
+metal.  Hence, organizing your code into a pattern has a small relative
+cost.  For that small cost, you get the following advantages: more easily 
+add networking, easily add new views (file loggers, radars, huds,
+multiple zoom levels, ...), keep the Model code "cleaner" by decoupling
+it from the view and the controller, and I contend, more readable code.
+</div>
+
+<h2><a name="mediator">Mediator</a></h2>
+<p>Let's examine the infinite while loop in the last bit of code. What is its
+job? It basically sends the Tick() message out to the View and the Controller
+as fast as the CPU can manage. In that sense it can be viewed as a piece of
+hardware sending messages into the program, just like the keyboard; it can be
+considered another Controller.
+<p>Perhaps if time affects our game there will be even another Controller that
+sends messages every second, or perhaps there will be another View that spits
+text out to a log file. We now need to consider how we are going to handle
+multiple Views and Controllers. This leads us to the next pattern in our
+architecture, the Mediator.</p>
+<center><img src="arch.png" class="figure" 
+alt="architecture" width="300" height="280"></center>
+<p>We implement the Mediator pattern by creating an EventManager object. This
+middleman will allow multiple listeners to be notified when some other object
+changes state. Furthermore, that changing object doesn't need to know how many
+listeners there are, they can even be added and removed dynamically. All
+the changing object needs to do is send an Event to the EventManager when it
+changes.</p>
+<p>If an object wants to listen for events, it must first register itself with
+the EventManager. We'll use the weakref WeakKeyDictionary so that listeners
+don't have to explicitly unregister themselves.</p>
+<p>We will also create an Event class to encapsulate the events that can be sent
+via the EventManager.</p>
+<div class="codeblock">
+<pre class="python">
+class Event:
+    <b>"""this is a superclass for any events that might be generated by an
+    object and sent to the EventManager
+    """</b>
+    def __init__(self):
+        self.name = "Generic Event"
+
+class EventManager:
+    <b>"""this object is responsible for coordinating most communication
+    between the Model, View, and Controller.
+    """</b>
+    def __init__(self ):
+        from weakref import WeakKeyDictionary
+        self.listeners = WeakKeyDictionary()
+
+    <b>#----------------------------------------------------------------------</b>
+    def RegisterListener( self, listener ):
+        self.listeners[ listener ] = 1
+
+    <b>#----------------------------------------------------------------------</b>
+    def UnregisterListener( self, listener ):
+        if listener in self.listeners.keys():
+            del self.listeners[ listener ]
+        
+    <b>#----------------------------------------------------------------------</b>
+    def Post( self, event ):
+        <b>"""Post a new event.  It will be broadcast to all listeners"""</b>
+        for listener in self.listeners.keys():
+            <b>#NOTE: If the weakref has died, it will be </b>
+            <b>#automatically removed, so we don't have </b>
+            <b>#to worry about it.</b>
+            listener.Notify( event )
+</pre></div>
+Here is a rough idea how this might be integrated with the previous code.
+<div class="codeblock">
+<pre class="python">
+class KeyboardController:
+    ...
+    def Notify(self, event):
+        if isinstance( event, TickEvent ):
+            <b>#Handle Input Events</b>
+            ...
+
+class CPUSpinnerController:
+    ...
+    def Run(self):
+        while self.keepGoing:
+            event = TickEvent()
+            self.evManager.Post( event )
+
+    def Notify(self, event):
+        if isinstance( event, QuitEvent ):
+            self.keepGoing = False
+            ...
+
+
+class PygameView:
+    ...
+    def Notify(self, event):
+        if isinstance( event, TickEvent ):
+            <b>#Draw Everything</b>
+            ...
+
+ main():
+    ...
+    evManager = EventManager()
+
+    keybd = KeyboardController()
+    spinner = CPUSpinnerController()
+    pygameView = PygameView()
+    
+    evManager.RegisterListener( keybd )
+    evManager.RegisterListener( spinner )
+    evManager.RegisterListener( pygameView )
+
+    spinner.Run()
+</pre></div>
+<div class="diversion">
+<h3><a name="selective">Diversion: Event Types and Selective
+Listeners</a></h3>
+As we get more and more listeners, we may find that it's inefficient to spam
+every listener with every event. Perhaps some listeners only care about
+certain events. One way to make things more efficient is to classify the
+events into different groups.
+<p>For the purpose of this guide, we'll just use one kind of event, so every
+listener gets spammed with every event.</p>
+</div>
+<div class="diversion">
+<h3><a name="evmanager">Advanced Event Managers</a></h3>
+If you try to use this particular Event Manager class for your own project,
+you might notice it has some shortcomings. In particular, if a block of code
+generates events A and B sequentially, and a listener catches event A and
+generates event C, the above Event Manager class will process the events in
+the order A,C,B, instead of the desired order of A,B,C. In the later
+examples, you can see an example of a more advanced Event Manager that
+always delivers events in the desired order.
+</div>
+Here is some more info on the Mediator pattern and the related Observer
+pattern:
+<a href="http://en.wikipedia.org/wiki/Mediator_pattern">Mediator @ Wikipedia</a>
+<a href="http://ootips.org/observer-pattern.html">Observer @ ootips.org</a>
+
+
+<a name="hModel"></a>
+<h1><a name="hModel">The Game Model</a></h1>
+Creating a model, we need to go through a process called "abstraction".
+We have played games before, so we have a valuable mental library of concrete examples of finished products similar, in principle, to the finished product we want to create.
+If we can find abstract commonalities in those concrete examples, it will help us create classes to organize our code, make it flexible, make it maintainable and give us a vocabulary to talk to other team members about the code.
+There are many possible abstractions we can come up with and judging whether we have created good abstraction is very subjective.  It's important to keep your goals in mind and also anticipate how the requirements could possibly change in the future.
+<p>
+Here is a Model that has worked for me and is general enough to adapt to many types of games:
+<center><img src="game-model.png" class="figure" alt="example applicaton" width="269" height=
+"206"></center>
+<h2><a name="game">Game</a></h2>
+Game is mainly a container object. It contains the Players and the Maps. It
+might also do things like Start() and Finish() and keep track of whose turn it
+is.
+<h2><a name="player">Player</a></h2>
+A Player object represents the actual human (or computer) that is playing the
+game. Common attributes are Player.score and Player.color. Don't confuse it
+with Charactor. Pac Man is a Charactor, the person holding the joystick is a
+Player.
+<h2><a name="charactor">Charactor</a></h2>
+A Charactor is something controlled by a player that moves around the Map.
+Synonyms might be "Unit" or "Avatar". It is intentionally spelled "Charactor"
+to avoid any ambiguity with Character which can also mean "a single letter"
+(also, you cannot create a table in PostgreSQL named "Character"). Common
+Charactor attributes are Charactor.health and Charactor.speed.
+<p>In our example, "little man" will be our sole Charactor.</p>
+<h2><a name="map">Map</a></h2>
+A Map is an area that Charactors can move around in. There are generally two
+kinds of maps, discrete ones that have Sectors, and continuous ones that have
+Locations. A chess board is an example of a discrete map. A 3-dimensional
+level in Quake (with floating-point precision), or a level in Super Mario (with pixel-precision) are examples of continuous Maps.
+<p>In our example, the Map will be a discrete Map having a simple list of nine
+sectors.</p>
+<h2><a name="sector">Sector</a></h2>
+A Sector is part of a Map. It is adjacent to other sectors of the map, and
+might have a list of any such neighbors. No Charactor can logically be 
+<i>in between</i>
+Sectors. If a Charactor is in a Sector, it is in that sector entirely, and not
+in any other Sector (I'm speaking functionally here. It can <i>look</i> like
+it is in between Sectors, but that is an issue for the View, not the Model)
+<p>In our example, we will allow no diagonal moves, only up, down, left and
+right. Each allowable move will be defined by the list of neighbors for a
+particular Sector, with the middle Sector having all four.</p>
+<h2><a name="location">Location</a></h2>
+We won't get into Locations of a continuous Map, as they don't apply to our
+example.
+<h2><a name="item">Item</a></h2>
+You'll notice that in the figure, Item is not explicitly connected to 
+anything. This is left
+up to the developer. You could have a design constraint that Items <b>must</b>
+be contained by Charactors (perhaps in an intermidiate "Inventory" object), or
+maybe it makes more sense for your game to keep a list of a bunch of Items in
+the Game object. Some games might call for Sectors having Items lying around
+inside them.
+<h1><a name="our">Our Example</a></h1>
+<div class="sourceLinks">The code can be downloaded here: 
+<a href="examples/example1.py">example1.py</a><br>
+And here's some colored html: 
+<a href="examples/example1.py.html">example1.py.html</a></div>
+
+<center><img src="screenshot-example1.png" alt="example applicaton" width=
+"434" height="468"></center>
+
+<p>This example makes use of everything covered so far. It starts out with a
+list of possible events, then we define our middleman, EventManager, with all
+the methods we showed earlier.</p>
+<p>Next we have our Controllers, KeyboardController and CPUSpinnerController.
+You'll notice keypresses no longer directly control some game object, instead
+they just generate events that are sent to the EventManager. Thus we have
+separated the Controller from the Model.</p>
+<p>Next we have the parts of our PyGame View, SectorSprite, CharactorSprite,
+and PygameView. You'll notice that SectorSprite does keep a reference to a
+Sector object, part of our model. However we don't want to access any methods
+of this Sector object directly, we're just using it to identify which Sector
+object the SectorSprite object corresponds to. If we wanted to make this
+limitation more explicit we could use the id() function.</p>
+<p>The Pygame View has a background group of green square sprites that
+represent the Sector objects, and a foreground group containing our "little
+man" or "red dot". It is updated on every TickEvent.</p>
+<p>Finally we have the Model objects as discussed above and ultimately the
+main() function.</p>
+<p>Here is a diagram of the major incoming and outgoing events.</p>
+<center><img src="diagram-incoming.png" class="figure" 
+alt="example incoming messages" width="400" height="340">
+<img src="diagram-outgoing.png" class="figure"
+alt="example outgoing messages" width="400" height="328"></center>
+<h1><a name="part2">PART 2</a></h1>
+<h1><a name="internet">Internet Play</a></h1>
+Our next task will be to make the game playable over the internet. Eventually
+this will lead to multiplayer capability for our game, but it's important that
+we do the single-player network step first, as it exposes us to 
+several constraints that may affect any future code.
+<p>The code in the following sections is written incrementally, so don't expect
+to just take the code from the first section and write a game with it.  
+Subsequent sections sometimes address problems with the previously shown code
+and explain how to overcome those problems.
+
+<center><img src="host_structure.png" class="figure"
+alt="the different ways to structure network hosts" 
+width="800" height="212"></center>
+
+
+<h3><a name="clientserver">Structure of Network Hosts</a></h3>
+Computer processes (usually there is only one process of interest on each
+physical computer, or "host", so we just use the term "host") that communicate over the network can be organized in many ways.
+In games there are three popular ways to structure hosts, Peer-to-Peer, "Strict" Client-Server, and "Servent" Client-Server.
+The driving factor when deciding how to structure network hosts for games is usually trust.
+Games are emotional (well, good ones) and competetive, players are motivated to win, and when they don't win, they want to trust that no other player had an unfair advantage.
+To ensure trust, there needs to be a consistent, authoritative model.  
+<p>
+In the "Strict" Client-Server structure, there is one "3rd party" server that
+all the clients connect to.  Any change to the authoritative game model must
+happen at the server.  A client can predict the authoritative state, but it must not put faith in game state until it hears from the server that that is, in fact the case.
+An example game would be World of Warcraft.
+<p>
+<a href="http://en.wikipedia.org/wiki/Client_server">Client-Server @ Wikipedia</a>
+<p>
+In the "Servent" Client-Server structure, one of the players, usually the one
+that starts the game, acts as the server as well.  This suffers from the 
+drawback that other players trust the game state as much as they trust that particular player.  However no 3rd party is needed.
+Examples can be found in many first person shooter games.
+This structure is often paired with a 3rd party "matching" server that connects
+players with each other and then hands off to the Servent host.
+<p>
+<a href="http://en.wikipedia.org/wiki/Servent">Servent @ Wikipedia</a>
+<p>
+In the Peer to Peer structure, all hosts have identical roles.  The great
+benefit of a Peer to Peer structure is that it robustly deals with network
+disconnects from individual hosts.  However trust is compromised.  
+Trust can be bolstered by adopting token passing strategy such that the host holding the token acts as a Servent.
+<p>
+<a href="http://en.wikipedia.org/wiki/Peer-to-peer">Peer to Peer @ Wikipedia</a>
+
+<p>
+For our examples, we will examine the "Strict" Client-Server structure.
+
+<h2><a name="sync">Synchronus / Asynchronus</a></h2>
+When you call a function that requires network communication, it may take a 
+long time to finish.  If we waited for network-dependent functions to 
+finish before we called the functions which draw the graphics, the 
+users would get angry and flame us on internet message boards.  
+The solution is to write functions that send out messages over the 
+network and then return immediately, not waiting for a reply.  
+The replies will eventually come from the remote hosts
+and wait in a queue until our process can service them.  It is important to
+remember that the replies may not queue up in the same order as the requests
+went out.
+<p>
+This asynchronus quality is fundamental to network-related code.  Luckily
+designing our code such that there is an independent EventManager and 
+well-defined events will make dealing with asynchronus messages 
+from the network fairly painless.
+<p>
+This tutorial will use the Twisted framework for network-related code.  I
+recommend reading the Twisted documentation, though it should not be 
+necessary to get through this tutorial.  (note, a lot of the Twisted 
+documentation focuses on writing servers where the client implementation is
+unknown.  I recommend skipping forward to the sections on Perspective
+Brokers)
+The ideas presented here should
+be independent from the choice of Twisted; the examples could just as well be
+implemented with raw sockets or carrier pigeons.
+<p>
+Twisted is a framework that hides the queue from us, it expects the 
+programmer to call reactor.run(), which is a mainloop that consumes the
+queue and fires off callbacks.  The callbacks are provided by the programmer.
+
+<h2><a name="implementation">Implementation</a></h2>
+<h3><a name="exServer">Example Server</a></h3>
+For the server, we'll start with the exact same code as before. Just rename
+example1.py to server1.py.
+<p>Normally a server is something that runs as a daemon or in a text console;
+it does not have a graphical display. We can do this simply by replacing
+PygameView with a TextLogView as follows:</p>
+<div class="codeblock">
+<pre class="python">
+<b>#------------------------------------------------------------------------------</b>
+class TextLogView:
+        """..."""
+        def __init__(self, evManager):
+                self.evManager = evManager
+                self.evManager.RegisterListener( self )
+                                                                               
+                                                                               
+        <b>#----------------------------------------------------------------------</b>
+        def Notify(self, event):
+                                                                               
+                if isinstance( event, CharactorPlaceEvent ):
+                        print event.name, " at ", event.charactor.sector
+                                                                               
+                elif isinstance( event, CharactorMoveEvent ):
+                        print event.name, " to ", event.charactor.sector
+                                                                               
+                elif not isinstance( event, TickEvent ):
+                        print event.name
+</pre></div>
+We are already reaping the benefits of the MVC pattern.
+By changing only a small amount of code, we no longer have a Pygame display, instead the TextLogView just prints received events out to the console.
+<p>Another thing we don't need in a server is keyboard input, so we can remove
+the KeyboardController. Where do input messages come from instead? They come
+from the network, so we'll need a Controller object for the messages sent by
+the clients, NetworkClientController.</p>
+<div class="codeblock">
+<pre class="python">
+from twisted.spread import pb
+#------------------------------------------------------------------------------
+class NetworkClientController(pb.Root):
+        """..."""
+        def __init__(self, evManager):
+                self.evManager = evManager
+                self.evManager.RegisterListener( self )
+
+        #----------------------------------------------------------------------
+        def remote_GameStartRequest(self):
+                ev = GameStartRequest( )
+                self.evManager.Post( ev )
+                return 1
+
+        #----------------------------------------------------------------------
+        def remote_CharactorMoveRequest(self, direction):
+                ev = CharactorMoveRequest( direction )
+                self.evManager.Post( ev )
+                return 1
+
+        #----------------------------------------------------------------------
+        def Notify(self, event):
+                pass
+</pre></div>
+The NetworkClientController instance is a special object that can be sent
+across the network via Twisted's Perspective Broker mechanism (because it
+inherits from pb.Root). The remote client will request a reference to the
+NetworkClientController instance, once it has received it, it can call any
+method that starts with "remote_". So for the client to send messages to the
+server, we have implemented remote_GameStartRequest and
+remote_CharactorMoveRequest.
+<div class="diversion">
+<h3><a name="caveat">Caveat</a></h3>
+It could be tempting to make all of the objects remotely referenceable. (ie,
+inherit from pb.Referenceable) The problem with that approach is that it
+tightly couples the networking code with the rest of the code. It's preferable
+to separate the networking code so that the other objects just use the event
+passing strategy described by the Mediator pattern.
+<p>In our examples, we're only going to have one class in the server that is
+referenceable, and also only one class in the client.
+<span class="todo">[TODO: expand on this]</span></p>
+</div>
+<p>
+We also don't need the CPUSpinnerController in the server, so we've
+removed that, and replaced it with Twisted's reactor, which similarly
+provides a run() method.
+<div class="codeblock">
+<pre class="python">
+def main():
+    evManager = EventManager()
+
+    log = TextLogView( evManager )
+    clientController = NetworkClientController( evManager )
+    game = Game( evManager )
+    
+    from twisted.internet import reactor
+
+    reactor.listenTCP( 8000, pb.PBServerFactory(clientController) )
+
+    reactor.run()
+</pre></div>
+
+<p>Previously, we used the Tick event to start the Game, now we'll
+need to explicitly start the game with our new GameStartRequest event.</p>
+<div class="codeblock">
+<pre class="python">
+class GameStartRequest(Event):
+        def __init__(self):
+        self.name = "Game Start Request"
+</pre></div>
+It is not necessary to understand the Twisted parts of this, you can
+just consider them "magic". What you should know is that invoking
+reactor.run() causes the mainloop to block while listening on port 8000.
+
+
+<p>
+If we play some dirty tricks, we can see what our server does without 
+writing a client.  Instead, we will just connect to it using the Python
+interactive interpreter.  Now, reactor.run() is a blocking call that does
+not return until the reactor is shut down, so in order to get back to
+the interactive prompt, we have to crash the reactor
+and then call reactor.iterate() in order to communicate with it.  
+It should go without saying that this is not a recommended practice.
+Also, if you replicate the session below, you may have to call iterate()
+multiple times before you see any result.
+
+<div class="console">
+<pre class="bash">
+ $ python
+Python 2.5.2 (r252:60911, Apr 21 2008, 11:17:30) 
+[GCC 4.2.3 (Ubuntu 4.2.3-2ubuntu7)] on linux2
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; from twisted.spread import pb
+&gt;&gt;&gt; from twisted.internet import reactor
+&gt;&gt;&gt; factory = pb.PBClientFactory()
+&gt;&gt;&gt; server = None
+&gt;&gt;&gt; def gotServer(serv):
+...     global server
+...     server = serv
+... 
+&gt;&gt;&gt; connection = reactor.connectTCP('localhost', 8000, factory)
+&gt;&gt;&gt; reactor.callLater( 4, reactor.crash )
+&lt;twisted.internet.base.DelayedCall instance at 0xac5638&gt;
+&gt;&gt;&gt; reactor.run()
+&gt;&gt;&gt; d = factory.getRootObject()
+&gt;&gt;&gt; d.addCallback(gotServer)
+&lt;Deferred at 0xb1f440  current result: None&gt;
+&gt;&gt;&gt; reactor.iterate()
+&gt;&gt;&gt; server.callRemote('GameStartRequest')
+&lt;Deferred at 0xac5638&gt;
+&gt;&gt;&gt; reactor.iterate()
+&gt;&gt;&gt; up, right, down, left = 0,1,2,3
+&gt;&gt;&gt; server.callRemote('CharactorMoveRequest', up)
+&lt;Deferred at 0xb1f4d0&gt;
+&gt;&gt;&gt; reactor.iterate()
+&gt;&gt;&gt; server.callRemote('CharactorMoveRequest', right)
+&lt;Deferred at 0xac5638&gt;
+&gt;&gt;&gt; reactor.iterate()
+&gt;&gt;&gt; server.callRemote('CharactorMoveRequest', down)
+&lt;Deferred at 0xb1f4d0&gt;
+&gt;&gt;&gt; reactor.iterate()
+&gt;&gt;&gt; server.callRemote('CharactorMoveRequest', left)
+&lt;Deferred at 0xac5638&gt;
+&gt;&gt;&gt; reactor.iterate()
+</pre>
+Example of using the Python console as a fake client</div>
+<div class="console">
+<pre class="bash">
+ $ python server1.py 
+Game Start Request
+Map Finished Building Event
+Game Started Event
+Charactor Placement Event  at  &lt;__main__.Sector instance at 0xc9b290&gt;
+Charactor Move Request
+Charactor Move Request
+Charactor Move Event  to  &lt;__main__.Sector instance at 0xc9b320&gt;
+Charactor Move Request
+Charactor Move Event  to  &lt;__main__.Sector instance at 0xc9b290&gt;
+Charactor Move Request
+Charactor Move Event  to  &lt;__main__.Sector instance at 0xc9b3b0&gt;
+</pre>
+Running server1.py
+<p>
+Note that the request to move up did not result in a Move event.
+</div>
+<p class="clear">&nbsp;</p>
+
+<p>
+We can fake the client in a more proper way by using a tool that comes
+with Twisted, twisted.conch.stdio.  We just start a python interpreter with
+this module and then we can omit the reactor abuse:
+
+<div class="console">
+<pre class="bash">
+ $ python -m twisted.conch.stdio
+&gt;&gt;&gt; from twisted.spread import pb
+&gt;&gt;&gt; from twisted.internet import reactor
+&gt;&gt;&gt; 
+&gt;&gt;&gt; factory = pb.PBClientFactory()
+&gt;&gt;&gt; server = None
+&gt;&gt;&gt; 
+&gt;&gt;&gt; def gotServer(serv):
+...     global server
+...     server = serv
+... 
+&gt;&gt;&gt; connection = reactor.connectTCP('localhost', 8000, factory)
+&gt;&gt;&gt; d = factory.getRootObject()
+&gt;&gt;&gt; d.addCallback(gotServer)
+&lt;Deferred at 0xc227a0  current result: None&gt;
+&gt;&gt;&gt; server.callRemote('GameStartRequest')
+&lt;Deferred #0&gt;
+Deferred #0 called back: 1
+&gt;&gt;&gt; up, right, down, left = 0,1,2,3
+&gt;&gt;&gt; server.callRemote('CharactorMoveRequest', up)
+&lt;Deferred #1&gt;
+Deferred #1 called back: 1
+&gt;&gt;&gt; server.callRemote('CharactorMoveRequest', right)
+&lt;Deferred #2&gt;
+Deferred #2 called back: 1
+&gt;&gt;&gt; server.callRemote('CharactorMoveRequest', down)
+&lt;Deferred #3&gt;
+Deferred #3 called back: 1
+&gt;&gt;&gt; server.callRemote('CharactorMoveRequest', left)
+&lt;Deferred #4&gt;
+Deferred #4 called back: 1
+</pre>
+Using twisted.conch.stdio as a fake client</div>
+<p class="clear">&nbsp;</p>
+
+
+<div class="sourceLinks">The code for server1.py can be downloaded here:
+<a href="examples/server1.py">server1.py</a><br>
+And here's some colored html: 
+<a href="examples/server1.py.html">server1.py.html</a></div>
+
+<h2><a name="king"></a>King of the Castle</h2>
+As seen above, Twisted's reactor object is designed to be in charge of the
+main loop.  This creates some difficulty, as we've already got a main loop
+in the CPUSpinnerController.  We could subordinate Twisted's reactor, and 
+"pump" it on every iteration of the CPUSpinnerController's main loop, but
+that has the drawback that we need to abuse Twisted's API in a way that was
+probably not intended, and may not be forward-compatible.  
+
+<div class="codeblock">
+<pre class="python">
+<b># Example of a class that pumps a Twisted reactor</b>
+class ReactorSlaveController(object):
+    def __init__(self):
+        ...
+        factory = pb.PBClientFactory()
+        self.reactor = SelectReactor()
+        installReactor(self.reactor)
+        connection = self.reactor.connectTCP('localhost', 8000, factory)
+        self.reactor.startRunning()
+        ...
+
+    def PumpReactor(self):
+        self.reactor.runUntilCurrent()
+        self.reactor.doIteration(0)
+
+    def Stop(self):
+        self.reactor.addSystemEventTrigger('after', 'shutdown',
+                                            self.onReactorStop)
+        self.reactor.stop()
+        self.reactor.run() <b>#excrete anything left in the reactor</b>
+
+    def onReactorStop(self):
+        <b>'''This gets called when the reactor is absolutely finished'''</b>
+        self.reactor = None
+</pre></div>
+
+Alternatively, we can use Twisted in the intended way and then use the 
+LoopingCall class to make the firing of the Tick event reliant on the
+reactor's main loop.  Creating a LoopingCall object is a way of asking the
+reactor to call a function repeatedly.  The downside of this approach is that
+games often start out in single-player mode and we don't want to invoke any
+network-related code like Twisted unless the user chooses a multiplayer option.
+
+<div class="codeblock">
+<pre class="python">
+<b># Example of using LoopingCall to fire the Tick event</b>
+from twisted.internet.task import LoopingCall
+
+...
+
+def FireTick(evManager):
+    evManager.Post( TickEvent() )
+
+loopingCall = LoopingCall(FireTick, evManager)
+interval = 1.0 / FRAMES_PER_SECOND
+loopingCall.start(interval)
+</pre></div>
+
+Ultimately, the choice is up to you.  You should weigh the pros and cons of
+each approach based on the type of game you are writing.  In the examples,
+we will use the reactor-pumping approach.
+
+<h2><a name="wire">Messages Over the Wire</a></h2>
+<div class="sourceLinks">The source code to the remainder of this section are
+in multiple files. You can download them in tar.gz format here: 
+<a href="examples/example2.tar.gz">example2.tar.gz</a></div>
+<p>The previous example of a server gave a good introduction to the basic
+networking technique, but it's a little too simple for our purposes. We don't
+really want to write a new function for every message the server can possibly
+receive. Instead, we'd like to leverage our already existing Event
+classes.</p>
+<p>This brings us to one of the most important parts, but possibly the most
+tedious part of implementing networking. We need to go through all the
+possible events and answer these questions about each:</p>
+<ol>
+<li>Do we need to send it from the client to the server?</li>
+<li>Do we need to send it from the server to the client?</li>
+<li>Are there security issues with sending this data over the network?</li>
+<li>Is the data formatted in a way that it can be sent over the network?</li>
+<li>If we must, how do we reformat the data so that it can be sent?</li>
+</ol>
+(Eventually, one might also ask "How often will this message be sent?" and
+therefore "How can I best optimise this message?")
+<p>While there are many ways of doing this with Twisted, I will outline a
+strategy that tries to minimize the amount of code written (to combat the
+tediousness of this task) and to maintain the separation of the networking
+requirements from the remainder of the code.</p>
+
+<p>Using Twisted, we must do three things to a class to make it possible to
+send instances of it over the network: make it inherit from 
+twisted.spread.pb.Copyable, make it inherit from twisted.spread.pb.RemoteCopy, 
+and call twisted.spread.pb.setUnjellyableForClass() on 
+it <span class="todo">[TODO: ask someone who knows Twisted if 
+that's <b>really</b> necessary].</span> Things
+can become even <i>more</i> complicated when we consider questions 4 and 5
+from our list above -- does the data require special formatting to send it
+over the network? The only data that <b>doesn't</b> require special formatting
+are the 
+<a href="http://www.python.org/doc/current/ref/literals.html">literal</a>
+types: string, int, float, etc., None, and containers (lists, tuples, dicts)
+thereof.</p>
+<p>While examining the Events, two cases will occur, either it will not
+require reformatting, and we can just mix-in pb.Copyable and pb.RemoteCopy, or
+it will require reformatting and we will have to create a new class that has a
+routine to change the original data into something that can be sent over the
+network. <span class="todo">[TODO: link to explain Mixins
+somewhere]</span></p>
+<p>In this next example, we've split the code into multiple files. All the
+events are in events.py. In network.py, we try to answer all of the above
+questions for each event in events.py.  If a message can go from the client to
+the server, we append it to the clientToServerEvents list, and likewise for
+the serverToClientEvents list. If the data in the event is simple, like
+integers and strings, then we can just mix-in the pb.Copyable and
+pb.RemoteCopy classes and call pb.setUnjellyableForClass() on the event.</p>
+
+
+<div class="codeblock">
+<pre class="python">
+<b># from network.py</b>
+
+<b>#------------------------------------------------------------------------------</b>
+<b># GameStartRequest</b>
+<b># Direction: Client to Server only</b>
+MixInCopyClasses( GameStartRequest )
+pb.setUnjellyableForClass(GameStartRequest, GameStartRequest)
+clientToServerEvents.append( GameStartRequest )
+
+<b>#------------------------------------------------------------------------------</b>
+<b># CharactorMoveRequest</b>
+<b># Direction: Client to Server only</b>
+<b># this has an additional attribute, direction.  it is an int, so it's safe</b>
+MixInCopyClasses( CharactorMoveRequest )
+pb.setUnjellyableForClass(CharactorMoveRequest, CharactorMoveRequest)
+clientToServerEvents.append( CharactorMoveRequest )
+</pre></div>
+
+
+<p>On the other hand, if an event contains data that is not network-friendly,
+like an object, we need to make a replacement event to send over the wire
+instead of the original. The simplest way to make a replacement is just to
+change any event attributes that were objects to unique integers using the
+id() function. This strategy requires us to keep a registry of objects and
+their ID numbers, so that when we recieve an event from the network
+referencing an object by its ID number, we can find the actual object.</p>
+<div class="codeblock">
+<pre class="python">
+<b># from network.py</b>
+
+<b>#------------------------------------------------------------------------------</b>
+<b># GameStartedEvent</b>
+<b># Direction: Server to Client only</b>
+class CopyableGameStartedEvent(pb.Copyable, pb.RemoteCopy):
+        def __init__(self, event, registry):
+                self.name = "Game Started Event"
+                self.gameID =  id(event.game)
+                registry[self.gameID] = event.game
+
+pb.setUnjellyableForClass(CopyableGameStartedEvent, CopyableGameStartedEvent)
+serverToClientEvents.append( CopyableGameStartedEvent )
+
+<b>#------------------------------------------------------------------------------</b>
+<b># CharactorMoveEvent</b>
+<b># Direction: Server to Client only</b>
+class CopyableCharactorMoveEvent( pb.Copyable, pb.RemoteCopy):
+        def __init__(self, event, registry ):
+                self.name = "Charactor Move Event"
+                self.charactorID = id( event.charactor )
+                registry[self.charactorID] = event.charactor
+
+pb.setUnjellyableForClass(CopyableCharactorMoveEvent, CopyableCharactorMoveEvent)
+serverToClientEvents.append( CopyableCharactorMoveEvent )
+</pre></div>
+
+It is very important that these classes are named exactly the same as the
+class they're replacing but with a prefix of "Copyable".
+We can see how to replace the original events with these network-friendly
+versions in NetworkClientView.Notify in server.py and we can see how the
+receipt of these events is handled in PhonyModel.Notify in client.py.
+
+<h3><a name="channel">Creating A Communication Channel</a></h3>
+We've seen that we can send fake messages to the server via an interactive
+python shell, but what we really want is a graphical client. There are a few
+steps to realizing this goal. Firstly, the client(s) need to be notified of
+any changes to the state of the server. So we'll need bidirectional
+communication. Not only does the client send requests to the server, but the
+server also notifies the client of events. (This is why one-way ("pull") 
+protocols like XML-RPC or HTTP are not well suited to our needs)
+<p>From the server, changes need to be sent out, so we need to create a new
+View on the server.</p>
+<div class="codeblock">
+<pre class="python">
+<b># from server.py</b>
+
+<b>#------------------------------------------------------------------------------</b>
+class NetworkClientView(object):
+	<b>"""We SEND events to the CLIENT through this object"""</b>
+	def __init__(self, evManager, sharedObjectRegistry):
+		self.evManager = evManager
+		self.evManager.RegisterListener( self )
+
+		self.clients = []
+		self.sharedObjs = sharedObjectRegistry
+
+
+	<b>#----------------------------------------------------------------------</b>
+	def Notify(self, event):
+		if isinstance( event, ClientConnectEvent ):
+			self.clients.append( event.client )
+
+		ev = event
+
+		<b>#don't broadcast events that aren't Copyable</b>
+		if not isinstance( ev, pb.Copyable ):
+			evName = ev.__class__.__name__
+			copyableClsName = "Copyable"+evName
+			if not hasattr( network, copyableClsName ):
+				return
+			copyableClass = getattr( network, copyableClsName )
+			ev = copyableClass( ev, self.sharedObjs )
+
+		if ev.__class__ not in network.serverToClientEvents:
+			#print "SERVER NOT SENDING: " +str(ev)
+			return
+
+		<b>#NOTE: this is very "chatty".  We could restrict </b>
+		<b>#      the number of clients notified in the future</b>
+		for client in self.clients:
+			print "=====server sending: ", str(ev)
+			remoteCall = client.callRemote("ServerEvent", ev)
+
+</pre></div>
+
+The NetworkClientView keeps a reference to the server's registry that maps
+object ID numbers to the actual objects. It also has a list of clients. The
+objects in the clients list inherit from pb.Referenceable, so we can use the
+callRemote() method, sending messages over the network. The
+serverToClientEvents list is imported from network.py.
+<p>NetworkClientView.Notify() is primarily interested in Copyable events. The
+event passed in to Notify() might already be Copyable, due to the mixing in of
+pb.Copyable in network.py. In that case,
+<code>isinstance( ev, pb.Copyable )</code> returns True. If it's not Copyable,
+there still might be a replacement class in the network module, and we can
+check by prepending "Copyable" to the event's class name because we used that
+naming convention for the replacement classes in network.py.</p>
+<p>As can be seen in NetworkClientView.Notify(), the server expects the client
+to send it a remotely accessible object (like one that inherits from Twisted's
+pb.Root) when the client connects. Thereafter, the server can use that object
+to notify the client of events.</p>
+<p>Now we'll (finally) get started on the client. From the point of view of
+the client, the incoming messages from the server represent a Controller, so
+we've got a NetworkServerController class in client.py. As you might be
+expecting, the client will also send events to the server through a View, the
+NetworkServerView.</p>
+
+<div class="codeblock">
+<pre class="python">
+<b># from client.py</b>
+
+<b>#------------------------------------------------------------------------------</b>
+class NetworkServerView(pb.Root):
+        """We SEND events to the server through this object"""
+
+        ...
+
+        <b>#----------------------------------------------------------------------</b>
+        def Connected(self, server):
+                self.server = server
+                self.state = NetworkServerView.STATE_CONNECTED
+                ev = ServerConnectEvent( server )
+                self.evManager.Post( ev )
+
+        ...
+
+        <b>#----------------------------------------------------------------------</b>
+        def AttemptConnection(self):
+                ...
+                connection = self.reactor.connectTCP(serverHost, serverPort,
+                                                     self.pbClientFactory)
+                deferred = self.pbClientFactory.getRootObject()
+                deferred.addCallback(self.Connected)
+                deferred.addErrback(self.ConnectFailed)
+                self.reactor.startRunning()
+
+        ...
+
+        <b>#----------------------------------------------------------------------</b>
+        def Notify(self, event):
+                ev = event
+
+                if isinstance( event, TickEvent ):
+                        if self.state == NetworkServerView.STATE_PREPARING:
+                                self.AttemptConnection()
+                        ...
+</pre></div>
+On the first TickEvent that the NetworkServerView gets, it attempts to connect
+to the server. When the connection is made, the Connected() method is called
+with a reference to a server object that inherits from pb.Referenceable,
+therefore the client can use it to remotely access the server. It also creates
+a ServerConnectEvent.
+
+<div class="codeblock">
+<pre class="python">
+<b># from client.py</b>
+
+<b>#------------------------------------------------------------------------------</b>
+class NetworkServerController(pb.Referenceable):
+        <b>"""We RECEIVE events from the server through this object"""</b>
+        def __init__(self, evManager, twistedReactor):
+                self.evManager = evManager
+                self.evManager.RegisterListener( self )
+
+        <b>#----------------------------------------------------------------------</b>
+        def remote_ServerEvent(self, event):
+                self.evManager.Post( event )
+                return 1
+
+        <b>#----------------------------------------------------------------------</b>
+        def Notify(self, event):
+                if isinstance( event, ServerConnectEvent ):
+                        <b>#tell the server that we're listening to it and</b>
+                        <b>#it can access this object</b>
+                        event.server.callRemote("ClientConnect", self)
+
+</pre></div>
+
+The NetworkServerController gets notified of that ServerConnectEvent and uses
+it to pass the server a reference to itself. Now the server can call the
+remote_ServerEvent() method of the NetworkServerController. So both the server
+and the client have references to remotely callable objects. This is the
+channel through which they communicate.
+<center><img src="diagram-channel.png" class="figure"
+alt="example applicaton" width="442" height="173"></center>
+
+
+<h3><a name="local">Local Copy of the Server State</a></h3>
+Theoretically, there should be only one model, the authoritative model on the
+server, and the clients should just be Views and Controllers for that model.
+However, it is no simple matter to
+keep references to <i>remote</i> model objects in the client's EventManager,
+Views and Controllers. Also, many events can be handled
+entirely on the client side, and always sending them to the server would
+create needless noise.  So a good design should create a local model to mirror
+the game objects that exist on the server side.
+<p>We will create a PhonyModel on the client side whose state we will keep in
+sync with the authoritative model on the server.
+This PhonyModel provides the same interface as
+the server's model, but it has a special role - to ensure
+that the local game objects do not change the game state when they don't
+have the authority to do so.
+In our example, this is accomplished by keeping two EventManager objects,
+one called phonyEventManager, which just discards events that it receives, 
+effectively silencing all events coming from the local game objects, and
+one called realEventManager, which propogates events received from the server.
+Events posted to the realEventManager will show up in the View objects, events
+posted to the phonyEventManager will not.
+<p>
+Because our example is very simple, we can get away with this simple 
+implementation.  One can imagine situations where we might want to allow a
+local game object to change the local state.  This could be accomplished by
+making PhonyEventManager propogate these special events.  Another approach
+could be to not have a local Model on the client, only a 
+View object on which incoming events from the server had a direct effect.
+
+<h3><a name="complex">Sending Complex Objects</a></h3>
+<p>Here's the tricky part: how do we send complex objects like Players or
+Charactors over the channel we've created? This is called
+<b>serialization</b>. To serialize our objects, we need to do two things.</p>
+<ul>
+<li>Create a registry that maps unique IDs to game objects</li>
+<li>For each class, have a way to change all of its internal data into
+numbers and strings, and a way to change those back into useful objects</li>
+</ul>
+Getting unique IDs is easy, we can use the result of the id() function when 
+called on the object in
+question <i>on the server</i>. It must originate from the server so that it is
+unique, otherwise we'd have multiple IDs for a single object.
+<p>When events referencing complex objects get to the NetworkClientView on the
+server, the objects are serialized starting in the constructor of the Copyable
+event.</p>
+
+<div class="codeblock">
+<pre class="python">
+<b># from server.py</b>
+
+class NetworkClientView:
+        ...
+
+        def Notify(self, event):
+                ...
+
+                ev = event
+
+                if not isinstance( ev, pb.Copyable ):
+                        evName = ev.__class__.__name__
+                        copyableClsName = "Copyable"+evName
+                        if not hasattr( network, copyableClsName )
+                                return
+                        copyableClass = getattr( network, copyableClsName )
+                        <b>#It is here that serialization starts</b>
+                        ev = copyableClass( ev, self.sharedObjs )
+
+                elif ev.__class__ not in serverToClientEvents:
+                        return 
+
+                for client in self.clients:
+                        self.RemoteCall( client, "ServerEvent", ev )
+</pre></div>
+Let's take a CharactorMoveEvent as an example. The above code will call
+__init__() for CopyableCharactorMoveEvent.
+<div class="codeblock">
+<pre class="python">
+<b># from network.py</b>
+
+class CopyableCharactorMoveEvent( pb.Copyable, pb.RemoteCopy):
+        def __init__( self, event, registry ):
+                self.name = "Copyable " + event.name
+                self.charactorID = id( event.charactor )
+                registry[self.charactorID] = event.charactor
+</pre></div>
+As you can see, the server won't send the actual object when it sends the
+event, it will only send a unique integer ID. It also makes sure that there is
+a mapping from that ID to the actual object in the registry.
+<p>When the client is sent the CopyableCharactorMoveEvent, the PhonyModel
+picks it up (the PhonyModel is the only object interested in events that start
+with "Copyable").</p>
+
+<div class="codeblock">
+<pre class="python">
+<b>#from client.py</b>
+
+class PhonyModel
+        ...
+
+        <b>#----------------------------------------------------------------------</b>
+        def Notify(self, event):
+                ...
+
+                if isinstance( event, CopyableCharactorMoveEvent ):
+                        charactorID = event.charactorID
+                        if not self.sharedObjs.has_key(charactorID):
+                                charactor = self.game.players[0].charactors[0]
+                                self.sharedObjs[charactorID] = charactor
+                        remoteResponse = self.server.callRemote("GetObjectState", charactorID)
+                        remoteResponse.addCallback(self.StateReturned)
+                        remoteResponse.addCallback(self.CharactorMoveCallback, charactorID)
+</pre></div>
+When a charactor moves, he is in a new sector.  To communicate this to the client,
+the server sends a CharactorMoveEvent, which has one attribute, the charactor 
+himself.  The client receives this event, sees the charactor referenced inside, and 
+requests the new state (which sector is he in?) for that charactor.
+<p>
+This is a very generic approach to solving the problem.
+<ul>
+<li><b>Server:</b> Hey, dude X just moved!
+<li><b>Client:</b> Oh really?  Tell me everything you now now about that guy.
+<li><b>Server:</b> Well, he's in the "ACTIVE" state, and he's in the sector with the unique ID 123567.
+<li><b>Client (to self):</b> Ah, excellent.  I already know about that sector, so I'll just change my little model of the universe and move that dude into that sector.
+</ul>
+This conversation took 4 messages.  It could have been shorter; we could have
+just hand-crafted the CopyableCharactorMoveEvent into something 
+more specific to our game's needs, for example we could have included the sector
+as an attribute of the event to obviate the request for more information.
+<ul>
+<li><b>Server:</b> Hey, dude X just moved!  To sector 123567!
+<li><b>Client (to self):</b> Ah, excellent.  I already know about that sector, so I'll just change my little model of the universe and move that dude into that sector.
+</ul>
+But we'll keep the code very generic for now.  A lot of the other events will follow 
+the same pattern.
+<p>
+Back to the code snippet, if the client has already received that object from
+the server, <code>self.sharedObjs.has_key()</code> will return true, and it
+can grab a reference to the object from the registry and carry on as normal.
+If it hasn't received that object yet (as is the case the first time this event
+is received), it must first create a placeholder object, and then copy the state
+of the object on the server into this new placeholder object. It does this by
+calling GetObjectState() with the unique ID of the needed object.
+
+<p>GetObjectState() basically just finds that object on the server (in this
+example, the Charactor that has moved), and serializes it's data with a call
+to getStateToCopy(). GetObjectState() returns the dict and the object ID that
+was requested.</p>
+
+<div class="codeblock">
+<pre class="python">
+<b># from network.py</b>
+
+<b>#------------------------------------------------------------------------------</b>
+class CopyableCharactor:
+        def getStateToCopy(self, registry):
+                d = self.__dict__.copy()
+                del d['evManager']
+                sID = id( self.sector )
+                d['sector'] = sID
+                registry[sID] = self.sector
+                return d
+
+        def setCopyableState(self, stateDict, registry):
+                neededObjIDs = []
+                success = 1
+                if stateDict['sector'] not in registry:
+                        registry[stateDict['sector']] = Sector(self.evManager)
+                        neededObjIDs.append( stateDict['sector'] )
+                        success = 0
+                else:
+                        self.sector = registry[stateDict['sector']]
+
+                return [success, neededObjIDs]
+</pre></div>
+The dict that getStateToCopy() returns contains all network-friendly data, so
+it can be sent over the network.
+<p>The client receives this information in the StateReturned() function,
+which is probably the most difficult function to follow in this whole tutorial. 
+I'll try to go through it step-by-step.
+<p>
+The client first requests the Object state.  When the response comes, the callbacks
+StateReturned and CharactorMoveCallback are queued to be called in sequence.
+<div class="codeblock">
+<pre class="python">
+<b># from client.py</b>
+
+        def Notify(self, event):
+                ...
+
+                        remoteResponse = self.server.callRemote("GetObjectState", charactorID)
+                        remoteResponse.addCallback(self.StateReturned)
+                        remoteResponse.addCallback(self.CharactorMoveCallback)
+</pre></div>
+
+The first callback, StateReturned will be called with [objectID, objDict] as its
+"response" argument.
+
+<div class="codeblock">
+<pre class="python">
+<b># from server.py</b>
+
+        def remote_GetObjectState(self, objectID):
+                ...
+
+                return [objectID, objDict]
+</pre></div>
+
+<div class="codeblock">
+<pre class="python">
+<b># from client.py</b>
+
+        <b>#----------------------------------------------------------------------</b>
+        def StateReturned(self, response):
+                """this is a callback that is called in response to 
+                invoking GetObjectState on the server"""
+
+                objID, objDict = response
+                if objID == 0:
+                        print "GOT ZERO -- better error handler here"
+                        return None
+                obj = self.sharedObjs[objID]
+
+                success, neededObjIDs =\
+                                 obj.setCopyableState(objDict, self.sharedObjs)
+                if success:
+                        <b>#we successfully set the state and no further objects</b>
+                        <b>#are needed to complete the current object</b>
+                        if objID in self.neededObjects:
+                                self.neededObjects.remove(objID)
+
+                else:
+                        <b>#to complete the current object, we need to grab the</b>
+                        <b>#state from some more objects on the server.  The IDs</b>
+                        <b>#for those needed objects were passed back</b>
+                        <b>#in neededObjIDs</b>
+                        for neededObjID in neededObjIDs:
+                                if neededObjID not in self.neededObjects:
+                                        self.neededObjects.append(neededObjID)
+        
+                self.waitingObjectStack.append( (obj, objDict) )
+
+                retval = self.GetAllNeededObjects()
+                if retval:
+                        <b># retval is a Deferred - returning it causes a chain</b>
+                        <b># to be formed.</b>
+                        return retval
+</pre></div>
+
+In the simplest case, "success" is True, and GetAllNeededObjects() returns None
+immediately.  Then the next callback, CharactorMoveCallback gets called, and we're
+done.
+<p>
+However, if "success" was False, that means more data is needed to complete the
+originally requested object's state.  The PhonyModel keeps a list of neededObjects
+that must be requested from the server before the originally requested object is
+complete.  Each of these needed objects may also append to the neededObjects list
+for subsequent objects they need.  So when we call GetAllNeededObjects() the 
+recursive behaviour begins.
+<p>
+
+<div class="codeblock">
+<pre class="python">
+<b># from client.py</b>
+
+        <b>#----------------------------------------------------------------------</b>
+        def GetAllNeededObjects(self):
+                if len(self.neededObjects) == 0:
+                        <b>#this is the recursion-ending condition.  If there are</b>
+                        <b>#no more objects needed to be grabbed from the server</b>
+                        <b>#then we can try to setCopyableState on them again and</b>
+                        <b>#we should now have all the needed objects, ensuring</b>
+                        <b>#that setCopyableState succeeds</b>
+                        return self.ConsumeWaitingObjectStack()
+
+                <b>#still in the recursion step.  Try to get the object state for</b>
+                <b>#the objectID on the top of the stack.  Note that the recursion</b>
+                <b>#is done via a deferred, which may be confusing </b>
+                nextID = self.neededObjects[-1]
+                remoteResponse = self.server.callRemote("GetObjectState",nextID)
+                remoteResponse.addCallback(self.StateReturned)
+                return remoteResponse
+
+</pre></div>
+<p>
+As you can see, another call is made to GetObjectState on the server that will
+result in StateReturned being called.  Notice that this isn't truly recursive.
+GetAllNeededObjects doesn't block.  It returns immediately.  But it returns a
+Deferred object, remoteResponse.  So the original Deferred had it's first callback
+called, and that returned a new Deferred object.  This is called 
+<a href="http://twistedmatrix.com/projects/core/documentation/howto/defer.html#auto11">Chaining Deferreds</a>
+and it causes the first callback to block until the second Deferred's callbacks
+are finished.  Hence we get recursion over the network.
+
+
+<p>Here is a flowchart that summarizes the actions taken when the client gets
+an event containing a complex object.</p>
+<center><img src="diagram-serialization-flowchart.png" alt=
+"flowchart of client event reception" width="400" height="452"></center>
+<p>Notice that we must make sure that the event we send over the network has
+enough information to update the client with any relevant changes to the state
+of the server. The client may already have a local version of an object, but
+if that object has <i>changed</i>, the client still has to call
+GetObjectState(), as is demonstrated with the CharactorMoveEvent.</p>
+<p>With that in mind, a question is raised: where do we put the intelligence
+do determine what object states we need to retrieve? Right now, we've put all
+this logic in PhonyModel.Notify() <span class="todo">[TODO: is this the best
+place? what about inside Copyable events?]</span></p>
+<div class="sourceLinks">Here is our example that handles fetching 
+complex objects: <a href="examples/example3.tar.gz">example3.tar.gz</a>
+</div>
+
+
+<h2><a name="problems">More Problems</a></h2>
+<p>The previous discussion is a good start and provides some useful code.  I
+encourage you to play around with it and see if you can get your game sending
+objects back and forth.  As your code becomes more complex, you will run into
+some more problems:
+<ol>
+<li>What if we don't have enough information to call __init__ for 
+some attributes in setCopyableState() ?</li>
+<li>What if we don't know the specific subclass for an attribute in 
+setCopyableState() ?</li>
+</ol>
+<p>To clarify, here's an example of when an issue like this might come up.
+Lets say we write a game where two Penguins fight each other.  Each Penguin
+has a weapon, and every weapon is initialized with a name, like "Deathbringer"
+or "Destroy-o-Matic", or "Patricia".
+<div class="codeblock">
+<pre class="python">
+<b>#------------------------------------------------------------------------------</b>
+class Weapon:
+    def __init__( self, evManager, name )
+        self.evManager = evManager
+        self.name = name
+</pre></div>
+<p>CopyablePenguin would thus look something like this:
+<div class="codeblock">
+<pre class="python">
+<b>#------------------------------------------------------------------------------</b>
+class CopyablePenguin:
+    def getStateToCopy(self, registry):
+        d = self.__dict__.copy()
+        del d['evManager']
+
+        wID = id( self.weapon )
+        registry[wID] = self.weapon
+        d['weapon'] = wID
+                                                                                
+        return d
+</pre></div>
+We would naively start writing the corresponding setCopyableState function:
+<div class="codeblock">
+<pre class="python">
+    def setCopyableState(self, stateDict, registry):
+        neededObjIDs = []
+        success = 1
+
+        wID = stateDict['weapon']
+        if not registry.has_key( wID ):
+            <b>#registry didn't have the object, so create a new one</b>
+            self.weapon = Weapon( self.evManager,
+            <b>#WELL CRAP!  I don't yet know what its name is,</b>
+            <b>so how am I going to initialize it?</b>
+</pre></div>
+
+Furthermore, lets say that Weapons are of one of three subclasses, 
+either Slingshot, Rifle, or Nuke.  Then we have even more difficulties with
+setCopyableState:
+<div class="codeblock">
+<pre class="python">
+        ...
+        wID = stateDict['weapon']
+        if not registry.has_key( wID ):
+            <b>#registry didn't have the object, so create a new one</b>
+            self.weapon = <i>???</i>
+            <b>#MORE CRAP!  I don't even know what class of object</b>
+            <b>it should be!</b>
+</pre></div>
+
+<p>We can solve this problem with a Placeholder object that is very similar to
+the <b>Lazy Proxy</b> design pattern.
+<p>...
+<span class="todo">[TODO: finish this section]</span>
+
+<h2><a name="multiplayer">Multiplayer</a></h2>
+
+<div class="sourceLinks">The example source code for the multiplayer section is here:
+<a href="example4.tar.gz">example4.tar.gz</a>
+</div>
+
+<h3><a name="nonnetworked">Non-Networked Multiplayer</a></h3>
+We'll start off by creating a 2-player game that runs locally, not over the
+network. Our loosely coupled architecture allows us to do this, and it's a
+great advantage to be able to develop your ideas first and worry about network
+issues later.
+
+<div style="margin-top:2em"><center>
+<img src="screenshot-example4a.png" alt="example applicaton" width=
+"432" height="468">
+<img src="screenshot-example4b.png" alt="example applicaton" width=
+"432" height="468">
+</center>
+</div>
+
+<p>
+We will add a couple new events, PlayerJoinRequest, PlayerJoinEvent (the 
+Player object is no longer created by when the Game is constructed), and 
+CharactorPlaceRequest.  The KeyboardController is also modified to detect 
+new keypresses, <b>p</b> and <b>c</b> to fire off those request events, and 
+the <b>o</b> key to switch between active players. (see screenshot above).
+</p>
+<p>
+You can try this out by running <code>python example1.py</code> from the
+example4.tar.gz archive below.  When it starts, press <b>p</b> twice to 
+request 2 PlayerJoin events, then press space bar to start the game, then
+press <b>c</b> to place one character, <b>o</b> to switch to the other
+player, then <b>c</b> again to place the second character.  Direction keys
+move the charactor around, as per usual.
+</p>
+
+<h3><a name="networked">Networked Multiplayer</a></h3>
+
+
+<p>We want to ensure that Player One's client cannot control Player Two's
+charactor. We want the server to reject any
+request where the player instance contained in the request is not an instance
+the sender is allowed to control.
+As a first step, we need to be able to uniquely identify clients.  Then we
+need to map clients to a set of Player objects (or more commonly, just one) 
+that they are allowed to control.  Then we need to filter out any events that
+should not be allowed based on that map.
+<p>
+Luckily, Twisted provides a rich set of tools to identify clients, aka
+"authentication".
+Most of this is explained in 
+<a href="howto/pb-cred.html">[TODO]Authentication with Perspective Broker</a>
+in the Twisted docs.  I'll go over the specific usage in our example, 
+but you should also review those docs.
+<p>
+Our first change will be to change the server's NetworkClientController from
+a pb.Root object into a pb.Avatar object:
+<div class="codeblock">
+<pre class="python">
+<b># from server.py</b>
+
+class NetworkClientController(pb.Avatar):
+        <b>"""We RECEIVE events from the CLIENT through this object
+        There is an instance of NetworkClientController for each connected
+        client.
+        """</b>
+        def __init__(self, evManager, avatarID, realm):
+                self.evManager = evManager
+                self.evManager.RegisterListener( self )
+                self.avatarID = avatarID
+                self.realm = realm
+
+        ...
+
+        <b>#----------------------------------------------------------------------</b>
+        def perspective_GetGame(self):
+                ...
+
+        <b>#----------------------------------------------------------------------</b>
+        def perspective_GetObjectState(self, objectID):
+                ...
+
+        <b>#----------------------------------------------------------------------</b>
+        def perspective_EventOverNetwork(self, event):
+                ...
+</pre></div>
+<p>
+As you can see, the class now inherits from pb.Avatar, and the methods 
+that were previously named remote_BlahBlah are now named perspective_BlahBlah.
+Also, the NetworkClientController objects will need to keep track of their
+realm and their avatarID. The realm is basically a factory on the server that
+gets requests for new client connections, and creates new NetworkServerViews
+and NetworkServerControllers for each successful connection.
+<div class="codeblock">
+<pre class="python">
+<b># from server.py</b>
+
+class MyRealm:
+        implements(portal.IRealm)
+        def __init__(self, evManager):
+                self.evManager = evManager
+                <b># keep track of avatars that have been given out</b>
+                self.claimedAvatarIDs = []
+                <b># we need to hold onto views so they don't get garbage collected</b>
+                self.clientViews = []
+                <b># maps avatars to player(s) they control</b>
+                self.playersControlledByAvatar = {}
+
+        <b>#----------------------------------------------------------------------</b>
+        def requestAvatar(self, avatarID, mind, *interfaces):
+                if pb.IPerspective not in interfaces:
+                        raise NotImplementedError
+                if avatarID in self.claimedAvatarIDs:
+                        <b># someone already has this avatar.</b>
+                        raise Exception( 'Another client is already connected'
+                                         ' to this avatar' )
+
+                self.claimedAvatarIDs.append(avatarID)
+                ev = ClientConnectEvent( mind, avatarID )
+                self.evManager.Post( ev )
+
+                self.playersControlledByAvatar[avatarID] = []
+                view = NetworkClientView( self.evManager, avatarID, mind )
+                controller = NetworkClientController(self.evManager,
+                                                     avatarID,
+                                                     self)
+                self.clientViews.append(view)
+                return pb.IPerspective, controller, controller.clientDisconnect
+
+        <b>#----------------------------------------------------------------------</b>
+        def knownPlayers(self):
+                ...
+
+        <b>#----------------------------------------------------------------------</b>
+        def Notify(self, event):
+                if isinstance(event, ClientDisconnectEvent):
+                        self.claimedAvatarIDs.remove(event.avatarID)
+                        removee = None
+                        for view in self.clientViews:
+                                if view.avatarID == event.avatarID:
+                                        removee = view
+                        if removee:
+                                self.clientViews.remove(removee)
+</pre></div>
+<p>
+If you look at the body of the requestAvatar method, you see where the network
+views and controllers get created.  The requestAvatar method is also where
+the avatarID comes into play.  It is created internally to Twisted, and passed
+to our code.  It is an identifier guaranteed to be unique for each 
+client.  It can effectively be considered a "username". 
+<p>
+requestAvatar gets called as a result of calling login() during the 
+AttemptConnection method of the client:
+<div class="codeblock">
+<pre class="python">
+<b># from client.py</b>
+
+avatarID = None
+
+def main():
+    global avatarID
+    if len(sys.argv) &gt; 1:
+        avatarID = sys.argv[1]
+    else:
+        avatarID = 'user1'
+
+
+class NetworkServerView(pb.Root):
+    <b>"""We SEND events to the server through this object"""</b>
+    ...
+    <b>#----------------------------------------------------------------------</b>
+    def __init__(self, evManager, sharedObjectRegistry):
+            self.evManager = evManager
+            self.evManager.RegisterListener( self )
+
+            self.pbClientFactory = pb.PBClientFactory()
+            self.state = NetworkServerView.STATE_PREPARING
+            self.reactor = None
+            self.server = None
+
+            self.sharedObjs = sharedObjectRegistry
+
+    <b>#----------------------------------------------------------------------</b>
+    def AttemptConnection(self):
+            self.state = NetworkServerView.STATE_CONNECTING
+            if self.reactor:
+                    self.reactor.stop()
+                    self.PumpReactor()
+            else:
+                    self.reactor = SelectReactor()
+                    installReactor(self.reactor)
+            connection = self.reactor.connectTCP(serverHost, serverPort,
+                                                 self.pbClientFactory)
+            userCred = credentials.UsernamePassword(avatarID, 'pass1')
+            controller = NetworkServerController( self.evManager )
+            deferred = self.pbClientFactory.login(userCred, client=controller)
+            deferred.addCallback(self.Connected)
+            deferred.addErrback(self.ConnectFailed)
+            self.reactor.startRunning()
+
+    <b>#----------------------------------------------------------------------</b>
+    def Disconnect(self):
+            if not self.reactor:
+                    return
+            self.reactor.stop()
+            self.PumpReactor()
+            self.state = NetworkServerView.STATE_DISCONNECTING
+
+    <b>#----------------------------------------------------------------------</b>
+    def Connected(self, server):
+            self.server = server
+            self.state = NetworkServerView.STATE_CONNECTED
+            ev = ServerConnectEvent( server )
+            self.evManager.Post( ev )
+
+    <b>#----------------------------------------------------------------------</b>
+    def ConnectFailed(self, server):
+            self.state = NetworkServerView.STATE_DISCONNECTED
+</pre></div>
+
+
+<p>
+<span class="todo">[TODO: more...]</span>
+
+<h2><a name="reconnect">Reconnecting After A Drop</a></h2>
+As is wont with the internet, sometimes a connection gets accidentally
+dropped.
+<p>...
+<span class="todo">[TODO: more details]</span>
+
+<!-- ====================================================================== --></p>
+<h1><a name="part3">PART 3</a></h1>
+<h1><a name="graphical">Graphical User Interface</a></h1>
+<h2><a name="widget">What Is A Widget</a></h2>
+A widget is the elemental object in a GUI. A widget can be a button, a label,
+a text entry field, etc. A widget can even contain other widgets, like a
+toolbar, or a menubar, or even a simple horizontal box.
+<p>You can get as complicated as you like when creating your GUI engine, but
+this tutorial will focus only on some simple widgets. Here are the ones we
+will implement:</p>
+<ul>
+<li>label</li>
+<li>button</li>
+<li>text-entry field</li>
+<li><span class="todo">[TODO ... scrollbox?]</span></li>
+</ul>
+All widgets share a small amount of behaviour, so we have an abstract Widget
+class that inherits from Sprite. Widgets can be focused and unfocused, and
+have a 'dirty' flag so that they can be redrawn when needed, and not on every
+single call to update().
+<div class="codeblock">
+<pre class="python">
+<b>#------------------------------------------------------------------------------</b>
+class Widget(pygame.sprite.Sprite):
+    def __init__(self, evManager, container=None):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.evManager = evManager
+        self.evManager.RegisterListener( self )
+
+        self.container = container
+        self.focused = 0
+        self.dirty = 1
+
+    <b>#----------------------------------------------------------------------</b>
+    def SetFocus(self, val):
+        self.focused = val
+        self.dirty = 1
+
+    <b>#----------------------------------------------------------------------</b>
+    def kill(self):
+        self.container = None
+        del self.container
+        pygame.sprite.Sprite.kill(self)
+
+    <b>#----------------------------------------------------------------------</b>
+    def Notify(self, event):
+        if isinstance( event, GUIFocusThisWidgetEvent ) \
+           and event.widget is self:
+            self.SetFocus(1)
+
+        elif isinstance( event, GUIFocusThisWidgetEvent ) \
+             and self.focused:
+            self.SetFocus(0)
+</pre></div>
+<h3><a name="label">Label</a></h3>
+Probably the simplest widget is a label. It is basically just a holder for
+some text.
+<div class="codeblock">
+<pre class="python">
+<b>#------------------------------------------------------------------------------</b>
+class LabelSprite(Widget):
+    def __init__(self, evManager, text, container=None):
+        Widget.__init__( self, evManager, container)
+
+        self.color = (200,200,200)
+        self.font = pygame.font.Font(None, 30)
+        self.__text = text
+        self.image = self.font.render( self.__text, 1, self.color)
+        self.rect  = self.image.get_rect()
+
+    <b>#----------------------------------------------------------------------</b>
+    def SetText(self, text):
+        self.__text = text
+        self.dirty = 1
+
+    <b>#----------------------------------------------------------------------</b>
+    def update(self):
+        if not self.dirty:
+            return
+
+        self.image = self.font.render( self.__text, 1, self.color )
+        self.dirty = 0
+</pre></div>
+<h3><a name="button">Button</a></h3>
+A button is also a very simple widget. It is just an image that can be
+clicked, and when it is clicked, it fires off an event. For simplicity's sake
+the image is just some rendered text, but it could be anything.
+<div class="codeblock">
+<pre class="python">
+<b>#------------------------------------------------------------------------------</b>
+class ButtonSprite(Widget):
+    def __init__(self, evManager, text, container=None, onClickEvent=None ):
+        Widget.__init__( self, evManager, container)
+
+        self.font = pygame.font.Font(None, 30)
+        self.text = text
+        self.image = self.font.render( self.text, 1, (255,0,0))
+        self.rect  = self.image.get_rect()
+
+        self.onClickEvent = onClickEvent
+
+    <b>#----------------------------------------------------------------------</b>
+    def update(self):
+        if not self.dirty:
+            return
+
+        if self.focused:
+            color = (255,255,0)
+        else:
+            color = (255,0,0)
+        self.image = self.font.render( self.text, 1, color)
+        <b>#self.rect  = self.image.get_rect()</b>
+
+        self.dirty = 0
+
+    <b>#----------------------------------------------------------------------</b>
+    def Connect(self, eventDict):
+        for key,event in eventDict.iteritems():
+            try:
+                self.__setattr__( key, event )
+            except AttributeError:
+                print "Couldn't connect the ", key
+                pass
+
+
+    <b>#----------------------------------------------------------------------</b>
+    def Click(self):
+        self.dirty = 1
+        if self.onClickEvent:
+            self.evManager.Post( self.onClickEvent )
+
+    <b>#----------------------------------------------------------------------</b>
+    def Notify(self, event):
+        if isinstance( event, GUIPressEvent ) and self.focused:
+            self.Click()
+
+        elif isinstance( event, GUIClickEvent ) \
+             and self.rect.collidepoint( event.pos ):
+            self.Click()
+
+        elif isinstance( event, GUIMouseMoveEvent ) \
+             and self.rect.collidepoint( event.pos ):
+            ev = GUIFocusThisWidgetEvent(self)
+            self.evManager.Post( ev )
+
+        Widget.Notify(self,event)
+
+</pre></div>
+<h3><a name="textbox">Text Box</a></h3>
+A text box is a little bit more complicated but still easy to understand. It
+is basically a rectangle into which text can be typed. When it gets focus it
+shows a little vertical bar (|) and starts responding to keypress events.
+<div class="codeblock">
+<pre class="python">
+<b>#------------------------------------------------------------------------------</b>
+class TextBoxSprite(Widget):
+    def __init__(self, evManager, width, container=None ):
+        Widget.__init__( self, evManager, container)
+
+        self.font = pygame.font.Font(None, 30)
+        linesize = self.font.get_linesize()
+
+        self.rect = pygame.Rect( (0,0,width, linesize +4) )
+        boxImg = pygame.Surface( self.rect.size ).convert_alpha()
+        color = (0,0,100)
+        pygame.draw.rect( boxImg, color, self.rect, 4 )
+
+        self.emptyImg = boxImg.convert_alpha()
+        self.image = boxImg
+
+        self.text = ''
+        self.textPos = (22, 2)
+
+    <b>#----------------------------------------------------------------------</b>
+    def update(self):
+        if not self.dirty:
+            return
+
+        text = self.text
+        if self.focused:
+            text += '|'
+
+        textColor = (255,0,0)
+        textImg = self.font.render( text, 1, textColor )
+        self.image.blit( self.emptyImg, (0,0) )
+        self.image.blit( textImg, self.textPos )
+
+        self.dirty = 0
+
+    <b>#----------------------------------------------------------------------</b>
+    def Click(self):
+        self.focused = 1
+        self.dirty = 1
+
+    <b>#----------------------------------------------------------------------</b>
+    def SetText(self, newText):
+        self.text = newText
+        self.dirty = 1
+
+    <b>#----------------------------------------------------------------------</b>
+    def Notify(self, event):
+
+        if isinstance( event, GUIPressEvent ) and self.focused:
+            self.Click()
+
+        elif isinstance( event, GUIClickEvent ) \
+             and self.rect.collidepoint( event.pos ):
+            self.Click()
+
+        elif isinstance( event, GUIClickEvent ) \
+             and self.focused:
+            self.SetFocus(0)
+
+        elif isinstance( event, GUIMouseMoveEvent ) \
+             and self.rect.collidepoint( event.pos ):
+            ev = GUIFocusThisWidgetEvent(self)
+            self.evManager.Post( ev )
+
+        elif isinstance( event, GUIKeyEvent ) \
+             and self.focused:
+            newText = self.text + event.key
+            self.SetText( newText )
+
+        elif isinstance( event, GUIControlKeyEvent ) \
+          and self.focused and event.key == K_BACKSPACE:
+            <b>#strip of last character</b>
+            newText = self.text[:( len(self.text) - 1 )]
+            self.SetText( newText )
+
+        Widget.Notify(self,event)
+</pre></div>
+<h2><a name="screens">GUI Screens</a></h2>
+<center><img src="diagram-visualstages.png" alt=
+"the visualstages of an example game" width="362" height="382"></center>
+<p>Above is a diagram showing some common uses of a Graphical User Interface
+in games. In each of the above screens, there is a blue section representing
+buttons or other widgets. It will also serve as the idea for our next example
+application, "Fool The Bar".</p>
+<h3><a name="menu">Menu</a></h3>
+<img src="diagram-gui-menu.png" alt="menu example" class="internal" width=
+"100" height="82"> The Menu GUI is the first thing seen when the program
+starts up. It is usually just a collection of buttons, most often things like
+"New Game", "Quit" and "Options". Sometimes there are multiple kinds of
+"Options" choices.
+<h3><a name="options">Options</a></h3>
+<img src="diagram-gui-options.png" alt="options example" class="internal"
+width="100" height="84"> The Options GUI is where the user sets their
+preferences or adds their personal information. It is usually text labels with
+adjacent fields where the user can change / add the values.
+<h3><a name="main">Main</a></h3>
+<img src="diagram-gui-main.png" alt="main example" class="internal" width=
+"100" height="84"> The Main GUI is where the game actually gets played. Few
+games have much in common when it comes to the Main GUI. However, many games
+have a "function bar" or a "shortcut bar" along some edge that is made up of
+buttons or other widgets.
+<h3><a name="cutscene">Cutscene</a></h3>
+<img src="diagram-gui-cutscene.png" alt="cutscene example" class="internal"
+width="100" height="84"> A Cutscene is part of the game where direct control
+is taken away and part of the game's story is presented. This can be done by
+playing a movie, or by presenting text with accompanying pictures. User input
+is usually limited to a few choices like "skip" or "continue".
+<h3><a name="dialog">Dialog</a></h3>
+<img src="diagram-gui-dialog.png" alt="dialog example" class="internal" width=
+"100" height="84"> A Dialog is one of the more tricky things to do in a game.
+It is usually a rectangle that pops up over the Main GUI containing buttons,
+text, or other widgets (like an RPG "inventory" dialog). While the Dialog is
+up, the presentation of the Main GUI is usually not interrupted (though it
+could be). Things still may move around in the background, but the Dialog is
+understood to have <i>focus</i>. For instance, if a "chat" dialog is present,
+the keypresses that usually make a Charactor move (ie "WASD") will now go only
+to the "chat" dialog so the user can type in a message. If a "yes/no" dialog
+has popped up such that the "no" button is over a charactor on the screen, and
+the user clicks the "no" button, that click should not select the charactor
+underneath, it should <i>only</i> press the "no" button.
+<div class="sourceLinks">Here is the source code to our example application,
+Fool The Bar: <a href="foolbar.tar.gz">foolbar.tar.gz</a>
+<b>WARNING: OLD CODE</b></div>
+<h1><a name="faq">FAQ</a></h1>
+<ul class="faq">
+<li class="q">What license is all this code under?</li>
+<li class="a">Unless otherwise stated, everything here is in the Public
+Domain.</li>
+<li class="q">Why do you use <code>from module import *</code>? Don't you know
+that's bad coding style</li>
+<li class="a">Yeah, my bad. I promise i'll clean all those up before i declare
+this "finished".</li>
+<li class="q">Why don't you use Twisted's Cacheable? It seems like you're just
+reimplementing it.</li>
+<li class="a">I am a bit of a newbie when it comes to Twisted. I read a bit
+about the Cacheable stuff, but it seemed to me I'd have to make the classes of
+my Model be Cacheable, and I didn't want the network code to be coupled with
+my model code. And seeing as I would have to write serialization code even if
+I used Cacheable, I just bulldozed ahead. Would it be possible to use
+Cacheable without coupling it with the Model code? Could someone who is
+familiar with Twisted point me in the right direction?</li>
+</ul>
+</body>
+</html>

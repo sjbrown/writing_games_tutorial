@@ -1,0 +1,17 @@
+from twisted.spread import pb
+from twisted.internet import reactor
+factory = pb.PBClientFactory()
+server = None
+def gotServer(serv):
+    global server
+    server = serv
+    reactor.stop()
+
+connection = reactor.connectTCP('localhost', 8000, factory)
+d = factory.getRootObject()
+d.addCallback(gotServer)
+#<Deferred at 0xac5680>
+reactor.run()
+print server
+#<twisted.spread.pb.RemoteReference instance at 0xb1f488>
+

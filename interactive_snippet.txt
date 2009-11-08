@@ -1,0 +1,37 @@
+ $ python
+Python 2.5.2 (r252:60911, Apr 21 2008, 11:17:30) 
+[GCC 4.2.3 (Ubuntu 4.2.3-2ubuntu7)] on linux2
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; from twisted.spread import pb
+&gt;&gt;&gt; from twisted.internet import reactor
+&gt;&gt;&gt; factory = pb.PBClientFactory()
+&gt;&gt;&gt; server = None
+&gt;&gt;&gt; def gotServer(serv):
+...&nbsp;&nbsp;&nbsp;&nbsp; global server
+...&nbsp;&nbsp;&nbsp;&nbsp; server = serv
+... 
+&gt;&gt;&gt; connection = reactor.connectTCP('localhost', 8000, factory)
+&gt;&gt;&gt; reactor.callLater( 4, reactor.crash )
+&lt;twisted.internet.base.DelayedCall instance at 0xac5638&gt;
+&gt;&gt;&gt; reactor.run()
+&gt;&gt;&gt; d = factory.getRootObject()
+&gt;&gt;&gt; d.addCallback(gotServer)
+&lt;Deferred at 0xb1f440&nbsp;&nbsp;current result: None&gt;
+&gt;&gt;&gt; reactor.iterate()
+&gt;&gt;&gt; server.callRemote('GameStartRequest')
+&lt;Deferred at 0xac5638&gt;
+&gt;&gt;&gt; reactor.iterate()
+&gt;&gt;&gt; up, right, down, left = 0,1,2,3
+&gt;&gt;&gt; server.callRemote('CharactorMoveRequest', up)
+&lt;Deferred at 0xb1f4d0&gt;
+&gt;&gt;&gt; reactor.iterate()
+&gt;&gt;&gt; server.callRemote('CharactorMoveRequest', right)
+&lt;Deferred at 0xac5638&gt;
+&gt;&gt;&gt; reactor.iterate()
+&gt;&gt;&gt; server.callRemote('CharactorMoveRequest', down)
+&lt;Deferred at 0xb1f4d0&gt;
+&gt;&gt;&gt; reactor.iterate()
+&gt;&gt;&gt; server.callRemote('CharactorMoveRequest', left)
+&lt;Deferred at 0xac5638&gt;
+&gt;&gt;&gt; reactor.iterate()
+
