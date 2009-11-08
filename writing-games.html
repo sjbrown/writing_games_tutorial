@@ -97,8 +97,8 @@ the later code will probably barf due to API changes if run against the
 current version of Twisted.</b>
 -->
 <h1>sjbrown's Writing Games Tutorial</h1>
-<p>By Shandy Brown.  Please send comments / corrections via email to sjbrown AT geeky DOT net</p>
-<p><b style="color:blue">Last Update:</b> August 2008
+<p>By Shandy Brown.  Please send comments / corrections via email to <b>tutorial@ezide.com</b></p>
+<p><b style="color:blue">Last Update:</b> November 2009
 </p>
 <hr>
 <a href="table.html">Table Of Contents</a>
@@ -130,13 +130,13 @@ better writer.  It kind of puts us into an arms race of laziness.
 It is expected the reader is comfortable in an object oriented environment.
 All the important code is structured with classes.
 <h2><a name="patterns">Design Patterns</a></h2>
+Design Patterns are a communication tool; they do not dictate design, they
+inform the reading of the code.
 This guide makes use of the Design Patterns "Model View Controller" (MVC),
 "Mediator", and "Lazy Proxy". 
-If this sounds foreign to you, I recommend checking out the book
-"Design Patterns" by Gamma et al. or just surfing the web for tutorials. You
-may be able to follow along without having previous exposure to Design
-Patterns, as their purpose is quickly evident to people familiar with object
-oriented programming.
+Time won't be spent describing these patterns in detail, so if they sound
+foreign to you, I recommend checking out the book
+"Design Patterns" by Gamma et al. or just surfing the web for tutorials.
 <h1><a name="part1">PART 1</a></h1>
 <h1><a name="example">Example Goal</a></h1>
 It's always a good idea to sketch out your game either with pictures or text
@@ -424,8 +424,9 @@ inside them.
 <h1><a name="our">Our Example</a></h1>
 <div class="sourceLinks">The code can be downloaded here: 
 <a href="examples/example1.py">example1.py</a><br>
-And here's some colored html: 
-<a href="examples/example1.py.html">example1.py.html</a></div>
+Or read it in your browser
+<a href="http://github.com/sjbrown/writing_games_tutorial/blob/master/examples/example1.py">here</a>
+</div>
 
 <center><img src="screenshot-example1.png" alt="example applicaton" width=
 "434" height="468"></center>
@@ -763,8 +764,9 @@ Using twisted.conch.stdio as a fake client</div>
 
 <div class="sourceLinks">The code for server1.py can be downloaded here:
 <a href="examples/server1.py">server1.py</a><br>
-And here's some colored html: 
-<a href="examples/server1.py.html">server1.py.html</a></div>
+Or read it in your browser 
+<a href="http://github.com/sjbrown/writing_games_tutorial/blob/master/examples/server1.py">here</a>
+</div>
 
 <h2><a name="king"></a>King of the Castle</h2>
 As seen above, Twisted's reactor object is designed to be in charge of the
@@ -829,9 +831,12 @@ each approach based on the type of game you are writing.  In the examples,
 we will use the reactor-pumping approach.
 
 <h2><a name="wire">Messages Over the Wire</a></h2>
-<div class="sourceLinks">The source code to the remainder of this section are
+<div class="sourceLinks">The source code to the remainder of this section is 
 in multiple files. You can download them in tar.gz format here: 
-<a href="examples/example2.tar.gz">example2.tar.gz</a></div>
+<a href="examples/example2.tar.gz">example2.tar.gz</a>, or browse
+the source code 
+<a href="http://github.com/sjbrown/writing_games_tutorial/tree/master/examples/example2">here</a>.
+</div>
 <p>The previous example of a server gave a good introduction to the basic
 networking technique, but it's a little too simple for our purposes. We don't
 really want to write a new function for every message the server can possibly
@@ -1407,8 +1412,9 @@ GetObjectState(), as is demonstrated with the CharactorMoveEvent.</p>
 do determine what object states we need to retrieve? Right now, we've put all
 this logic in PhonyModel.Notify() <span class="todo">[TODO: is this the best
 place? what about inside Copyable events?]</span></p>
-<div class="sourceLinks">Here is our example that handles fetching 
-complex objects: <a href="examples/example3.tar.gz">example3.tar.gz</a>
+<div class="sourceLinks">You can download the example that handles fetching 
+complex objects here: <a href="examples/example3.tar.gz">example3.tar.gz</a>.
+Or browse the source code <a href="http://github.com/sjbrown/writing_games_tutorial/tree/master/examples/example3">here</a>.
 </div>
 
 
@@ -1426,7 +1432,7 @@ setCopyableState() ?</li>
 <p>To clarify, here's an example of when an issue like this might come up.
 Lets say we write a game where two Penguins fight each other.  Each Penguin
 has a weapon, and every weapon is initialized with a name, like "Deathbringer"
-or "Destroy-o-Matic", or "Patricia".
+or "Destroy-o-Matic", or "Daffodil".
 <div class="codeblock">
 <pre class="python">
 <b>#------------------------------------------------------------------------------</b>
@@ -1486,8 +1492,9 @@ the <b>Lazy Proxy</b> design pattern.
 
 <h2><a name="multiplayer">Multiplayer</a></h2>
 
-<div class="sourceLinks">The example source code for the multiplayer section is here:
-<a href="example4.tar.gz">example4.tar.gz</a>
+<div class="sourceLinks">Download the example source code for the multiplayer 
+section here: <a href="example4.tar.gz">example4.tar.gz</a>
+Or browse the source code <a href="http://github.com/sjbrown/writing_games_tutorial/tree/master/examples/example3">here</a>.
 </div>
 
 <h3><a name="nonnetworked">Non-Networked Multiplayer</a></h3>
