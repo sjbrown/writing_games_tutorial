@@ -82,6 +82,16 @@ class KeyboardController:
 			if not self.activePlayer:
 				self.activePlayer = event.player
 
+		if isinstance( event, GameSyncEvent ):
+			game = event.game
+			self.players = game.players[:] # copy the list
+
+		if isinstance( event, SetActivePlayerEvent ):
+			player = event.player
+			self.activePlayer = player
+			print '\n ]]]]]]]]] set player to ', player
+
+
 		if isinstance( event, TickEvent ):
 			#Handle Input Events
 			for event in pygame.event.get():
@@ -116,6 +126,8 @@ class KeyboardController:
 
 				elif event.type == KEYDOWN \
 				     and event.key == K_UP:
+					if not self.activePlayer:
+						continue
 					direction = DIRECTION_UP
 					data = self.activePlayer.GetMoveData()
 					ev = CharactorMoveRequest( 
@@ -125,6 +137,8 @@ class KeyboardController:
 
 				elif event.type == KEYDOWN \
 				     and event.key == K_DOWN:
+					if not self.activePlayer:
+						continue
 					direction = DIRECTION_DOWN
 					data = self.activePlayer.GetMoveData()
 					ev = CharactorMoveRequest( 
@@ -134,6 +148,8 @@ class KeyboardController:
 
 				elif event.type == KEYDOWN \
 				     and event.key == K_LEFT:
+					if not self.activePlayer:
+						continue
 					direction = DIRECTION_LEFT
 					data = self.activePlayer.GetMoveData()
 					ev = CharactorMoveRequest( 
@@ -143,6 +159,8 @@ class KeyboardController:
 
 				elif event.type == KEYDOWN \
 				     and event.key == K_RIGHT:
+					if not self.activePlayer:
+						continue
 					direction = DIRECTION_RIGHT
 					data = self.activePlayer.GetMoveData()
 					ev = CharactorMoveRequest( 
@@ -299,7 +317,7 @@ class PygameView:
 		statusBarSprite = StatusBarSprite(self.evManager,self.backSprites)
 
 	#----------------------------------------------------------------------
- 	def ShowCharactor(self, charactor):
+	def ShowCharactor(self, charactor):
 		sector = charactor.sector
 		if not sector:
 			print "Charactor is not in a sector.  cannot show"
@@ -367,9 +385,11 @@ class PygameView:
 			self.MoveCharactor( event.charactor )
 
 		elif isinstance( event, GameSyncEvent ):
+			print 'Pygame View syncing to game state', event, event.game.__dict__
 			game = event.game
 			if game.state == Game.STATE_PREPARING:
 				return
+			print 'Pygame View syncing to game state'
 			self.ShowMap( game.map )
 			for player in game.players:
 				for charactor in player.charactors:
@@ -379,9 +399,9 @@ class PygameView:
 class Game:
 	"""..."""
 
-	STATE_PREPARING = 0
-	STATE_RUNNING = 1
-	STATE_PAUSED = 2
+	STATE_PREPARING = 'preparing'
+	STATE_RUNNING = 'running'
+	STATE_PAUSED = 'paused'
 
 	#----------------------------------------------------------------------
 	def __init__(self, evManager):
@@ -458,7 +478,7 @@ class Player:
 		self.name = playerDict['name']
 
 	#----------------------------------------------------------------------
- 	def Notify(self, event):
+	def Notify(self, event):
 		pass
 		#if isinstance( event, PlayerJoinEvent):
 			#if event.player is self:
@@ -521,13 +541,13 @@ class Map:
 
 		self.state = Map.STATE_PREPARING
 
-		self.sectors = range(9)
+		self.sectors = []
 		self.startSectorIndex = 0
 
 	#----------------------------------------------------------------------
 	def Build(self):
 		for i in range(9):
-			self.sectors[i] = Sector( self.evManager )
+			self.sectors.append( Sector(self.evManager) )
 
 		self.sectors[3].neighbors[DIRECTION_UP] = self.sectors[0]
 		self.sectors[4].neighbors[DIRECTION_UP] = self.sectors[1]

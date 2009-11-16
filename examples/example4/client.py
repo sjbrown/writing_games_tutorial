@@ -80,6 +80,8 @@ class NetworkServerView(pb.Root):
     def ConnectFailed(self, server):
             print "CONNECTION FAILED"
             print server
+            print 'quitting'
+            self.evManager.Post( QuitEvent() )
             #self.state = NetworkServerView.STATE_PREPARING
             self.state = NetworkServerView.STATE_DISCONNECTED
 
@@ -196,6 +198,17 @@ class PhonyModel:
             return self.StateReturned( response )
 
     #----------------------------------------------------------------------
+    def PlayersIControlReturned(self, playerNameList):
+            print "PlayersIControl Returned : ", playerNameList
+            if not playerNameList:
+                return
+            pName = playerNameList[0]
+            print 'looking for pname', pName, 'in', self.game.players
+            player = [p for p in self.game.players if pName == p.name][0]
+            ev = SetActivePlayerEvent( player )
+            self.realEvManager.Post( ev )
+
+    #----------------------------------------------------------------------
     def StateReturned(self, response):
             """this is a callback that is called in response to
             invoking GetObjectState on the server"""
@@ -281,6 +294,7 @@ class PhonyModel:
             remoteResponse.addCallback(self.GameSyncCallback, gameID)
             remoteResponse.addErrback(self.ServerErrorHandler, 'ServerConnect')
 
+
         elif isinstance( event, network.CopyableGameStartedEvent ):
             gameID = event.gameID
             if not self.game:
@@ -356,6 +370,9 @@ class PhonyModel:
         game = self.sharedObjs[gameID]
         ev = GameSyncEvent( game )
         self.realEvManager.Post( ev )
+        remoteResponse = self.server.callRemote("GetPlayersIControl")
+        remoteResponse.addCallback(self.PlayersIControlReturned)
+        remoteResponse.addErrback(self.ServerErrorHandler, 'ServerConnect')
     #----------------------------------------------------------------------
     def PlayerJoinCallback(self, deferredResult, playerID):
         print "ADDING PLAYER -----===========", playerID
@@ -403,7 +420,15 @@ def main():
 
     serverView = NetworkServerView( evManager, sharedObjectRegistry )
     
-    spinner.Run()
+    try:
+        spinner.Run()
+    except Exception, ex:
+        print 'got exception (%s)' % ex, 'killing reactor'
+        import logging
+        logging.basicConfig()
+        logging.exception(ex)
+        serverView.Disconnect()
+
 
 if __name__ == "__main__":
     main()

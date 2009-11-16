@@ -19,7 +19,42 @@ def MixInCopyClasses( someClass ):
 	MixInClass( someClass, pb.Copyable )
 	MixInClass( someClass, pb.RemoteCopy )
 
+#------------------------------------------------------------------------------
+def serialize(obj, registry):
+    objType = type(obj)
+    if objType in [str, unicode, int, float, bool, type(None)]:
+        return obj
 
+    elif objType in [list, tuple]:
+        new_obj = []
+        for sub_obj in obj:
+            new_obj.append(serialize(sub_obj, registry))
+        return new_obj
+
+    elif objType == dict:
+        new_obj = {}
+        for key, val in obj.items():
+            new_obj[serialize(key, registry)] = serialize(val, registry)
+        return new_obj
+
+    else:
+        objID = id(obj)
+        registry[objID] = obj
+        return objID
+        
+#------------------------------------------------------------------------------
+class Serializable:
+    '''The Serializable interface.
+    All objects inheriting Serializable must have a .copyworthy_attrs member.
+    '''
+    def getStateToCopy(self, registry):
+        d = {}
+        for attr in self.copyworthy_attrs:
+            val = getattr(self, attr)
+            new_val = serialize(val, registry)
+            d[attr] = new_val
+
+        return d
 
 
 #------------------------------------------------------------------------------
@@ -207,7 +242,7 @@ class CopyableMap:
 
 	def setCopyableState(self, stateDict, registry):
 		neededObjIDs = []
-		success = 1
+		success = True
 
 		if self.state != Map.STATE_BUILT:
 			self.Build()
@@ -219,33 +254,21 @@ class CopyableMap:
 
 MixInClass( Map, CopyableMap )
 
+
 #------------------------------------------------------------------------------
-class CopyableGame:
-	def getStateToCopy(self, registry):
-		d = self.__dict__.copy()
-		del d['evManager']
-
-		mID = id( self.map )
-		d['map'] = mID
-		registry[mID] = self.map
-
-		playerIDList = []
-		for player in self.players:
-			pID = id( player )
-			playerIDList.append( pID )
-			registry[pID] = player
-		d['players'] = playerIDList
-
-		return d
+class CopyableGame(Serializable):
+	copyworthy_attrs = ['map', 'state', 'players']
 
 	def setCopyableState(self, stateDict, registry):
 		neededObjIDs = []
-		success = 1
+		success = True
+
+		self.state = stateDict['state']
 
 		if not registry.has_key( stateDict['map'] ):
 			registry[stateDict['map']] = Map( self.evManager )
 			neededObjIDs.append( stateDict['map'] )
-			success = 0
+			success = False
 		else:
 			self.map = registry[stateDict['map']]
 
@@ -254,7 +277,7 @@ class CopyableGame:
 			if not registry.has_key( pID ):
 				registry[pID] = Player( self.evManager )
 				neededObjIDs.append( pID )
-				success = 0
+				success = False
 			else:
 				self.players.append( registry[pID] )
 
@@ -263,32 +286,17 @@ class CopyableGame:
 MixInClass( Game, CopyableGame )
 
 #------------------------------------------------------------------------------
-class CopyablePlayer:
-	def getStateToCopy(self, registry):
-		d = self.__dict__.copy()
-		del d['evManager']
-
-		gID = id( self.game )
-		d['game'] = gID
-		registry[gID] = self.game
-
-		charactorIDList = []
-		for charactor in self.charactors:
-			cID = id( charactor )
-			charactorIDList.append( cID )
-			registry[cID] = charactor
-		d['charactors'] = charactorIDList
-
-		return d
+class CopyablePlayer(Serializable):
+	copyworthy_attrs = ['name', 'game', 'charactors']
 
 	def setCopyableState(self, stateDict, registry):
 		neededObjIDs = []
-		success = 1
+		success = True
 
 		self.name = stateDict['name']
 
 		if not registry.has_key( stateDict['game'] ):
-			print "Something is very wrong.should already be a game"
+			print "Something is wrong. should already be a game"
 		else:
 			self.game = registry[stateDict['game']]
 
@@ -297,7 +305,7 @@ class CopyablePlayer:
 			if not registry.has_key( cID ):
 				registry[cID] = Charactor( self.evManager )
 				neededObjIDs.append( cID )
-				success = 0
+				success = False
 			else:
 				self.charactors.append( registry[cID] )
 
@@ -306,29 +314,21 @@ class CopyablePlayer:
 MixInClass( Player, CopyablePlayer )
 
 #------------------------------------------------------------------------------
-class CopyableCharactor:
-	def getStateToCopy(self, registry):
-		d = self.__dict__.copy()
-		del d['evManager']
-
-		if self.sector is None:
-			sID = None
-		else:
-			sID = id( self.sector )
-		d['sector'] = sID
-		registry[sID] = self.sector
-
-		return d
+class CopyableCharactor(Serializable):
+	copyworthy_attrs = ['sector', 'state']
 
 	def setCopyableState(self, stateDict, registry):
 		neededObjIDs = []
-		success = 1
+		success = True
+
+		self.state = stateDict['state']
+
 		if stateDict['sector'] == None:
 			self.sector = None
 		elif not registry.has_key( stateDict['sector'] ):
 			registry[stateDict['sector']] = Sector(self.evManager)
 			neededObjIDs.append( stateDict['sector'] )
-			success = 0
+			success = False
 		else:
 			self.sector = registry[stateDict['sector']]
 
@@ -351,12 +351,12 @@ class CopyableSector:
 		#d['neighbors'][DIRECTION_DOWN] = id(d['neighbors'][DIRECTION_DOWN])
 		#d['neighbors'][DIRECTION_LEFT] = id(d['neighbors'][DIRECTION_LEFT])
 		#d['neighbors'][DIRECTION_RIGHT] = id(d['neighbors'][DIRECTION_RIGHT])
-		return d
+		#return d
 
 	def setCopyableState(self, stateDict, registry):
-		return [1, []]
+		return [True, []]
 		#neededObjIDs = []
-		#success = 1
+		#success = True
 		#if not registry.has_key( stateDict['neighbors'][DIRECTION_UP]):
 			#neededObjIDs.append( stateDict['neighbors'][DIRECTION_UP] )
 			#success = 0

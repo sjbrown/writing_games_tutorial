@@ -91,6 +91,13 @@ class GameSyncEvent(Event):
 		self.name = "Game Synched to Authoritative State"
 		self.game = game
 
+class SetActivePlayerEvent(Event):
+	"""..."""
+	def __init__(self, player):
+		self.name = "Synched from server - set active player in controllers"
+		self.player = player
+
+
 class PlayerJoinRequest(Event):
 	"""..."""
 	def __init__(self, playerDict):
