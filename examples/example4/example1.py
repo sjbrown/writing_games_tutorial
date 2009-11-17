@@ -68,29 +68,36 @@ class EventManager:
 #------------------------------------------------------------------------------
 class KeyboardController:
 	"""..."""
-	def __init__(self, evManager):
+	def __init__(self, evManager, playerName=None):
+		'''playerName is an optional argument; when given, this
+		keyboardController will control only the specified player
+		'''
 		self.evManager = evManager
 		self.evManager.RegisterListener( self )
 
 		self.activePlayer = None
+		self.playerName = playerName
 		self.players = []
 
 	#----------------------------------------------------------------------
 	def Notify(self, event):
 		if isinstance( event, PlayerJoinEvent ):
 			self.players.append( event.player )
-			if not self.activePlayer:
+			if event.player.name == self.playerName:
+				self.activePlayer = event.player
+			if not self.playerName and not self.activePlayer:
 				self.activePlayer = event.player
 
 		if isinstance( event, GameSyncEvent ):
 			game = event.game
 			self.players = game.players[:] # copy the list
+			if self.playerName and self.players:
+				self.activePlayer = [p for p in self.players
+				              if p.name == self.playerName][0]
 
-		if isinstance( event, SetActivePlayerEvent ):
-			player = event.player
-			self.activePlayer = player
-			print '\n ]]]]]]]]] set player to ', player
-
+		#if isinstance( event, SetControlPlayerEvent ):
+			#player = event.player
+			#self.activePlayer = player
 
 		if isinstance( event, TickEvent ):
 			#Handle Input Events
@@ -106,6 +113,8 @@ class KeyboardController:
 					import random
 					rng = random.Random()
 					name = str( rng.randrange(1,100) )
+					if self.playerName:
+						name = self.playerName
 					playerData = {'name':name}
 					ev = PlayerJoinRequest(playerData)
 
@@ -236,6 +245,7 @@ class SectorSprite(pygame.sprite.Sprite):
 
 #------------------------------------------------------------------------------
 class CharactorSprite(pygame.sprite.Sprite):
+	counter = 0
 	def __init__(self, charactor, group=None, color=(0,0,0)):
 		pygame.sprite.Sprite.__init__(self, group)
 
@@ -246,6 +256,9 @@ class CharactorSprite(pygame.sprite.Sprite):
 		self.image = charactorSurf
 		self.rect  = charactorSurf.get_rect()
 
+		self.order = CharactorSprite.counter
+		CharactorSprite.counter += 1
+
 		self.charactor = charactor
 		self.moveTo = None
 
@@ -254,6 +267,9 @@ class CharactorSprite(pygame.sprite.Sprite):
 		if self.moveTo:
 			self.rect.center = self.moveTo
 			self.moveTo = None
+			# offset the rect so that charactors don't draw exactly on
+			# top of each other.
+			self.rect.move_ip(self.order, self.order)
 
 #------------------------------------------------------------------------------
 class PygameView:
@@ -448,7 +464,7 @@ class Game:
 
 
 #------------------------------------------------------------------------------
-class Player:
+class Player(object):
 	"""..."""
 	def __init__(self, evManager):
 		self.evManager = evManager
@@ -457,6 +473,10 @@ class Player:
 		self.evManager.RegisterListener( self )
 
 		self.charactors = [ Charactor(evManager) ]
+
+	#----------------------------------------------------------------------
+	def __str__(self):
+		return '<Player %s %s>' % (self.name, id(self))
 
 	#----------------------------------------------------------------------
 	def GetPlaceData( self ):
@@ -496,6 +516,10 @@ class Charactor:
 
 		self.sector = None
 		self.state = Charactor.STATE_INACTIVE
+
+	#----------------------------------------------------------------------
+	def __str__(self):
+		return '<Charactor %s>' % id(self)
 
 	#----------------------------------------------------------------------
 	def Move(self, direction):

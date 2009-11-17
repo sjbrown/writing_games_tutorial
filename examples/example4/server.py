@@ -166,28 +166,19 @@ class NetworkClientController(pb.Avatar):
         self.evManager.Post( ev )
 
     #----------------------------------------------------------------------
-    def perspective_GetGame(self):
+    def perspective_GetGameSync(self):
         """this is usually called when a client first connects or
         when they had dropped and reconnect
         """
         game = sharedObjectRegistry.getGame()
         if game == None:
-            print 'GetGame: game was none'
+            print 'GetGameSync: game was none'
             raise Exception('Game should be set by this point')
         gameID = id( game )
         gameDict = game.getStateToCopy( sharedObjectRegistry )
 
         return [gameID, gameDict]
     
-    #----------------------------------------------------------------------
-    def perspective_GetPlayersIControl(self):
-        """this is usually called when a client reconnects
-        """
-        print '\nGetPlayersIControl was called', self.PlayersIControl()
-        print 'I am', self.avatarID
-        print 'realm', self.realm, 'has', self.realm.playersControlledByAvatar
-        return self.PlayersIControl()
-
     #----------------------------------------------------------------------
     def perspective_GetObjectState(self, objectID):
         #print "request for object state", objectID

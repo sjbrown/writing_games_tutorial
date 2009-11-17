@@ -118,7 +118,7 @@ class NetworkServerView(pb.Root):
                     # key to the registry with the local id().
                     if copyableClass not in network.clientToServerEvents:
                         return
-                    print 'creating instance of copyable class', copyableClsName
+                    #print 'creating instance of copyable class', copyableClsName
                     ev = copyableClass( event, self.sharedObjs )
 
             if ev.__class__ not in network.clientToServerEvents:
@@ -191,32 +191,23 @@ class PhonyModel:
             self.realEvManager.RegisterListener( self )
 
     #----------------------------------------------------------------------
-    def GameReturned(self, response):
+    def GameSyncReturned(self, response):
             gameID, gameDict = response
-            print "GameReturned : ", gameID
+            print "GameSyncReturned : ", gameID
             self.sharedObjs[gameID] = self.game
+            # StateReturned returns a deferred, pass it on to keep the
+            # chain going.
             return self.StateReturned( response )
-
-    #----------------------------------------------------------------------
-    def PlayersIControlReturned(self, playerNameList):
-            print "PlayersIControl Returned : ", playerNameList
-            if not playerNameList:
-                return
-            pName = playerNameList[0]
-            print 'looking for pname', pName, 'in', self.game.players
-            player = [p for p in self.game.players if pName == p.name][0]
-            ev = SetActivePlayerEvent( player )
-            self.realEvManager.Post( ev )
 
     #----------------------------------------------------------------------
     def StateReturned(self, response):
             """this is a callback that is called in response to
             invoking GetObjectState on the server"""
 
-            print "looking for ", response
+            #print "looking for ", response
             objID, objDict = response
             if objID == 0:
-                    print "GOT ZERO -- better error handler here"
+                    print "GOT ZERO -- TODO: better error handler here"
                     return None
             obj = self.sharedObjs[objID]
 
@@ -289,8 +280,8 @@ class PhonyModel:
                 self.game = Game( self.phonyEvManager )
                 gameID = id(self.game)
                 self.sharedObjs[gameID] = self.game
-            remoteResponse = self.server.callRemote("GetGame")
-            remoteResponse.addCallback(self.GameReturned)
+            remoteResponse = self.server.callRemote("GetGameSync")
+            remoteResponse.addCallback(self.GameSyncReturned)
             remoteResponse.addCallback(self.GameSyncCallback, gameID)
             remoteResponse.addErrback(self.ServerErrorHandler, 'ServerConnect')
 
@@ -321,8 +312,6 @@ class PhonyModel:
             playerID = event.playerID
             if not self.sharedObjs.has_key(playerID):
                 player = Player( self.phonyEvManager )
-                print '=====================================ADDING TO REG'
-                print '========================PLAYER', playerID, player
                 self.sharedObjs[playerID] = player
             remoteResponse = self.server.callRemote("GetObjectState", playerID)
             remoteResponse.addCallback(self.StateReturned)
@@ -366,21 +355,15 @@ class PhonyModel:
         self.realEvManager.Post( ev )
     #----------------------------------------------------------------------
     def GameSyncCallback(self, deferredResult, gameID):
-        print "sending out the GS EVENT------------------==========="
         game = self.sharedObjs[gameID]
         ev = GameSyncEvent( game )
         self.realEvManager.Post( ev )
-        remoteResponse = self.server.callRemote("GetPlayersIControl")
-        remoteResponse.addCallback(self.PlayersIControlReturned)
-        remoteResponse.addErrback(self.ServerErrorHandler, 'ServerConnect')
     #----------------------------------------------------------------------
     def PlayerJoinCallback(self, deferredResult, playerID):
-        print "ADDING PLAYER -----===========", playerID
         player = self.sharedObjs[playerID]
         self.game.AddPlayer( player )
         ev = PlayerJoinEvent( player )
         self.realEvManager.Post( ev )
-        print "PLAYER in sharedobjs-----===========", self.sharedObjs
     #----------------------------------------------------------------------
     def ServerErrorHandler(self, failure, *args):
         print '\n **** ERROR REPORT **** '
@@ -392,11 +375,11 @@ class PhonyModel:
         print ' ^*** ERROR REPORT ***^ \n'
 
 
-class DebugDict(dict):
-    def __setitem__(self, *args):
-        print ''
-        print '        set item', args
-        return dict.__setitem__(self, *args)
+#class DebugDict(dict):
+    #def __setitem__(self, *args):
+        #print ''
+        #print '        set item', args
+        #return dict.__setitem__(self, *args)
 
 #------------------------------------------------------------------------------
 def main():
@@ -412,7 +395,7 @@ def main():
     evManager = EventManager()
     sharedObjectRegistry = {}
     #sharedObjectRegistry = DebugDict()
-    keybd = KeyboardController( evManager )
+    keybd = KeyboardController( evManager, playerName=avatarID )
     spinner = CPUSpinnerController( evManager )
     pygameView = PygameView( evManager )
 
