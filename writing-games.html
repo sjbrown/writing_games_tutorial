@@ -465,6 +465,21 @@ to just take the code from the first section and write a game with it.
 Subsequent sections sometimes address problems with the previously shown code
 and explain how to overcome those problems.
 
+
+<div class="diversion">
+<h3><a name="netgoals">Rapid Development</a></h3>
+One of the goals of this tutorial is to show how game development can be done
+<i>rapidly</i>.  Usually anything involving networking is anaethema to "rapid"
+because once you introduce networking, you introduce multiprocessing, latency,
+error handling, and general hair-pulling.  A principle of the code examples
+in this tutorial is to make sure that the game can be run without even turning
+on networking.  The networking feature should have zero impact on the code
+in example.py.  By being strict about this separation, we hope to make it
+possible to develop the <i>game</i> rapidly, no matter what snags the 
+networking code may introduce.
+</div>
+
+
 <center><img src="host_structure.png" class="figure"
 alt="the different ways to structure network hosts" 
 width="800" height="212"></center>
@@ -1566,7 +1581,7 @@ class NetworkClientController(pb.Avatar):
         ...
 
         <b>#----------------------------------------------------------------------</b>
-        def perspective_GetGame(self):
+        def perspective_GetGameSync(self):
                 ...
 
         <b>#----------------------------------------------------------------------</b>
@@ -1640,7 +1655,7 @@ If you look at the body of the requestAvatar method, you see where the network
 views and controllers get created.  The requestAvatar method is also where
 the avatarID comes into play.  It is created internally to Twisted, and passed
 to our code.  It is an identifier guaranteed to be unique for each 
-client.  It can effectively be considered a "username". 
+client.  Effectively, it is a "username". 
 <p>
 requestAvatar gets called as a result of calling login() during the 
 AttemptConnection method of the client:
@@ -1713,13 +1728,68 @@ class NetworkServerView(pb.Root):
 
 
 <p>
-<span class="todo">[TODO: more...]</span>
+Now that we've got these usernames mandated by Twisted, we might as well
+use the information in our Model.
+<span class="todo">[TODO: expand...]</span>
+<p>
+All that remains is changing the KeyboardController.  The KeyboardController
+keeps track of which player is "active" and controls only that player,
+switching when the "o" key is pressed.  That works fine when running as a
+single process, but now that there are a couple clients and which player
+a client controls is regulated by the server, we need to adjust the
+KeyboardController.
+<p>
+First we'll give the constructor an optional argument, "playerName".
+By making the default value None, we can check to see if it's set, and
+anywhere it's not set, we keep the single-process behaviour.
+<span class="todo">[TODO: paste in code]</span>
+The only change to make is the reaction to a PlayerJoinEvent.  In
+single-process mode, it makes sense to always control the new player,
+but with multiple clients, that new player could have come from a remote
+host and the server won't let this local host control it. So only try
+to control players that match the playerName.
+The next question may be "where does the playerName get set then".  It
+is simply during the main() function of the client code.
+<span class="todo">[TODO: paste in code]</span>
 
 <h2><a name="reconnect">Reconnecting After A Drop</a></h2>
 As is wont with the internet, sometimes a connection gets accidentally
-dropped.
-<p>...
-<span class="todo">[TODO: more details]</span>
+dropped.  It's always nice to let players reconnect.  The key to achieving this
+is a GameSync message.
+<p>A GameSync is a request from the client to pull sufficient information
+about the game to recreate it from nothing. In our example, we just send the
+Game object from the authoritative model.  Start by creating a new event,
+GameSyncEvent:
+<span class="todo">[TODO: paste in events.GameSyncEvent]</span>
+<p>
+Add another remotely callable method on the server, and the
+server-side code is done:
+<span class="todo">[TODO: paste in perspective_GetGameSync]</span>
+<p>
+Next we need to hook up the client side.  When should a GameSync be requested?
+It needs to be done at a time when the client has a connection to the server,
+but the client-side model (PhonyModel) has not yet been populated. A good place
+is the ServerConnectEvent handler in PhonyModel itself.
+<span class="todo">[TODO: paste in PhonyModel.Notify]</span>
+Note that two callbacks are attached to the GetGameSync remoteResponse.
+As we've seen before, this means that the functions GameSyncReturned
+and GameSyncCallback will be executed in succession.
+<p>
+These two functions are straightforward; they just populate the client-side
+sharedObjs and send the GameSyncEvent to the client-side event manager.
+<span class="todo">[TODO: paste in GameSyncReturned and GameSyncCallback]</span>
+<p>
+The last detail of the reconnection involves example.py.  After a client
+reconnects, it will have a fresh KeyboardController object.  This 
+KeyboardController won't receive a PlayerJoinEvent to set up it's activePlayer
+because the game is already underway (in the authoritative model, both players
+had already joined).  So we add some new code to example.py (compromising
+the principles set out in the "Rapid Development" section, but it'll be
+harmless, I promise.  <span class="todo">(can anyone suggest a better way 
+to do this?)</span>) to take a GameSyncEvent and figure out which player
+the KeyboardController should control.
+
+
 
 <!-- ====================================================================== --></p>
 <h1><a name="part3">PART 3</a></h1>

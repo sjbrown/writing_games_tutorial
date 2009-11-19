@@ -79,7 +79,7 @@ def PostMortem(fatalEvent, reactor):
 
 #------------------------------------------------------------------------------
 class RegularAvatar(pb.IPerspective): pass
-class DisallowedAvatar(pb.IPerspective): pass
+#class DisallowedAvatar(pb.IPerspective): pass
 #------------------------------------------------------------------------------
 class MyRealm:
     implements(portal.IRealm)
@@ -142,7 +142,6 @@ class MyRealm:
 
             print 'after disconnect, state is:'
             pprint (self.__dict__)
-            print 'after disconnect, realm was:', self
 
 
 #------------------------------------------------------------------------------
@@ -168,7 +167,7 @@ class NetworkClientController(pb.Avatar):
     #----------------------------------------------------------------------
     def perspective_GetGameSync(self):
         """this is usually called when a client first connects or
-        when they had dropped and reconnect
+        when they reconnect after a drop
         """
         game = sharedObjectRegistry.getGame()
         if game == None:
