@@ -467,16 +467,17 @@ and explain how to overcome those problems.
 
 
 <div class="diversion">
-<h3><a name="netgoals">Rapid Development</a></h3>
+<h3><a name="rapid">Rapid Development</a></h3>
 One of the goals of this tutorial is to show how game development can be done
 <i>rapidly</i>.  Usually anything involving networking is anaethema to "rapid"
 because once you introduce networking, you introduce multiprocessing, latency,
 error handling, and general hair-pulling.  A principle of the code examples
 in this tutorial is to make sure that the game can be run without even turning
 on networking.  The networking feature should have zero impact on the code
-in example.py.  By being strict about this separation, we hope to make it
-possible to develop the <i>game</i> rapidly, no matter what snags the 
-networking code may introduce.
+in example.py -- running the game in single-player mode should not execute any
+networking-related code paths.  By being strict about this separation, we hope
+to make it possible to develop the <i>game</i> rapidly, no matter what snags
+the networking code may introduce.
 </div>
 
 
@@ -1757,38 +1758,153 @@ As is wont with the internet, sometimes a connection gets accidentally
 dropped.  It's always nice to let players reconnect.  The key to achieving this
 is a GameSync message.
 <p>A GameSync is a request from the client to pull sufficient information
-about the game to recreate it from nothing. In our example, we just send the
-Game object from the authoritative model.  Start by creating a new event,
-GameSyncEvent:
-<span class="todo">[TODO: paste in events.GameSyncEvent]</span>
+about the game to recreate its current state from nothing. In our example, 
+we just send the Game object from the authoritative model.
+Start by creating a new event, GameSyncEvent:
+<div class="codeblock">
+<pre class="python">
+<b># from events.py</b>
+
+class GameSyncEvent(Event):
+    def __init__(self, game):
+        self.name = "Game Synched to Authoritative State"
+        self.game = game
+</pre>
+</div>
+
 <p>
 Add another remotely callable method on the server, and the
 server-side code is done:
-<span class="todo">[TODO: paste in perspective_GetGameSync]</span>
+
+<div class="codeblock">
+<pre class="python">
+<b># from server.py</b>
+
+class NetworkClientController(pb.Avatar):
+
+    ...
+
+    def perspective_GetGameSync(self):
+        <b>"""this is usually called when a client first connects or
+        when they reconnect after a drop
+        """</b>
+        game = sharedObjectRegistry.getGame()
+        if game == None:
+            raise Exception('Game should be set by this point')
+        gameID = id( game )
+        gameDict = game.getStateToCopy( sharedObjectRegistry )
+
+        return [gameID, gameDict]
+</pre>
+</div>
+
 <p>
 Next we need to hook up the client side.  When should a GameSync be requested?
 It needs to be done at a time when the client has a connection to the server,
 but the client-side model (PhonyModel) has not yet been populated. A good place
 is the ServerConnectEvent handler in PhonyModel itself.
-<span class="todo">[TODO: paste in PhonyModel.Notify]</span>
+<div class="codeblock">
+<pre class="python">
+<b># from client.py</b>
+
+class PhonyModel:
+
+    ...
+
+    def Notify(self, event):
+        if isinstance( event, ServerConnectEvent ):
+            self.server = event.server
+            <b>#when we reconnect to the server, we should get the</b>
+            <b>#entire game state.</b>
+            if not self.game:
+                self.game = Game( self.phonyEvManager )
+                gameID = id(self.game)
+                self.sharedObjs[gameID] = self.game
+            remoteResponse = self.server.callRemote("GetGameSync")
+            remoteResponse.addCallback(self.GameSyncReturned)
+            remoteResponse.addCallback(self.GameSyncCallback, gameID)
+            remoteResponse.addErrback(self.ServerErrorHandler, 'ServerConnect')
+
+        ...
+</pre>
+</div>
+
 Note that two callbacks are attached to the GetGameSync remoteResponse.
 As we've seen before, this means that the functions GameSyncReturned
 and GameSyncCallback will be executed in succession.
 <p>
 These two functions are straightforward; they just populate the client-side
 sharedObjs and send the GameSyncEvent to the client-side event manager.
-<span class="todo">[TODO: paste in GameSyncReturned and GameSyncCallback]</span>
+
+<div class="codeblock">
+<pre class="python">
+<b># from client.py</b>
+
+class PhonyModel:
+
+    ...
+
+    def GameSyncReturned(self, response):
+        gameID, gameDict = response
+        print "GameSyncReturned : ", gameID
+        self.sharedObjs[gameID] = self.game
+        <b># StateReturned returns a deferred, pass it on to keep the</b>
+        <b># chain going.</b>
+        return self.StateReturned( response )
+
+    ...
+
+    def GameSyncCallback(self, deferredResult, gameID):
+        game = self.sharedObjs[gameID]
+        ev = GameSyncEvent( game )
+        self.realEvManager.Post( ev )
+</pre>
+</div>
+
 <p>
 The last detail of the reconnection involves example.py.  After a client
 reconnects, it will have a fresh KeyboardController object.  This 
 KeyboardController won't receive a PlayerJoinEvent to set up it's activePlayer
 because the game is already underway (in the authoritative model, both players
 had already joined).  So we add some new code to example.py (compromising
-the principles set out in the "Rapid Development" section, but it'll be
-harmless, I promise.  <span class="todo">(can anyone suggest a better way 
-to do this?)</span>) to take a GameSyncEvent and figure out which player
-the KeyboardController should control.
+the principles set out in the <a href="#rapid">Rapid Development</a>
+aside, but it'll be harmless, I promise.
+<span class="todo">(can anyone suggest a better way to do this?)</span>
+) to take a GameSyncEvent and figure out which player the KeyboardController
+should control.
+<div class="codeblock">
+<pre class="python">
+<b># from example.py</b>
 
+class KeyboardController:
+
+    ...
+
+    def Notify(self, event):
+
+        ...
+
+        if isinstance( event, GameSyncEvent ):
+            game = event.game
+            self.players = game.players[:] <b># copy the list</b>
+            if self.playerName and self.players:
+                self.activePlayer = [p for p in self.players
+                                     if p.name == self.playerName][0]
+        ...
+</pre>
+</div>
+
+At this point you can test reconnecting.  Extract the code from
+example4.tar.gz, and open up 3 terminals.  In one terminal, run server.py.
+In terminal 2, run `python client.py user1`.  In terminal 3, run
+`python client.py user2`.  Create a player in each Pygame window.  Then start
+the game by pressing spacebar in a Pygame window.  Create a charactor in each
+Pygame window, and move the charactors around to new positions.  Then close
+the second Pygame window.  You should see the server react by printing some
+messages about the disconnection.  Now run `python client.py user2` again.
+The client should connect, get the game state, and display the charactors in
+the same positions shown in the first Pygame window.  You should be able to
+control charactor 2 again.
 
 
 <!-- ====================================================================== --></p>
