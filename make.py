@@ -37,4 +37,4 @@ s('cd examples; gzip example4.tar')
 
 
 # always append a '/' on the src directory when rsyncing
-s('rsync -r ./ sjbrowngeeky@ezide.com:/home/sjbrowngeeky/ezide.com/games')
+s('rsync -r ./ $DREAMHOST_USERNAME@ezide.com:/home/$DREAMHOST_USERNAME/ezide.com/games')

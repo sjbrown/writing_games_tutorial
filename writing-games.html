@@ -179,11 +179,14 @@ loop like this:</p>
         allsprites.draw(screen)
         pygame.display.flip()
 </pre></div>
+
 In this example, the Controller (the "Handle Input Events" part) and the View
 (the "Draw Everything" part) are tightly coupled, and this is generally how
-PyGame works, at every iteration of the main loop, it is expected that we will
-check for input events, update all the visible sprites, and redraw the screen.
-However the MVC pattern requires the View and the Controller to be separate.
+PyGame games work, at every iteration of the main loop, it is expected that we 
+will check for input events, update all the visible sprites, and redraw the
+screen.
+Experience tells us that as the code grows, this section will get hairy.
+Organizing this in an MVC pattern, we separate the View and the Controller.
 Our solution is to introduce a Tick() function that the constantly looping
 main loop can call for both the View and the Controller. That way there will
 not be View-specific code in the same location as Controller-specific code.
@@ -237,6 +240,7 @@ add networking, easily add new views (file loggers, radars, huds,
 multiple zoom levels, ...), keep the Model code "cleaner" by decoupling
 it from the view and the controller, and I contend, more readable code.
 </div>
+
 
 <h2><a name="mediator">Mediator</a></h2>
 <p>Let's examine the infinite while loop in the last bit of code. What is its
