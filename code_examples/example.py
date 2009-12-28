@@ -283,7 +283,6 @@ class PygameView:
 		pygame.display.set_caption( 'Example Game' )
 		self.background = pygame.Surface( self.window.get_size() )
 		self.background.fill( (0,0,0) )
-
 		font = pygame.font.Font(None, 30)
 		text = """Press SPACE BAR to start"""
 		textImg = font.render( text, 1, (255,0,0))
@@ -356,7 +355,7 @@ class PygameView:
 	#----------------------------------------------------------------------
 	def GetCharactorSprite(self, charactor):
 		#there will be only one
-		for s in self.frontSprites.sprites():
+		for s in self.frontSprites:
 			if s.charactor is charactor:
 				return s
 
@@ -404,7 +403,6 @@ class PygameView:
 			game = event.game
 			if game.state == Game.STATE_PREPARING:
 				return
-			print 'Pygame View syncing to game state'
 			self.ShowMap( game.map )
 			for player in game.players:
 				for charactor in player.charactors:
