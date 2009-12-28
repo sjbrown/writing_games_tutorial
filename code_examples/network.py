@@ -158,6 +158,30 @@ serverToClientEvents.append( CopyableCharactorPlaceEvent )
 
 
 #------------------------------------------------------------------------------
+class CopyableCharactor(Serializable):
+	copyworthy_attrs = ['sector', 'state']
+
+	def setCopyableState(self, stateDict, registry):
+		neededObjIDs = []
+		success = True
+
+		self.state = stateDict['state']
+
+		if stateDict['sector'] == None:
+			self.sector = None
+		elif not registry.has_key( stateDict['sector'] ):
+			registry[stateDict['sector']] = Sector(self.evManager)
+			neededObjIDs.append( stateDict['sector'] )
+			success = False
+		else:
+			self.sector = registry[stateDict['sector']]
+
+		return [success, neededObjIDs]
+		
+
+MixInClass( Charactor, CopyableCharactor )
+
+#------------------------------------------------------------------------------
 # PlayerJoinRequest
 # Direction: Client to Server only
 MixInCopyClasses( PlayerJoinRequest )
@@ -265,7 +289,7 @@ class CopyableGame(Serializable):
 
 		self.state = stateDict['state']
 
-		if not registry.has_key( stateDict['map'] ):
+		if stateDict['map'] not in registry:
 			registry[stateDict['map']] = Map( self.evManager )
 			neededObjIDs.append( stateDict['map'] )
 			success = False
@@ -274,7 +298,7 @@ class CopyableGame(Serializable):
 
 		self.players = []
 		for pID in stateDict['players']:
-			if not registry.has_key( pID ):
+			if pID not in registry:
 				registry[pID] = Player( self.evManager )
 				neededObjIDs.append( pID )
 				success = False
@@ -302,7 +326,7 @@ class CopyablePlayer(Serializable):
 
 		self.charactors = []
 		for cID in stateDict['charactors']:
-			if not registry.has_key( cID ):
+			if not cID in registry:
 				registry[cID] = Charactor( self.evManager )
 				neededObjIDs.append( cID )
 				success = False
@@ -312,30 +336,6 @@ class CopyablePlayer(Serializable):
 		return [success, neededObjIDs]
 
 MixInClass( Player, CopyablePlayer )
-
-#------------------------------------------------------------------------------
-class CopyableCharactor(Serializable):
-	copyworthy_attrs = ['sector', 'state']
-
-	def setCopyableState(self, stateDict, registry):
-		neededObjIDs = []
-		success = True
-
-		self.state = stateDict['state']
-
-		if stateDict['sector'] == None:
-			self.sector = None
-		elif not registry.has_key( stateDict['sector'] ):
-			registry[stateDict['sector']] = Sector(self.evManager)
-			neededObjIDs.append( stateDict['sector'] )
-			success = False
-		else:
-			self.sector = registry[stateDict['sector']]
-
-		return [success, neededObjIDs]
-		
-
-MixInClass( Charactor, CopyableCharactor )
 
 #------------------------------------------------------------------------------
 # Copyable Sector is not necessary in this simple example because the sectors

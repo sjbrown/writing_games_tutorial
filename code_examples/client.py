@@ -394,7 +394,6 @@ def main():
         
     evManager = EventManager()
     sharedObjectRegistry = {}
-    #sharedObjectRegistry = DebugDict()
     keybd = KeyboardController( evManager, playerName=avatarID )
     spinner = CPUSpinnerController( evManager )
     pygameView = PygameView( evManager )
