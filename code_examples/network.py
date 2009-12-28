@@ -1,5 +1,5 @@
 
-from example1 import *
+from example import *
 from twisted.spread import pb
 
 # A list of ALL possible events that a server can send to a client

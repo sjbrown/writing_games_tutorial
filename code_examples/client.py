@@ -3,11 +3,11 @@ from twisted.spread import pb
 from twisted.internet.selectreactor import SelectReactor
 from twisted.internet.main import installReactor
 from events import *
-from example1 import (EventManager,
-                      Game,
-                      KeyboardController,
-                      CPUSpinnerController,
-                      PygameView)
+from example import (EventManager,
+                     Game,
+                     KeyboardController,
+                     CPUSpinnerController,
+                     PygameView)
 
 serverHost, serverPort = 'localhost', 8000
 

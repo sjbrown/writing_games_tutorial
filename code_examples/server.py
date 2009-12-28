@@ -4,7 +4,7 @@ Example server
 '''
 
 from twisted.spread import pb
-from example1 import EventManager, Game
+from example import EventManager, Game
 from events import *
 import network
 
