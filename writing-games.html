@@ -558,7 +558,7 @@ queue and fires off callbacks.  The callbacks are provided by the programmer.
 <h2><a name="implementation">Implementation</a></h2>
 <h3><a name="exServer">Example Server</a></h3>
 For the server, we'll start with the exact same code as before. Just rename
-example1.py to server1.py.
+example1.py to server.py.
 <p>Normally a server is something that runs as a daemon or in a text console;
 it does not have a graphical display. We can do this simply by replacing
 PygameView with a TextLogView as follows:</p>
@@ -720,7 +720,7 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 Example of using the Python console as a fake client</div>
 <div class="console">
 <pre class="bash">
- $ python server1.py 
+ $ python server.py 
 Game Start Request
 Map Finished Building Event
 Game Started Event
@@ -733,7 +733,7 @@ Charactor Move Event  to  &lt;__main__.Sector instance at 0xc9b290&gt;
 Charactor Move Request
 Charactor Move Event  to  &lt;__main__.Sector instance at 0xc9b3b0&gt;
 </pre>
-Running server1.py
+Running server.py
 <p>
 Note that the request to move up did not result in a Move event.
 </div>
@@ -782,10 +782,10 @@ Using twisted.conch.stdio as a fake client</div>
 <p class="clear">&nbsp;</p>
 
 
-<div class="sourceLinks">The code for server1.py can be downloaded here:
-<a href="examples/server1.py">server1.py</a><br>
+<div class="sourceLinks">The code for server.py can be downloaded here:
+<a href="examples/server.py">server.py</a><br>
 Or read it in your browser 
-<a href="http://github.com/sjbrown/writing_games_tutorial/blob/master/examples/server1.py">here</a>
+<a href="http://github.com/sjbrown/writing_games_tutorial/blob/master/examples/server.py">here</a>
 </div>
 
 <h2><a name="king"></a>King of the Castle</h2>
