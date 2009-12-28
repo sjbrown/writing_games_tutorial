@@ -97,13 +97,13 @@ class NetworkClientController(pb.Root):
 	#----------------------------------------------------------------------
 	def remote_GameStartRequest(self):
 		ev = GameStartRequest( )
-		self.evManager.Notify( ev )
+		self.evManager.Post( ev )
 		return 1
 
 	#----------------------------------------------------------------------
 	def remote_CharactorMoveRequest(self, direction):
 		ev = CharactorMoveRequest( direction )
-		self.evManager.Notify( ev )
+		self.evManager.Post( ev )
 		return 1
 
 	#----------------------------------------------------------------------
