@@ -12,25 +12,35 @@ from events import *
 class EventManager:
 	"""this object is responsible for coordinating most communication
 	between the Model, View, and Controller."""
-	def __init__(self ):
+	def __init__(self):
 		from weakref import WeakKeyDictionary
 		self.listeners = WeakKeyDictionary()
 		self.eventQueue= []
+		self.listenersToAdd = []
+		self.listenersToRemove = []
 
 	#----------------------------------------------------------------------
 	def RegisterListener( self, listener ):
-		self.listeners[ listener ] = 1
+		self.listenersToAdd.append(listener)
+
+	#----------------------------------------------------------------------
+	def ActuallyUpdateListeners(self):
+		for listener in self.listenersToAdd:
+			self.listeners[ listener ] = 1
+		for listener in self.listenersToRemove:
+			if listener in self.listeners:
+				del self.listeners[ listener ]
 
 	#----------------------------------------------------------------------
 	def UnregisterListener( self, listener ):
-		if listener in self.listeners:
-			del self.listeners[ listener ]
+		self.listenersToRemove.append(listener)
 		
 	#----------------------------------------------------------------------
 	def Post( self, event ):
 		self.eventQueue.append(event)
 		if isinstance(event, TickEvent):
 			# Consume the event queue every Tick.
+			self.ActuallyUpdateListeners()
 			self.ConsumeEventQueue()
 		else:
 			Debug( "     Message: " + event.name )
@@ -43,8 +53,12 @@ class EventManager:
 			for listener in self.listeners:
 				# Note: a side effect of notifying the listener
 				# could be that more events are put on the queue
+				# or listeners could Register / Unregister
+				old = len(self.eventQueue)
 				listener.Notify( event )
 			i += 1
+			if self.listenersToAdd:
+				self.ActuallyUpdateListeners()
 		#all code paths that could possibly add more events to 
 		# the eventQueue have been exhausted at this point, so 
 		# it's safe to empty the queue
@@ -184,10 +198,15 @@ class PygameView:
 			newSprite = None
 
 	#----------------------------------------------------------------------
-	def ShowCharactor(self, charactor):
-		charactorSprite = CharactorSprite( self.frontSprites )
-
+ 	def ShowCharactor(self, charactor):
 		sector = charactor.sector
+		if not sector:
+			print "Charactor is not in a sector.  cannot show"
+			return
+
+		charactorSprite = self.GetCharactorSprite( charactor )
+		if not charactorSprite:
+			charactorSprite = CharactorSprite( self.frontSprites )
 		sectorSprite = self.GetSectorSprite( sector )
 		charactorSprite.rect.center = sectorSprite.rect.center
 
@@ -241,6 +260,13 @@ class PygameView:
 		elif isinstance( event, CharactorMoveEvent ):
 			self.MoveCharactor( event.charactor )
 
+		elif isinstance( event, GameSyncEvent ):
+			print "VIEW gets SYNC event"
+			game = event.game
+			self.ShowMap( game.map )
+			for player in game.players:
+				for charactor in player.charactors:
+					self.ShowCharactor( charactor )
 
 #------------------------------------------------------------------------------
 class Game:
@@ -270,6 +296,7 @@ class Game:
 	#----------------------------------------------------------------------
 	def Notify(self, event):
 		if isinstance( event, GameStartRequest ):
+		        print 'Game object gets game start req'
 			if self.state == Game.STATE_PREPARING:
 				self.Start()
 

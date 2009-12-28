@@ -4,7 +4,8 @@ Example server
 '''
 
 from twisted.spread import pb
-from example import EventManager, Game
+from twisted.spread.pb import DeadReferenceError
+from example1 import EventManager, Game
 from events import *
 import network
 
@@ -18,13 +19,48 @@ class NoTickEventManager(EventManager):
 		EventManager.__init__(self)
 		self._lock = False
 	def Post(self, event):
-		EventManager.Post(self,event)
+		self.eventQueue.append(event)
 		if not self._lock:
 			self._lock = True
+			self.ActuallyUpdateListeners()
 			self.ConsumeEventQueue()
 			self._lock = False
 
 
+
+#------------------------------------------------------------------------------
+class TimerController:
+	"""A controller that sends of an event every second"""
+	def __init__(self, evManager, reactor):
+		self.evManager = evManager
+		self.evManager.RegisterListener( self )
+
+		self.reactor = reactor
+		self.numClients = 0
+
+	#-----------------------------------------------------------------------
+	def NotifyApplicationStarted( self ):
+		self.reactor.callLater( 1, self.Tick )
+
+	#-----------------------------------------------------------------------
+	def Tick(self):
+		if self.numClients == 0:
+			return
+
+		ev = SecondEvent()
+		self.evManager.Post( ev )
+		ev = TickEvent()
+		self.evManager.Post( ev )
+		self.reactor.callLater( 1, self.Tick )
+
+	#----------------------------------------------------------------------
+	def Notify(self, event):
+		if isinstance( event, ClientConnectEvent ):
+			self.numClients += 1
+			if self.numClients == 1:
+				self.Tick()
+		if isinstance( event, ClientDisconnectEvent ):
+			self.numClients -= 1
 
 #------------------------------------------------------------------------------
 class NetworkClientController(pb.Root):
@@ -34,19 +70,40 @@ class NetworkClientController(pb.Root):
 		self.evManager.RegisterListener( self )
 		self.sharedObjs = sharedObjectRegistry
 
+		#this is needed for GetEntireState()
+		self.game = None
+
 	#----------------------------------------------------------------------
 	def remote_ClientConnect(self, netClient):
-		#print "CLIENT CONNECT"
+		print "\nremote_CLIENT CONNECT"
 		ev = ClientConnectEvent( netClient )
 		self.evManager.Post( ev )
-		return 1
+		if self.game == None:
+			gameID = 0
+		else:
+			gameID = id(self.game)
+		return gameID
 
+	#----------------------------------------------------------------------
+	def remote_GetGame(self):
+		"""this is usually called when a client first connects or
+		when they had dropped and reconnect"""
+		if self.game == None:
+			return [0,0]
+		gameID = id( self.game )
+		gameDict = self.game.getStateToCopy( self.sharedObjs )
+
+		print "returning: ", gameID
+		return [gameID, gameDict]
+	
 	#----------------------------------------------------------------------
 	def remote_GetObjectState(self, objectID):
 		#print "request for object state", objectID
 		if not self.sharedObjs.has_key( objectID ):
 			return [0,0]
-		objDict = self.sharedObjs[objectID].getStateToCopy()
+		obj = self.sharedObjs[objectID]
+		objDict = obj.getStateToCopy( self.sharedObjs )
+
 		return [objectID, objDict]
 	
 	#----------------------------------------------------------------------
@@ -57,7 +114,8 @@ class NetworkClientController(pb.Root):
 
 	#----------------------------------------------------------------------
 	def Notify(self, event):
-		pass
+		if isinstance( event, GameStartedEvent ):
+			self.game = event.game
 
 
 #------------------------------------------------------------------------------
@@ -78,6 +136,8 @@ class TextLogView(object):
 
 		elif isinstance( event, CharactorMoveEvent ):
 			print event.name, " to ", event.charactor.sector
+		else:
+			print 'event:', event
 
 
 #------------------------------------------------------------------------------
@@ -89,12 +149,56 @@ class NetworkClientView(object):
 
 		self.clients = []
 		self.sharedObjs = sharedObjectRegistry
+		#TODO:
+		#every 5 seconds, the server should poll the clients to see if
+		# they're still connected
+		self.pollSeconds = 0
+
+	#----------------------------------------------------------------------
+	def Pong(self ):
+		pass
+
+	#----------------------------------------------------------------------
+	def RemoteCallError(self, failure, client):
+		from twisted.internet.error import ConnectionLost
+		#trap ensures that the rest will happen only 
+		#if the failure was ConnectionLost
+		failure.trap(ConnectionLost)
+		self.DisconnectClient(client)
+		return failure
+
+	#----------------------------------------------------------------------
+	def DisconnectClient(self, client):
+		print "Disconnecting Client", client
+		self.clients.remove( client )
+		ev = ClientDisconnectEvent( client ) #client id in here
+		self.evManager.Post( ev )
+
+	#----------------------------------------------------------------------
+	def RemoteCall( self, client, fnName, *args):
+
+		try:
+			remoteCall = client.callRemote(fnName, *args)
+			#remoteCall.addCallback( self.Pong )
+			remoteCall.addErrback( self.RemoteCallError, client )
+		except DeadReferenceError:
+			self.DisconnectClient(client)
 
 
 	#----------------------------------------------------------------------
 	def Notify(self, event):
 		if isinstance( event, ClientConnectEvent ):
+			print "\nADDING CLIENT", event.client
 			self.clients.append( event.client )
+			#TODO tell the client what it's ID is
+
+		if isinstance( event, SecondEvent ):
+			self.pollSeconds +=1
+			if self.pollSeconds == 10:
+				self.pollSeconds = 0
+				for client in self.clients:
+					self.RemoteCall( client, "Ping" )
+
 
 		ev = event
 
@@ -114,23 +218,24 @@ class NetworkClientView(object):
 		#NOTE: this is very "chatty".  We could restrict 
 		#      the number of clients notified in the future
 		for client in self.clients:
-			print "=====server sending: ", str(ev)
-			remoteCall = client.callRemote("ServerEvent", ev)
+			print "\n====server===sending: ", str(ev), 'to', client
+			self.RemoteCall( client, "ServerEvent", ev )
 
 
 
 		
 #------------------------------------------------------------------------------
 def main():
+	from twisted.internet import reactor
 	evManager = NoTickEventManager()
 	sharedObjectRegistry = {}
 
 	log = TextLogView( evManager )
+	timer = TimerController( evManager, reactor )
 	clientController = NetworkClientController( evManager, sharedObjectRegistry )
 	clientView = NetworkClientView( evManager, sharedObjectRegistry )
 	game = Game( evManager )
 
-	from twisted.internet import reactor
 	reactor.listenTCP( 8000, pb.PBServerFactory(clientController) )
 
 	reactor.run()
