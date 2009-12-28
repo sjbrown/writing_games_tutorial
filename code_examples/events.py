@@ -8,6 +8,10 @@ class Event:
 	object and sent to the EventManager"""
 	def __init__(self):
 		self.name = "Generic Event"
+	def __str__(self):
+		return '<%s %s>' % (self.__class__.__name__,
+		                    id(self))
+	    
 
 class TickEvent(Event):
 	def __init__(self):
@@ -36,8 +40,10 @@ class GameStartedEvent(Event):
 		self.game = game
 
 class CharactorMoveRequest(Event):
-	def __init__(self, direction):
+	def __init__(self, player, charactor, direction):
 		self.name = "Charactor Move Request"
+		self.player = player
+		self.charactor = charactor
 		self.direction = direction
 
 class CharactorMoveEvent(Event):

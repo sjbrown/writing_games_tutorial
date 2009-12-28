@@ -1,5 +1,5 @@
 
-from example1 import *
+from example import *
 from twisted.spread import pb
 
 # A list of ALL possible events that a server can send to a client
@@ -100,7 +100,7 @@ serverToClientEvents.append( CopyableMapBuiltEvent )
 # Direction: Server to Client only
 class CopyableCharactorMoveEvent( pb.Copyable, pb.RemoteCopy):
 	def __init__(self, event, registry ):
-		self.name = "Copyable Charactor Move Event"
+		self.name = "Copyable " + event.name
 		self.charactorID = id( event.charactor )
 		registry[self.charactorID] = event.charactor
 
@@ -112,13 +112,12 @@ serverToClientEvents.append( CopyableCharactorMoveEvent )
 # Direction: Server to Client only
 class CopyableCharactorPlaceEvent( pb.Copyable, pb.RemoteCopy):
 	def __init__(self, event, registry ):
-		self.name = "Copyable Charactor Placement Event"
+		self.name = "Copyable " + event.name
 		self.charactorID = id( event.charactor )
 		registry[self.charactorID] = event.charactor
 
 pb.setUnjellyableForClass(CopyableCharactorPlaceEvent, CopyableCharactorPlaceEvent)
 serverToClientEvents.append( CopyableCharactorPlaceEvent )
-
 
 
 #------------------------------------------------------------------------------
@@ -161,7 +160,7 @@ class CopyableMap:
 
 	def setCopyableState(self, stateDict, registry):
 		neededObjIDs = []
-		success = 1
+		success = True
 
 		if self.state != Map.STATE_BUILT:
 			self.Build()
@@ -172,6 +171,7 @@ class CopyableMap:
 		return [success, neededObjIDs]
 
 MixInClass( Map, CopyableMap )
+
 
 #------------------------------------------------------------------------------
 class CopyableGame:
@@ -194,20 +194,23 @@ class CopyableGame:
 
 	def setCopyableState(self, stateDict, registry):
 		neededObjIDs = []
-		success = 1
+		success = True
+
+		self.state = stateDict['state']
 
 		if stateDict['map'] not in registry:
 			registry[stateDict['map']] = Map( self.evManager )
 			neededObjIDs.append( stateDict['map'] )
-			success = 0
+			success = False
 		else:
 			self.map = registry[stateDict['map']]
 
+		self.players = []
 		for pID in stateDict['players']:
 			if pID not in registry:
 				registry[pID] = Player( self.evManager )
 				neededObjIDs.append( pID )
-				success = 0
+				success = False
 			else:
 				self.players.append( registry[pID] )
 
@@ -232,13 +235,21 @@ class CopyablePlayer:
 
 	def setCopyableState(self, stateDict, registry):
 		neededObjIDs = []
-		success = 1
+		success = True
 
+		self.name = stateDict['name']
+
+		if not registry.has_key( stateDict['game'] ):
+			print "Something is wrong. should already be a game"
+		else:
+			self.game = registry[stateDict['game']]
+
+		self.charactors = []
 		for cID in stateDict['charactors']:
 			if not cID in registry:
 				registry[cID] = Charactor( self.evManager )
 				neededObjIDs.append( cID )
-				success = 0
+				success = False
 			else:
 				self.charactors.append( registry[cID] )
 

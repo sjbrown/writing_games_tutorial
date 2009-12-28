@@ -3,11 +3,11 @@ from twisted.spread import pb
 from twisted.internet.selectreactor import SelectReactor
 from twisted.internet.main import installReactor
 from events import *
-from example1 import (EventManager,
-                      Game,
-                      KeyboardController,
-                      CPUSpinnerController,
-                      PygameView)
+from example import (EventManager,
+                     Game,
+                     KeyboardController,
+                     CPUSpinnerController,
+                     PygameView)
 
 serverHost, serverPort = 'localhost', 8000
 
@@ -70,6 +70,9 @@ class NetworkServerView(pb.Root):
     #----------------------------------------------------------------------
     def ConnectFailed(self, server):
             print "CONNECTION FAILED"
+            print server
+            print 'quitting'
+            self.evManager.Post( QuitEvent() )
             #self.state = NetworkServerView.STATE_PREPARING
             self.state = NetworkServerView.STATE_DISCONNECTED
 
@@ -106,7 +109,7 @@ class NetworkServerView(pb.Root):
                     # key to the registry with the local id().
                     if copyableClass not in network.clientToServerEvents:
                         return
-                    print 'creating instance of copyable class', copyableClsName
+                    #print 'creating instance of copyable class', copyableClsName
                     ev = copyableClass( event, self.sharedObjs )
 
             if ev.__class__ not in network.clientToServerEvents:
@@ -188,10 +191,10 @@ class PhonyModel:
             """this is a callback that is called in response to
             invoking GetObjectState on the server"""
 
-            print "looking for ", response
+            #print "looking for ", response
             objID, objDict = response
             if objID == 0:
-                    print "GOT ZERO -- better error handler here"
+                    print "GOT ZERO -- TODO: better error handler here"
                     return None
             obj = self.sharedObjs[objID]
 
@@ -333,7 +336,15 @@ def main():
     serverController = NetworkServerController( evManager )
     serverView = NetworkServerView( evManager, sharedObjectRegistry )
     
-    spinner.Run()
+    try:
+        spinner.Run()
+    except Exception, ex:
+        print 'got exception (%s)' % ex, 'killing reactor'
+        import logging
+        logging.basicConfig()
+        logging.exception(ex)
+        serverView.Disconnect()
+
 
 if __name__ == "__main__":
     main()
