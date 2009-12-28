@@ -22,105 +22,105 @@ class NetworkServerView(pb.Root):
 
     #----------------------------------------------------------------------
     def __init__(self, evManager, sharedObjectRegistry):
-            self.evManager = evManager
-            self.evManager.RegisterListener( self )
+        self.evManager = evManager
+        self.evManager.RegisterListener( self )
 
-            self.pbClientFactory = pb.PBClientFactory()
-            self.state = NetworkServerView.STATE_PREPARING
-            self.reactor = None
-            self.server = None
+        self.pbClientFactory = pb.PBClientFactory()
+        self.state = NetworkServerView.STATE_PREPARING
+        self.reactor = None
+        self.server = None
 
-            self.sharedObjs = sharedObjectRegistry
+        self.sharedObjs = sharedObjectRegistry
 
     #----------------------------------------------------------------------
     def AttemptConnection(self):
-            print "attempting a connection to", serverHost, serverPort
-            self.state = NetworkServerView.STATE_CONNECTING
-            if self.reactor:
-                    self.reactor.stop()
-                    self.PumpReactor()
-            else:
-                    self.reactor = SelectReactor()
-                    installReactor(self.reactor)
-            connection = self.reactor.connectTCP(serverHost, serverPort,
-                                                 self.pbClientFactory)
-            deferred = self.pbClientFactory.getRootObject()
-            deferred.addCallback(self.Connected)
-            deferred.addErrback(self.ConnectFailed)
-            self.reactor.startRunning()
+        print "attempting a connection to", serverHost, serverPort
+        self.state = NetworkServerView.STATE_CONNECTING
+        if self.reactor:
+            self.reactor.stop()
+            self.PumpReactor()
+        else:
+            self.reactor = SelectReactor()
+            installReactor(self.reactor)
+        connection = self.reactor.connectTCP(serverHost, serverPort,
+                                             self.pbClientFactory)
+        deferred = self.pbClientFactory.getRootObject()
+        deferred.addCallback(self.Connected)
+        deferred.addErrback(self.ConnectFailed)
+        self.reactor.startRunning()
 
     #----------------------------------------------------------------------
     def Disconnect(self):
-            print "disconnecting"
-            if not self.reactor:
-                    return
-            print 'stopping the reactor'
-            self.reactor.stop()
-            self.PumpReactor()
-            self.state = NetworkServerView.STATE_DISCONNECTING
+        print "disconnecting"
+        if not self.reactor:
+            return
+        print 'stopping the reactor'
+        self.reactor.stop()
+        self.PumpReactor()
+        self.state = NetworkServerView.STATE_DISCONNECTING
 
     #----------------------------------------------------------------------
     def Connected(self, server):
-            print "CONNECTED"
-            self.server = server
-            self.state = NetworkServerView.STATE_CONNECTED
-            ev = ServerConnectEvent( server )
-            self.evManager.Post( ev )
+        print "CONNECTED"
+        self.server = server
+        self.state = NetworkServerView.STATE_CONNECTED
+        ev = ServerConnectEvent( server )
+        self.evManager.Post( ev )
 
     #----------------------------------------------------------------------
     def ConnectFailed(self, server):
-            print "CONNECTION FAILED"
-            print server
-            print 'quitting'
-            self.evManager.Post( QuitEvent() )
-            #self.state = NetworkServerView.STATE_PREPARING
-            self.state = NetworkServerView.STATE_DISCONNECTED
+        print "CONNECTION FAILED"
+        print server
+        print 'quitting'
+        self.evManager.Post( QuitEvent() )
+        #self.state = NetworkServerView.STATE_PREPARING
+        self.state = NetworkServerView.STATE_DISCONNECTED
 
     #----------------------------------------------------------------------
     def PumpReactor(self):
-            self.reactor.runUntilCurrent()
-            self.reactor.doIteration(0)
+        self.reactor.runUntilCurrent()
+        self.reactor.doIteration(0)
 
     #----------------------------------------------------------------------
     def Notify(self, event):
-            NSV = NetworkServerView
-            if isinstance( event, TickEvent ):
-                    if self.state == NSV.STATE_PREPARING:
-                            self.AttemptConnection()
-                    elif self.state in [NSV.STATE_CONNECTED,
-                                        NSV.STATE_DISCONNECTING,
-                                        NSV.STATE_CONNECTING]:
-                            self.PumpReactor()
-                    return
+        NSV = NetworkServerView
+        if isinstance( event, TickEvent ):
+            if self.state == NSV.STATE_PREPARING:
+                self.AttemptConnection()
+            elif self.state in [NSV.STATE_CONNECTED,
+                                NSV.STATE_DISCONNECTING,
+                                NSV.STATE_CONNECTING]:
+                self.PumpReactor()
+            return
 
-            if isinstance( event, QuitEvent ):
-                    self.Disconnect()
-                    return
+        if isinstance( event, QuitEvent ):
+            self.Disconnect()
+            return
 
-            ev = event
-            if not isinstance( event, pb.Copyable ):
-                    evName = event.__class__.__name__
-                    copyableClsName = "Copyable"+evName
-                    if not hasattr( network, copyableClsName ):
-                            return
-                    copyableClass = getattr( network, copyableClsName )
-                    #NOTE, never even construct an instance of an event that
-                    # is serverToClient, as a side effect is often adding a
-                    # key to the registry with the local id().
-                    if copyableClass not in network.clientToServerEvents:
-                        return
-                    #print 'creating instance of copyable class', copyableClsName
-                    ev = copyableClass( event, self.sharedObjs )
+        ev = event
+        if not isinstance( event, pb.Copyable ):
+            evName = event.__class__.__name__
+            copyableClsName = "Copyable"+evName
+            if not hasattr( network, copyableClsName ):
+                return
+            copyableClass = getattr( network, copyableClsName )
+            #NOTE, never even construct an instance of an event that
+            # is serverToClient, as a side effect is often adding a
+            # key to the registry with the local id().
+            if copyableClass not in network.clientToServerEvents:
+                return
+            #print 'creating instance of copyable class', copyableClsName
+            ev = copyableClass( event, self.sharedObjs )
 
-            if ev.__class__ not in network.clientToServerEvents:
-                    #print "CLIENT NOT SENDING: " +str(ev)
-                    return
-                    
-            if self.server:
-                    print " ====   Client sending", str(ev)
-                    remoteCall = self.server.callRemote("EventOverNetwork", ev)
-            else:
-                    print " =--= Cannot send while disconnected:", str(ev)
+        if ev.__class__ not in network.clientToServerEvents:
+            #print "CLIENT NOT SENDING: " +str(ev)
+            return
+
+        if self.server:
+            print " ====   Client sending", str(ev)
+            remoteCall = self.server.callRemote("EventOverNetwork", ev)
+        else:
+            print " =--= Cannot send while disconnected:", str(ev)
 
 
 #------------------------------------------------------------------------------
@@ -161,89 +161,88 @@ class PhonyModel:
 
     #----------------------------------------------------------------------
     def __init__(self, evManager, sharedObjectRegistry):
-            self.sharedObjs = sharedObjectRegistry
-            self.game = None
-            self.server = None
-            self.phonyEvManager = PhonyEventManager()
-            self.realEvManager = evManager
-            self.neededObjects = []
-            self.waitingObjectStack = []
+        self.sharedObjs = sharedObjectRegistry
+        self.game = None
+        self.server = None
+        self.phonyEvManager = PhonyEventManager()
+        self.realEvManager = evManager
+        self.neededObjects = []
+        self.waitingObjectStack = []
 
-            self.realEvManager.RegisterListener( self )
+        self.realEvManager.RegisterListener( self )
 
     #----------------------------------------------------------------------
     def GameReturned(self, response):
-            if response[0] == 0:
-                    print "GameReturned : game HASNT started"
-                    #the game has not been started on the server.
-                    #we'll be informed of the gameID when we receive the
-                    #GameStartedEvent
-                    return None
-            else:
-                    gameID = response[0]
-                    print "GameReturned : game started ", gameID
+        if response[0] == 0:
+            print "GameReturned : game HASNT started"
+            #the game has not been started on the server.
+            #we'll be informed of the gameID when we receive the
+            #GameStartedEvent
+            return None
+        else:
+            gameID = response[0]
+            print "GameReturned : game started ", gameID
+            self.sharedObjs[gameID] = self.game
 
-                    self.sharedObjs[gameID] = self.game
-            return self.StateReturned( response, self.GameSyncCallback )
+        return self.StateReturned( response, self.GameSyncCallback )
 
     #----------------------------------------------------------------------
     def StateReturned(self, response):
-            """this is a callback that is called in response to
-            invoking GetObjectState on the server"""
+        """this is a callback that is called in response to
+        invoking GetObjectState on the server"""
 
-            #print "looking for ", response
-            objID, objDict = response
-            if objID == 0:
-                    print "GOT ZERO -- TODO: better error handler here"
-                    return None
-            obj = self.sharedObjs[objID]
+        #print "looking for ", response
+        objID, objDict = response
+        if objID == 0:
+            print "GOT ZERO -- TODO: better error handler here"
+            return None
+        obj = self.sharedObjs[objID]
 
-            success, neededObjIDs =\
-                             obj.setCopyableState(objDict, self.sharedObjs)
-            if success:
-                    #we successfully set the state and no further objects
-                    #are needed to complete the current object
-                    if objID in self.neededObjects:
-                            self.neededObjects.remove(objID)
+        success, neededObjIDs = obj.setCopyableState(objDict, self.sharedObjs)
+        if success:
+            #we successfully set the state and no further objects
+            #are needed to complete the current object
+            if objID in self.neededObjects:
+                self.neededObjects.remove(objID)
 
-            else:
-                    #to complete the current object, we need to grab the
-                    #state from some more objects on the server.  The IDs
-                    #for those needed objects were passed back 
-                    #in neededObjIDs
-                    for neededObjID in neededObjIDs:
-                            if neededObjID not in self.neededObjects:
-                                    self.neededObjects.append(neededObjID)
-                    print "failed.  still need ", self.neededObjects
-    
-            self.waitingObjectStack.append( (obj, objDict) )
+        else:
+            #to complete the current object, we need to grab the
+            #state from some more objects on the server.  The IDs
+            #for those needed objects were passed back 
+            #in neededObjIDs
+            for neededObjID in neededObjIDs:
+                if neededObjID not in self.neededObjects:
+                    self.neededObjects.append(neededObjID)
+            print "failed.  still need ", self.neededObjects
 
-            retval = self.GetAllNeededObjects()
-            if retval:
-                    # retval is a Deferred - returning it causes a chain
-                    # to be formed.  The original deferred must wait for
-                    # this new one to return before it calls its next
-                    # callback
-                    return retval
-    
+        self.waitingObjectStack.append( (obj, objDict) )
+
+        retval = self.GetAllNeededObjects()
+        if retval:
+            # retval is a Deferred - returning it causes a chain
+            # to be formed.  The original deferred must wait for
+            # this new one to return before it calls its next
+            # callback
+            return retval
+
     #----------------------------------------------------------------------
     def GetAllNeededObjects(self):
-            if len(self.neededObjects) == 0:
-                    # this is the recursion-ending condition.  If there are
-                    # no more objects needed to be grabbed from the server
-                    # then we can try to setCopyableState on them again and
-                    # we should now have all the needed objects, ensuring
-                    # that setCopyableState succeeds
-                    return self.ConsumeWaitingObjectStack()
+        if len(self.neededObjects) == 0:
+            # this is the recursion-ending condition.  If there are
+            # no more objects needed to be grabbed from the server
+            # then we can try to setCopyableState on them again and
+            # we should now have all the needed objects, ensuring
+            # that setCopyableState succeeds
+            return self.ConsumeWaitingObjectStack()
 
-            # still in the recursion step.  Try to get the object state for
-            # the objectID on the top of the stack.  Note that the 
-            # recursion is done via a deferred, which may be confusing
-            nextID = self.neededObjects[-1]
-            print "next one to grab: ", nextID
-            remoteResponse = self.server.callRemote("GetObjectState",nextID)
-            remoteResponse.addCallback(self.StateReturned)
-            return remoteResponse
+        # still in the recursion step.  Try to get the object state for
+        # the objectID on the top of the stack.  Note that the 
+        # recursion is done via a deferred, which may be confusing
+        nextID = self.neededObjects[-1]
+        print "next one to grab: ", nextID
+        remoteResponse = self.server.callRemote("GetObjectState",nextID)
+        remoteResponse.addCallback(self.StateReturned)
+        return remoteResponse
 
     #----------------------------------------------------------------------
     def ConsumeWaitingObjectStack(self):
