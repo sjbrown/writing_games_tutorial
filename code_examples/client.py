@@ -1,15 +1,20 @@
+import sys
+import time
 import network
 from twisted.spread import pb
 from twisted.internet.selectreactor import SelectReactor
 from twisted.internet.main import installReactor
+from twisted.cred import credentials
 from events import *
-from example1 import (EventManager,
-                      Game,
-                      KeyboardController,
-                      CPUSpinnerController,
-                      PygameView)
+from example import (EventManager,
+                     Game,
+                     Player,
+                     KeyboardController,
+                     CPUSpinnerController,
+                     PygameView)
 
 serverHost, serverPort = 'localhost', 8000
+avatarID = None
 
 #------------------------------------------------------------------------------
 class NetworkServerView(pb.Root):
@@ -44,7 +49,11 @@ class NetworkServerView(pb.Root):
                     installReactor(self.reactor)
             connection = self.reactor.connectTCP(serverHost, serverPort,
                                                  self.pbClientFactory)
-            deferred = self.pbClientFactory.getRootObject()
+            # TODO: make this anonymous login()
+            #deferred = self.pbClientFactory.login(credentials.Anonymous())
+            userCred = credentials.UsernamePassword(avatarID, 'pass1')
+            controller = NetworkServerController( self.evManager )
+            deferred = self.pbClientFactory.login(userCred, client=controller)
             deferred.addCallback(self.Connected)
             deferred.addErrback(self.ConnectFailed)
             self.reactor.startRunning()
@@ -70,6 +79,9 @@ class NetworkServerView(pb.Root):
     #----------------------------------------------------------------------
     def ConnectFailed(self, server):
             print "CONNECTION FAILED"
+            print server
+            print 'quitting'
+            self.evManager.Post( QuitEvent() )
             #self.state = NetworkServerView.STATE_PREPARING
             self.state = NetworkServerView.STATE_DISCONNECTED
 
@@ -106,7 +118,7 @@ class NetworkServerView(pb.Root):
                     # key to the registry with the local id().
                     if copyableClass not in network.clientToServerEvents:
                         return
-                    print 'creating instance of copyable class', copyableClsName
+                    #print 'creating instance of copyable class', copyableClsName
                     ev = copyableClass( event, self.sharedObjs )
 
             if ev.__class__ not in network.clientToServerEvents:
@@ -135,10 +147,20 @@ class NetworkServerController(pb.Referenceable):
 
     #----------------------------------------------------------------------
     def Notify(self, event):
-        if isinstance( event, ServerConnectEvent ):
-            #tell the server that we're listening to it and
-            #it can access this object
-            event.server.callRemote("ClientConnect", self)
+        pass
+        #if isinstance( event, ServerConnectEvent ):
+            ##tell the server that we're listening to it and
+            ##it can access this object
+            #defrd = event.server.callRemote("ClientConnect", self)
+            #defrd.addErrback(self.ServerErrorHandler)
+
+    #----------------------------------------------------------------------
+    def ServerErrorHandler(self, *args):
+        print '\n **** ERROR REPORT **** '
+        print 'Server threw us an error.  Args:', args
+        ev = network.ServerErrorEvent()
+        self.evManager.Post(ev)
+        print ' ^*** ERROR REPORT ***^ \n'
 
 
 #------------------------------------------------------------------------------
@@ -169,29 +191,23 @@ class PhonyModel:
             self.realEvManager.RegisterListener( self )
 
     #----------------------------------------------------------------------
-    def GameReturned(self, response):
-            if response[0] == 0:
-                    print "GameReturned : game HASNT started"
-                    #the game has not been started on the server.
-                    #we'll be informed of the gameID when we receive the
-                    #GameStartedEvent
-                    return None
-            else:
-                    gameID = response[0]
-                    print "GameReturned : game started ", gameID
-
-                    self.sharedObjs[gameID] = self.game
-            return self.StateReturned( response, self.GameSyncCallback )
+    def GameSyncReturned(self, response):
+            gameID, gameDict = response
+            print "GameSyncReturned : ", gameID
+            self.sharedObjs[gameID] = self.game
+            # StateReturned returns a deferred, pass it on to keep the
+            # chain going.
+            return self.StateReturned( response )
 
     #----------------------------------------------------------------------
     def StateReturned(self, response):
             """this is a callback that is called in response to
             invoking GetObjectState on the server"""
 
-            print "looking for ", response
+            #print "looking for ", response
             objID, objDict = response
             if objID == 0:
-                    print "GOT ZERO -- better error handler here"
+                    print "GOT ZERO -- TODO: better error handler here"
                     return None
             obj = self.sharedObjs[objID]
 
@@ -240,6 +256,7 @@ class PhonyModel:
             print "next one to grab: ", nextID
             remoteResponse = self.server.callRemote("GetObjectState",nextID)
             remoteResponse.addCallback(self.StateReturned)
+            remoteResponse.addErrback(self.ServerErrorHandler, 'allNeededObjs')
             return remoteResponse
 
     #----------------------------------------------------------------------
@@ -261,8 +278,13 @@ class PhonyModel:
             #entire game state.  this also applies to RE-connecting
             if not self.game:
                 self.game = Game( self.phonyEvManager )
-            remoteResponse = self.server.callRemote("GetGame")
-            remoteResponse.addCallback(self.GameReturned)
+                gameID = id(self.game)
+                self.sharedObjs[gameID] = self.game
+            remoteResponse = self.server.callRemote("GetGameSync")
+            remoteResponse.addCallback(self.GameSyncReturned)
+            remoteResponse.addCallback(self.GameSyncCallback, gameID)
+            remoteResponse.addErrback(self.ServerErrorHandler, 'ServerConnect')
+
 
         elif isinstance( event, network.CopyableGameStartedEvent ):
             gameID = event.gameID
@@ -272,6 +294,11 @@ class PhonyModel:
             ev = GameStartedEvent( self.game )
             self.realEvManager.Post( ev )
 
+        elif isinstance( event, network.ServerErrorEvent ):
+            from pprint import pprint
+            print 'Client state at the time of server error:'
+            pprint(self.sharedObjs)
+
         if isinstance( event, network.CopyableMapBuiltEvent ):
             mapID = event.mapID
             if not self.sharedObjs.has_key(mapID):
@@ -279,6 +306,17 @@ class PhonyModel:
             remoteResponse = self.server.callRemote("GetObjectState", mapID)
             remoteResponse.addCallback(self.StateReturned)
             remoteResponse.addCallback(self.MapBuiltCallback, mapID)
+            remoteResponse.addErrback(self.ServerErrorHandler, 'MapBuilt')
+
+        if isinstance( event, network.CopyablePlayerJoinEvent ):
+            playerID = event.playerID
+            if not self.sharedObjs.has_key(playerID):
+                player = Player( self.phonyEvManager )
+                self.sharedObjs[playerID] = player
+            remoteResponse = self.server.callRemote("GetObjectState", playerID)
+            remoteResponse.addCallback(self.StateReturned)
+            remoteResponse.addCallback(self.PlayerJoinCallback, playerID)
+            remoteResponse.addErrback(self.ServerErrorHandler, 'PlayerJoin')
 
         if isinstance( event, network.CopyableCharactorPlaceEvent ):
             charactorID = event.charactorID
@@ -288,6 +326,7 @@ class PhonyModel:
             remoteResponse = self.server.callRemote("GetObjectState", charactorID)
             remoteResponse.addCallback(self.StateReturned)
             remoteResponse.addCallback(self.CharactorPlaceCallback, charactorID)
+            remoteResponse.addErrback(self.ServerErrorHandler, 'CharPlace')
 
         if isinstance( event, network.CopyableCharactorMoveEvent ):
             charactorID = event.charactorID
@@ -297,6 +336,7 @@ class PhonyModel:
             remoteResponse = self.server.callRemote("GetObjectState", charactorID)
             remoteResponse.addCallback(self.StateReturned)
             remoteResponse.addCallback(self.CharactorMoveCallback, charactorID)
+            remoteResponse.addErrback(self.ServerErrorHandler, 'CharMove')
 
     #----------------------------------------------------------------------
     def CharactorPlaceCallback(self, deferredResult, charactorID):
@@ -314,26 +354,64 @@ class PhonyModel:
         ev = CharactorMoveEvent( charactor )
         self.realEvManager.Post( ev )
     #----------------------------------------------------------------------
-    def GameSyncCallback(self, game):
-        print "sending out the GS EVENT------------------==========="
+    def GameSyncCallback(self, deferredResult, gameID):
+        game = self.sharedObjs[gameID]
         ev = GameSyncEvent( game )
         self.realEvManager.Post( ev )
+    #----------------------------------------------------------------------
+    def PlayerJoinCallback(self, deferredResult, playerID):
+        player = self.sharedObjs[playerID]
+        self.game.AddPlayer( player )
+        ev = PlayerJoinEvent( player )
+        self.realEvManager.Post( ev )
+    #----------------------------------------------------------------------
+    def ServerErrorHandler(self, failure, *args):
+        print '\n **** ERROR REPORT **** '
+        print 'Server threw PhonyModel an error.  failure:', failure
+        print 'failure traceback:', failure.getTraceback()
+        print 'Server threw PhonyModel an error.  Args:', args
+        ev = network.ServerErrorEvent()
+        self.realEvManager.Post(ev)
+        print ' ^*** ERROR REPORT ***^ \n'
+
+
+#class DebugDict(dict):
+    #def __setitem__(self, *args):
+        #print ''
+        #print '        set item', args
+        #return dict.__setitem__(self, *args)
 
 #------------------------------------------------------------------------------
 def main():
+    global avatarID
+    if len(sys.argv) > 1:
+        avatarID = sys.argv[1]
+    else:
+        print 'You should provide a username on the command line'
+        print 'Defaulting to username "user1"'
+        time.sleep(1)
+        avatarID = 'user1'
+        
     evManager = EventManager()
     sharedObjectRegistry = {}
-
-    keybd = KeyboardController( evManager )
+    #sharedObjectRegistry = DebugDict()
+    keybd = KeyboardController( evManager, playerName=avatarID )
     spinner = CPUSpinnerController( evManager )
     pygameView = PygameView( evManager )
 
     phonyModel = PhonyModel( evManager, sharedObjectRegistry  )
 
-    serverController = NetworkServerController( evManager )
     serverView = NetworkServerView( evManager, sharedObjectRegistry )
     
-    spinner.Run()
+    try:
+        spinner.Run()
+    except Exception, ex:
+        print 'got exception (%s)' % ex, 'killing reactor'
+        import logging
+        logging.basicConfig()
+        logging.exception(ex)
+        serverView.Disconnect()
+
 
 if __name__ == "__main__":
     main()
