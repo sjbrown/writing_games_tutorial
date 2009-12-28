@@ -56,7 +56,7 @@ class NetworkServerView(pb.Root):
             return
         print 'stopping the reactor'
         self.reactor.stop()
-                self.PumpReactor()
+        self.PumpReactor()
         self.state = NetworkServerView.STATE_DISCONNECTING
 
     #----------------------------------------------------------------------
@@ -70,6 +70,9 @@ class NetworkServerView(pb.Root):
     #----------------------------------------------------------------------
     def ConnectFailed(self, server):
         print "CONNECTION FAILED"
+        print server
+        print 'quitting'
+        self.evManager.Post( QuitEvent() )
         #self.state = NetworkServerView.STATE_PREPARING
         self.state = NetworkServerView.STATE_DISCONNECTED
 
@@ -101,20 +104,23 @@ class NetworkServerView(pb.Root):
             if not hasattr( network, copyableClsName ):
                 return
             copyableClass = getattr( network, copyableClsName )
+            #NOTE, never even construct an instance of an event that
+            # is serverToClient, as a side effect is often adding a
+            # key to the registry with the local id().
+            if copyableClass not in network.clientToServerEvents:
+                return
+            #print 'creating instance of copyable class', copyableClsName
             ev = copyableClass( event, self.sharedObjs )
 
         if ev.__class__ not in network.clientToServerEvents:
             #print "CLIENT NOT SENDING: " +str(ev)
             return
-            
+
         if self.server:
             print " ====   Client sending", str(ev)
-            remoteCall = self.server.callRemote("EventOverNetwork",
-                                                ev)
+            remoteCall = self.server.callRemote("EventOverNetwork", ev)
         else:
             print " =--= Cannot send while disconnected:", str(ev)
-
-
 
 
 #------------------------------------------------------------------------------
@@ -140,16 +146,20 @@ class NetworkServerController(pb.Referenceable):
 
 #------------------------------------------------------------------------------
 class PhonyEventManager(EventManager):
+    """this object is responsible for coordinating most communication
+    between the Model, View, and Controller."""
     #----------------------------------------------------------------------
     def Post( self, event ):
         pass
 
 #------------------------------------------------------------------------------
-class PhonyModel(object):
+class PhonyModel:
     '''This isn't the authouritative model.  That one exists on the
     server.  This is a model to store local state and to interact with
     the local EventManager.
     '''
+
+    #----------------------------------------------------------------------
     def __init__(self, evManager, sharedObjectRegistry):
         self.sharedObjs = sharedObjectRegistry
         self.game = None
@@ -193,14 +203,13 @@ class PhonyModel(object):
                 # give a phony event manager to the local game
                 # object so it won't be able to fire events
                 self.game = Game( self.phonyEvManager )
-                self.sharedObjs[gameID] = self.game
+            self.sharedObjs[gameID] = self.game
             #------------------------
             #note: we shouldn't really be calling methods on our
             # phony model, instead we should be copying the state
             # from the server.
             #self.game.Start()
             #------------------------
-            print 'sending the gse to the real em.'
             ev = GameStartedEvent( self.game )
             self.realEvManager.Post( ev )
 
@@ -266,17 +275,20 @@ def main():
     spinner = CPUSpinnerController( evManager )
     pygameView = PygameView( evManager )
 
-    phonyModel = PhonyModel( evManager, sharedObjectRegistry )
-
-    #from twisted.spread.jelly import globalSecurity
-    #globalSecurity.allowModules( network )
+    phonyModel = PhonyModel( evManager, sharedObjectRegistry  )
 
     serverController = NetworkServerController( evManager )
     serverView = NetworkServerView( evManager, sharedObjectRegistry )
     
-    spinner.Run()
-    print 'Done Run'
-    print evManager.eventQueue
+    try:
+        spinner.Run()
+    except Exception, ex:
+        print 'got exception (%s)' % ex, 'killing reactor'
+        import logging
+        logging.basicConfig()
+        logging.exception(ex)
+        serverView.Disconnect()
+
 
 if __name__ == "__main__":
     main()

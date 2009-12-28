@@ -97,7 +97,7 @@ serverToClientEvents.append( CopyableMapBuiltEvent )
 # Direction: Server to Client only
 class CopyableCharactorMoveEvent( pb.Copyable, pb.RemoteCopy):
 	def __init__(self, event, registry ):
-		self.name = "Copyable Charactor Move Event"
+		self.name = "Copyable " + event.name
 		self.charactorID = id( event.charactor )
 		registry[self.charactorID] = event.charactor
 
@@ -109,13 +109,12 @@ serverToClientEvents.append( CopyableCharactorMoveEvent )
 # Direction: Server to Client only
 class CopyableCharactorPlaceEvent( pb.Copyable, pb.RemoteCopy):
 	def __init__(self, event, registry ):
-		self.name = "Copyable Charactor Placement Event"
+		self.name = "Copyable " + event.name
 		self.charactorID = id( event.charactor )
 		registry[self.charactorID] = event.charactor
 
 pb.setUnjellyableForClass(CopyableCharactorPlaceEvent, CopyableCharactorPlaceEvent)
 serverToClientEvents.append( CopyableCharactorPlaceEvent )
-
 
 
 #------------------------------------------------------------------------------
@@ -133,13 +132,13 @@ class CopyableCharactor:
 	def setCopyableState(self, stateDict, registry):
 		neededObjIDs = []
 		success = 1
-		if not registry.has_key( stateDict['sector'] ):
+		if stateDict['sector'] not in registry:
+			registry[stateDict['sector']] = Sector(self.evManager)
 			neededObjIDs.append( stateDict['sector'] )
 			success = 0
 		else:
 			self.sector = registry[stateDict['sector']]
 		return [success, neededObjIDs]
-		
 
 
 MixInClass( Charactor, CopyableCharactor )
@@ -149,16 +148,15 @@ class CopyableMap:
 	def getStateToCopy(self):
 		sectorIDList = []
 		for sect in self.sectors:
-			sectorIDList.append( id(sect) )
+			sID = id(sect)
+			sectorIDList.append( sID )
+
 		return {'ninegrid':1, 'sectorIDList':sectorIDList}
-
-
-
 
 
 	def setCopyableState(self, stateDict, registry):
 		neededObjIDs = []
-		success = 1
+		success = True
 
 		if self.state != Map.STATE_BUILT:
 			self.Build()
