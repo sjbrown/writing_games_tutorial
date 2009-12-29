@@ -31,7 +31,8 @@ s('cat /tmp/table.html >> ./table.html')
 targen = ('git checkout %(name)s; '
           'cp -a code_examples %(name)s; '
           'tar -cv --exclude-vcs %(name)s > %(name)s.tar; '
-          'mv %(name)s /tmp; '
+          'rm -rf /tmp/%(name)s; '
+          'mv %(name)s /tmp/%(name)s; '
           'gzip %(name)s.tar; '
          )
 s(targen % {'name': 'example2'})
