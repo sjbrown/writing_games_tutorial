@@ -427,9 +427,9 @@ the Game object. Some games might call for Sectors having Items lying around
 inside them.
 <h1><a name="our">Our Example</a></h1>
 <div class="sourceLinks">The code can be downloaded here: 
-<a href="examples/example1.py">example1.py</a><br>
+<a href="code_examples/example.py">example.py</a><br>
 Or read it in your browser
-<a href="http://github.com/sjbrown/writing_games_tutorial/blob/master/examples/example1.py">here</a>
+<a href="http://github.com/sjbrown/writing_games_tutorial/blob/master/code_examples/example.py">here</a>
 </div>
 
 <center><img src="screenshot-example1.png" alt="example applicaton" width=
@@ -558,7 +558,7 @@ queue and fires off callbacks.  The callbacks are provided by the programmer.
 <h2><a name="implementation">Implementation</a></h2>
 <h3><a name="exServer">Example Server</a></h3>
 For the server, we'll start with the exact same code as before. Just rename
-example1.py to server.py.
+example.py to server.py.
 <p>Normally a server is something that runs as a daemon or in a text console;
 it does not have a graphical display. We can do this simply by replacing
 PygameView with a TextLogView as follows:</p>
@@ -783,9 +783,9 @@ Using twisted.conch.stdio as a fake client</div>
 
 
 <div class="sourceLinks">The code for server.py can be downloaded here:
-<a href="examples/server.py">server.py</a><br>
+<a href="code_examples/server.py">server.py</a><br>
 Or read it in your browser 
-<a href="http://github.com/sjbrown/writing_games_tutorial/blob/master/examples/server.py">here</a>
+<a href="http://github.com/sjbrown/writing_games_tutorial/blob/master/code_examples/server.py">here</a>
 </div>
 
 <h2><a name="king"></a>King of the Castle</h2>
@@ -855,7 +855,7 @@ we will use the reactor-pumping approach.
 in multiple files. You can download them in tar.gz format here: 
 <a href="examples/example2.tar.gz">example2.tar.gz</a>, or browse
 the source code 
-<a href="http://github.com/sjbrown/writing_games_tutorial/tree/master/examples/example2">here</a>.
+<a href="http://github.com/sjbrown/writing_games_tutorial/tree/master/code_examples/example2">here</a>.
 </div>
 <p>The previous example of a server gave a good introduction to the basic
 networking technique, but it's a little too simple for our purposes. We don't
@@ -1434,7 +1434,7 @@ this logic in PhonyModel.Notify() <span class="todo">[TODO: is this the best
 place? what about inside Copyable events?]</span></p>
 <div class="sourceLinks">You can download the example that handles fetching 
 complex objects here: <a href="examples/example3.tar.gz">example3.tar.gz</a>.
-Or browse the source code <a href="http://github.com/sjbrown/writing_games_tutorial/tree/master/examples/example3">here</a>.
+Or browse the source code <a href="http://github.com/sjbrown/writing_games_tutorial/tree/master/code_examples/example3">here</a>.
 </div>
 
 
@@ -1514,7 +1514,7 @@ the <b>Lazy Proxy</b> design pattern.
 
 <div class="sourceLinks">Download the example source code for the multiplayer 
 section here: <a href="example4.tar.gz">example4.tar.gz</a>
-Or browse the source code <a href="http://github.com/sjbrown/writing_games_tutorial/tree/master/examples/example3">here</a>.
+Or browse the source code <a href="http://github.com/sjbrown/writing_games_tutorial/tree/master/code_examples/example3">here</a>.
 </div>
 
 <h3><a name="nonnetworked">Non-Networked Multiplayer</a></h3>
@@ -1539,7 +1539,7 @@ new keypresses, <b>p</b> and <b>c</b> to fire off those request events, and
 the <b>o</b> key to switch between active players. (see screenshot above).
 </p>
 <p>
-You can try this out by running <code>python example1.py</code> from the
+You can try this out by running <code>python example.py</code> from the
 example4.tar.gz archive below.  When it starts, press <b>p</b> twice to 
 request 2 PlayerJoin events, then press space bar to start the game, then
 press <b>c</b> to place one character, <b>o</b> to switch to the other
