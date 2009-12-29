@@ -28,13 +28,18 @@ h3 {
 fp.close()
 s('cat /tmp/table.html >> ./table.html')
 
-s('cd examples; tar -cv --exclude-vcs example2 > example2.tar')
-s('cd examples; gzip example2.tar')
-s('cd examples; tar -cv --exclude-vcs example3 > example3.tar')
-s('cd examples; gzip example3.tar')
-s('cd examples; tar -cv --exclude-vcs example4 > example4.tar')
-s('cd examples; gzip example4.tar')
+targen = ('git checkout %(name)s; '
+          'cp -a code_examples %(name)s; '
+          'tar -cv --exclude-vcs %(name)s > %(name)s.tar; '
+          'mv %(name)s /tmp; '
+          'gzip %(name)s.tar; '
+         )
+s(targen % {'name': 'example2'})
+s(targen % {'name': 'example3'})
+s(targen % {'name': 'example4'})
 
+print 'Setting git branch to *master*'
+s('git checkout master')
 
 # always append a '/' on the src directory when rsyncing
 s('rsync -r ./ $DREAMHOST_USERNAME@ezide.com:/home/$DREAMHOST_USERNAME/ezide.com/games')
