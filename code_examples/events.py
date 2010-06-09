@@ -57,7 +57,7 @@ class CharactorMoveEvent(Event):
 		self.charactor = charactor
 
 class CharactorPlaceEvent(Event):
-	"""this event occurs when a Charactor is *placed* in a sector, 
+	"""this event occurs when a Charactor is *placed* in a sector,
 	ie it doesn't move there from an adjacent sector."""
 	def __init__(self, charactor):
 		self.name = "Charactor Placement Event"
