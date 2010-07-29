@@ -248,7 +248,8 @@ job? It basically sends the Tick() message out to the View and the Controller
 as fast as the CPU can manage. In that sense it can be viewed as a piece of
 hardware sending messages into the program, just like the keyboard; it can be
 considered another Controller.
-<p>Perhaps if time affects our game there will be even another Controller that
+<p>Perhaps if "wall clock" time affects our game there will be even another
+Controller that
 sends messages every second, or perhaps there will be another View that spits
 text out to a log file. We now need to consider how we are going to handle
 multiple Views and Controllers. This leads us to the next pattern in our
@@ -263,7 +264,8 @@ the changing object needs to do is send an Event to the EventManager when it
 changes.</p>
 <p>If an object wants to listen for events, it must first register itself with
 the EventManager. We'll use the weakref WeakKeyDictionary so that listeners
-don't have to explicitly unregister themselves.</p>
+don't have to explicitly unregister themselves.
+<span class="todo">[TODO: more weakref rationale. gc, etc]</span></p>
 <p>We will also create an Event class to encapsulate the events that can be sent
 via the EventManager.</p>
 <div class="codeblock">
