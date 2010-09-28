@@ -142,7 +142,7 @@ foreign to you, I recommend checking out the book
 It's always a good idea to sketch out your game either with pictures or text
 before you begin coding.
 <p>We will start by trying to create a program where a little man moves around
-a grid of nine squares. This is a overly simple example, but easily extendable
+a grid of nine squares. This is a overly simple example, but easily extensible
 so we won't get tied up in the game rules, instead we can focus on the
 structure of the code.</p>
 <center><img src="mockup.png" alt="example applicaton" width="400" height=
@@ -236,7 +236,7 @@ we have resource-rich
 personal computers where applications run a couple layers above the 
 metal.  Hence, organizing your code into a pattern has a small relative
 cost.  For that small cost, you get the following advantages: more easily 
-add networking, easily add new views (file loggers, radars, huds,
+add networking, easily add new views (file loggers, radars, HUDs,
 multiple zoom levels, ...), keep the Model code "cleaner" by decoupling
 it from the view and the controller, and I contend, more readable code.
 </div>
@@ -423,7 +423,7 @@ example.
 You'll notice that in the figure, Item is not explicitly connected to 
 anything. This is left
 up to the developer. You could have a design constraint that Items <b>must</b>
-be contained by Charactors (perhaps in an intermidiate "Inventory" object), or
+be contained by Charactors (perhaps in an intermediate "Inventory" object), or
 maybe it makes more sense for your game to keep a list of a bunch of Items in
 the Game object. Some games might call for Sectors having Items lying around
 inside them.
@@ -476,7 +476,7 @@ and explain how to overcome those problems.
 <div class="diversion">
 <h3><a name="rapid">Rapid Development</a></h3>
 One of the goals of this tutorial is to show how game development can be done
-<i>rapidly</i>.  Usually anything involving networking is anaethema to "rapid"
+<i>rapidly</i>.  Usually anything involving networking is anathema to "rapid"
 because once you introduce networking, you introduce multiprocessing, latency,
 error handling, and general hair-pulling.  A principle of the code examples
 in this tutorial is to make sure that the game can be run without even turning
@@ -498,7 +498,7 @@ Computer processes (usually there is only one process of interest on each
 physical computer, or "host", so we just use the term "host") that communicate over the network can be organized in many ways.
 In games there are three popular ways to structure hosts, Peer-to-Peer, "Strict" Client-Server, and "Servent" Client-Server.
 The driving factor when deciding how to structure network hosts for games is usually trust.
-Games are emotional (well, good ones) and competetive, players are motivated to win, and when they don't win, they want to trust that no other player had an unfair advantage.
+Games are emotional (well, good ones) and competitive, players are motivated to win, and when they don't win, they want to trust that no other player had an unfair advantage.
 To ensure trust, there needs to be a consistent, authoritative model.  
 <p>
 In the "Strict" Client-Server structure, there is one "3rd party" server that
@@ -527,7 +527,7 @@ Trust can be bolstered by adopting token passing strategy such that the host hol
 <p>
 For our examples, we will examine the "Strict" Client-Server structure.
 
-<h2><a name="sync">Synchronus / Asynchronus</a></h2>
+<h2><a name="sync">Synchronous / Asynchronous</a></h2>
 When you call a function that requires network communication, it may take a 
 long time to finish.  If we waited for network-dependent functions to 
 finish before we called the functions which draw the graphics, the 
@@ -539,9 +539,9 @@ and wait in a queue until our process can service them.  It is important to
 remember that the replies may not queue up in the same order as the requests
 went out.
 <p>
-This asynchronus quality is fundamental to network-related code.  Luckily
+This asynchronous quality is fundamental to network-related code.  Luckily
 designing our code such that there is an independent EventManager and 
-well-defined events will make dealing with asynchronus messages 
+well-defined events will make dealing with asynchronous messages 
 from the network fairly painless.
 <p>
 This tutorial will use the Twisted framework for network-related code.  I
@@ -876,7 +876,7 @@ possible events and answer these questions about each:</p>
 <li>If we must, how do we reformat the data so that it can be sent?</li>
 </ol>
 (Eventually, one might also ask "How often will this message be sent?" and
-therefore "How can I best optimise this message?")
+therefore "How can I best optimize this message?")
 <p>While there are many ways of doing this with Twisted, I will outline a
 strategy that tries to minimize the amount of code written (to combat the
 tediousness of this task) and to maintain the separation of the networking
@@ -936,7 +936,7 @@ like an object, we need to make a replacement event to send over the wire
 instead of the original. The simplest way to make a replacement is just to
 change any event attributes that were objects to unique integers using the
 id() function. This strategy requires us to keep a registry of objects and
-their ID numbers, so that when we recieve an event from the network
+their ID numbers, so that when we receive an event from the network
 referencing an object by its ID number, we can find the actual object.</p>
 <div class="codeblock">
 <pre class="python">
@@ -1738,7 +1738,7 @@ class NetworkServerView(pb.Root):
 
 
 <p>
-Now that we've got these usernames mandated by Twisted, we might as well
+Now that we've got these usernames dictated by Twisted, we might as well
 use the information in our Model.
 <span class="todo">[TODO: expand...]</span>
 <p>
