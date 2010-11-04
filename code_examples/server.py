@@ -34,7 +34,7 @@ class NoTickEventManager(EventManager):
 
 #------------------------------------------------------------------------------
 class TimerController:
-    """A controller that sends of an event every second"""
+    """A controller that sends an event every second"""
     def __init__(self, evManager, reactor):
         self.evManager = evManager
         self.evManager.RegisterListener( self )
