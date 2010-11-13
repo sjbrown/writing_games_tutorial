@@ -1761,6 +1761,19 @@ to control players that match the playerName.
 The next question may be "where does the playerName get set then".  It
 is simply during the main() function of the client code.
 <span class="todo">[TODO: paste in code]</span>
+<p>
+<span class="todo">[TODO: 
+I need a section here on why to chain deferreds when the client receives
+events from the server.  On a received event, the client starts getting new
+state information from the server.  Because of the asynchronous nature of
+networked programs and the choice we made to not send ALL the needed
+information at once, there are points in time when we've collected incomplete
+information from the server.  If we populated our phony Model with that
+incomplete information and then the User Interface got Ticked, it will likely
+result in a crash or at least a UI bug.  So we chain deferreds, get all the
+state information we need, and once it's all collected, then we update our
+phony Model and post events.
+]</span>
 
 <h2><a name="reconnect">Reconnecting After A Drop</a></h2>
 As is wont with the internet, sometimes a connection gets accidentally
