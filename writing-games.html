@@ -1774,6 +1774,13 @@ result in a crash or at least a UI bug.  So we chain deferreds, get all the
 state information we need, and once it's all collected, then we update our
 phony Model and post events.
 ]</span>
+<p>
+<span class="todo">[TODO: 
+I need a section here talking about how to refine the client code so that
+you don't need a waitingObjects queue.  Basically, with a better Placeholder
+class, and some Python self.__class__ = foo magic, we don't have to keep
+a queue and solidify the Placeholders after everything has been downloaded.
+]</span>
 
 <h2><a name="reconnect">Reconnecting After A Drop</a></h2>
 As is wont with the internet, sometimes a connection gets accidentally
