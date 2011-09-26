@@ -1,0 +1,36 @@
+authentication
+making your own system?  you have two choices:
+ * be smarter than everyone else in the world
+ * be smarter than that finite set of people that will play your game
+
+
+protocol:
+Twisted needs to have another Twisted client at the other end
+This may not be realistic
+But let's use Twisted at both ends because we're trying to do it rapidly
+
+Ok, which chapter should be first?
+I tried considering the "Messages across the wire" as the first chapter, but I think my brain wants to do first things first.
+
+---- Chapter 1 ----
+First:
+simple pygame example - Chimp
+code example.
+critique about how this will fail under complexity
+ * maybe some pseudocode with a hella nested if/else
+critique about how this will fail under network
+ * maybe the same example with a sleep(1) simulating the network
+
+Games need a front end with NO perceptible lag for user interaction / feedback.
+
+Model / view / controller with Event-driven can solve these two design problems
+
+Explain MVC
+Code example
+
+Explain Event-driven
+Code example
+---- End Chapter 1 ----
+
+
+Should I do some kind of *radical* client-server
