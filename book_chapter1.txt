@@ -1,6 +1,10 @@
-Let's start with a very simple example of a game. 
+Let's start with a very simple example of a game. This will be a game in which
+a monkey's face travels back and forth across the screen, and the player must
+try to "punch" the monkey by clicking on it. The gameplay will be familiar to
+anyone who has gone through the "Chimp Line by Line" [TODO: link] tutorial or
+those who have endured annoying banner ads in the early 2000s.
 
-
+----
 import time
 import pygame
 import pygame.constants as c
@@ -90,5 +94,60 @@ So with that we have a (very simple, but complete) game. It may not be the most
 fun game ever written, but that can be fixed by slick box art and a major motion
 picture tie-in. Let's not concern ourselves with that and instead look at
 the technical details.
+
+What we have above is a minimal game. As we add features to it, the code will
+grow in complexity. As humans, we are bad at holding and manipulating complex
+systems in our brains. 
+
+Consider what would happen if instead of just punching one monkey, we wanted to set
+traps for 3 monkeys. A click of the mouse would either drop down a trap at the
+clicked location or reset a sprung trap if one was already there. What might
+our main() function look like?
+
+----
+def main():
+    # Necessary Pygame set-up...
+    pygame.init()
+    clock = pygame.time.Clock()
+    displayImg = pygame.display.set_mode(screenDimensions.size)
+
+    monkeys = [Monkey(), Monkey(), Monkey()]
+    traps = [Trap(), Trap(), Trap()]
+    trapPointer = 0
+
+    while True:
+        clock.tick(60) # aim for 60 FPS
+        for event in pygame.event.get():
+            if event.type == c.QUIT:
+                return
+            elif event.type == c.MOUSEBUTTONDOWN:
+                wasTrapClick = False
+                for trap in traps:
+                    if trap.rect.collidepoint(event.pos):
+                        trap.reset()
+                        wasTrapClick = True
+                        break
+                if not wasTrapClick:
+                    trap = traps[trapPointer]
+                    trapPointer += 1
+                    trapPointer %= len(traps)
+
+        for monkey in monkeys:
+            monkey.update(traps)
+        displayImg.fill(black)
+        displayImg.blit(monkey.image, monkey.rect)
+        pygame.display.flip()
+
+----
+So what happened?  Significantly, the block of code that starts with 
+"for event in pygame.event.get():" has grown.  I'm going to call this the event
+handling block.  Now it's about 10 lines longer.  It contains one new loop, 
+and two new branches (if statements). Imagine what will happen to
+the event handling block as each new feature is added.
+
+Because we humans have trouble with complex systems, we have developed the techniques of organization and abstraction.
+We organize things so that we only need to deal with one thing at a time, and
+we abstract things so that we can manipulate a simple system that is "similar
+enough" to the complex system.
 
 
