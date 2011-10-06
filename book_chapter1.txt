@@ -209,4 +209,13 @@ So why stop at 60?  Why not go up to 120?  240?  2000? There are a couple
 reasons.  One is that the game gets too fast at those rates (try it and see).
 Another is that it heats up the CPU, which can be uncomfortable when using
 a laptop.
+
+Now that you know that clock.tick() is to block the process for 1/60th of a 
+second, think about what monkey.update() does.  It's basically just a call to
+inform the monkey object that 1/60th of a second has passed.
 ]
+
+So to summarize what we said, the code is at the base level, initialization 
+then an infinite loop.  Inside that loop there is an event handling block
+(here, we include the call to monkey.update() as part of the event handling 
+block), and then a section where images are drawn to the screen.
