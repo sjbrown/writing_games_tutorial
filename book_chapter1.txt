@@ -136,7 +136,8 @@ def main():
         for monkey in monkeys:
             monkey.update(traps)
         displayImg.fill(black)
-        displayImg.blit(monkey.image, monkey.rect)
+        for sprite in monkeys + traps:
+            displayImg.blit(sprite.image, sprite.rect)
         pygame.display.flip()
 
 ----
@@ -218,4 +219,101 @@ inform the monkey object that 1/60th of a second has passed.
 So to summarize what we said, the code is at the base level, initialization 
 then an infinite loop.  Inside that loop there is an event handling block
 (here, we include the call to monkey.update() as part of the event handling 
-block), and then a section where images are drawn to the screen.
+block), and then a section where images are drawn to the screen.  Use that
+summary to organize the code like so:
+
+----
+def init():
+    # Necessary Pygame set-up...
+    pygame.init()
+    clock = pygame.time.Clock()
+    displayImg = pygame.display.set_mode(screenDimensions.size)
+    monkey = Monkey()
+
+    return (clock, displayImg, monkey)
+
+def handle_events(clock, monkey):
+    for event in pygame.event.get():
+        if event.type == c.QUIT:
+            return
+        elif event.type == c.MOUSEBUTTONDOWN:
+            monkey.attemptPunch(event.pos)
+
+    clock.tick(60) # aim for 60 frames per second
+    monkey.update()
+
+def draw_to_display(displayImg, monkey):
+    displayImg.fill(black)
+    displayImg.blit(monkey.image, monkey.rect)
+    pygame.display.flip()
+
+def main():
+    clock, displayImg, monkey = init()
+
+    while True:
+        handle_events(clock, monkey)
+        draw_to_display(displayImg, monkey)
+
+----
+
+Look at that code.  It's ever so organized.  Therefore, problem solved. 
+We are now great coders who deserve a cookie and a pat on the back.
+Don't choke on that cookie.  First, ask yourself whether this change has 
+actually done anything worthwhile.
+
+The code has definitely been broken into chunks that have a semantic distinction
+for the reader.  The functions are named descriptively, and the lines of code 
+in each function are fewer.  These are all good things.
+
+What if we add the 3 traps, 3 monkeys feature discussed above?  We will have to
+change the code as before *plus* we'll have to change all the argument passing.
+Using function arguments as a river to move your little boats downstream should
+raise a red flag.
+
+Let's start abstracting.  See what the code looks like if we add a 
+module-level variable to contain any and all sprites.
+[[TODO: justify module-level variables to the no-globals-kneejerk]]
+
+----
+sprites = pygame.sprite.Group()
+
+def init():
+    # Necessary Pygame set-up...
+    pygame.init()
+    clock = pygame.time.Clock()
+    displayImg = pygame.display.set_mode(screenDimensions.size)
+    monkey = Monkey()
+    sprites.add(monkey)
+
+    return (clock, displayImg)
+
+def handle_events(clock):
+    for event in pygame.event.get():
+        if event.type == c.QUIT:
+            return
+        elif event.type == c.MOUSEBUTTONDOWN:
+            for sprite in sprites:
+                if isinstance(sprite, Monkey):
+                    sprite.attemptPunch(event.pos)
+
+    clock.tick(60) # aim for 60 frames per second
+    for sprite in sprites:
+        sprite.update()
+
+def draw_to_display(displayImg):
+    displayImg.fill(black)
+    for sprite in sprites:
+        displayImg.blit(sprite.image, sprite.rect)
+    pygame.display.flip()
+
+def main():
+    clock, displayImg = init()
+
+    while True:
+        handle_events(clock)
+        draw_to_display(displayImg)
+
+----
+
+This change adds a few lines of code, but it has carved out of main() the
+dependence
