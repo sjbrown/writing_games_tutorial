@@ -72,7 +72,7 @@ def main():
     monkey = Monkey()
 
     while True:
-        clock.tick(60) # aim for 60 FPS
+        clock.tick(60) # aim for 60 frames per second
         for event in pygame.event.get():
             if event.type == c.QUIT:
                 return
@@ -92,8 +92,8 @@ if __name__ == '__main__':
 ----
 So with that we have a (very simple, but complete) game. It may not be the most
 fun game ever written, but that can be fixed by slick box art and a major motion
-picture tie-in. Let's not concern ourselves with that and instead look at
-the technical details.
+picture tie-in. Let's leave those concerns for the marketing department and 
+instead look at the technical details.
 
 What we have above is a minimal game. As we add features to it, the code will
 grow in complexity. As humans, we are bad at holding and manipulating complex
@@ -113,7 +113,7 @@ def main():
 
     monkeys = [Monkey(), Monkey(), Monkey()]
     traps = [Trap(), Trap(), Trap()]
-    trapPointer = 0
+    trapCycle = itertools.cycle(traps)
 
     while True:
         clock.tick(60) # aim for 60 FPS
@@ -128,9 +128,10 @@ def main():
                         wasTrapClick = True
                         break
                 if not wasTrapClick:
-                    trap = traps[trapPointer]
-                    trapPointer += 1
-                    trapPointer %= len(traps)
+                    # if the user didn't click on a trap, then they
+                    # intended to place the next one here.
+                    trap = trapCycle.next()
+                    trap.place_at(event.pos)
 
         for monkey in monkeys:
             monkey.update(traps)
@@ -143,11 +144,27 @@ So what happened?  Significantly, the block of code that starts with
 "for event in pygame.event.get():" has grown.  I'm going to call this the event
 handling block.  Now it's about 10 lines longer.  It contains one new loop, 
 and two new branches (if statements). Imagine what will happen to
-the event handling block as each new feature is added.
+the event handling block as each new feature is added.  If your imagination
+is summoning images of a single skyscraping ladder of an if / elif, ridden with
+deep sub-blocks of loops and branches, countless and tentacle-like, then you
+are two things: accurate, and likely on the same medication as myself.
 
-Because we humans have trouble with complex systems, we have developed the techniques of organization and abstraction.
-We organize things so that we only need to deal with one thing at a time, and
-we abstract things so that we can manipulate a simple system that is "similar
+Not only will complex code be difficult to hold in our brain, it also gets
+in the way of our critical goal - Rapid Development. Developing software always
+involves going back to code you've written in the past to make changes. If the
+code is complex, you are going to pay greater time costs for both searching 
+for the code to change, and for the change itself because it will need to be
+made in more places.
+
+Because we humans have trouble with complex systems, we have developed 
+the techniques of organization and abstraction.
+We organize so that we only need to deal with one thing at a time, and
+we abstract so that we can manipulate a simple system that is "similar
 enough" to the complex system.
+
+How can we organize and/or abstract this code to address the problem of
+growing complexity as we add more game features? (And while we're solving
+that, can we also do ourselves some favours along the way to make it faster
+to develop our game?)
 
 
