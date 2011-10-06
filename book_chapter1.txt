@@ -149,8 +149,8 @@ is summoning images of a single skyscraping ladder of an if / elif, ridden with
 deep sub-blocks of loops and branches, countless and tentacle-like, then you
 are two things: accurate, and likely on the same medication as myself.
 
-Not only will complex code be difficult to hold in our brain, it also gets
-in the way of our critical goal - Rapid Development. Developing software always
+Not only will complex code be difficult to hold in your brain, it also gets
+in the way of a critical goal - Rapid Development. Developing software always
 involves going back to code you've written in the past to make changes. If the
 code is complex, you are going to pay greater time costs for both searching 
 for the code to change, and for the change itself because it will need to be
@@ -167,4 +167,46 @@ growing complexity as we add more game features? (And while we're solving
 that, can we also do ourselves some favours along the way to make it faster
 to develop our game?)
 
+Luckily for us humans, our brains are *built* for this task.
+They are Automatic Abstraction Apparati.  We make abstractions every time 
+we think, and especially when we talk.
+So one exercise to do is to simply talk about code. If somebody asked, 
+"What does this main() function do?", a reply might go something like
+"Well, it does some initialization of the important objects, then it starts
+this infinite 'while True:' loop, see?  Inside the loop it does this
+clock.tick() thing, I'm not really sure what that's for.  Anyway, then it goes
+through all the 'pygame' events and handles them.  After all that, it calls
+monkey.update() (we've got to update the monkey every frame so that it moves),
+and then it draws everything to the screen."
 
+[ASIDE]
+[
+Ok, did you catch that?  Here you are talking about this great monkey-punching
+game you wrote, and you don't even know what clock.tick() does?
+
+clock.tick() is used to get a target *frame rate*. We want the game to look 
+"smooth". Animation works because if we see a series of images in quick
+succession, we are tricked into thinking we are seeing a moving thing.
+
+Try the example code with 5 as the argument to clock.tick().  The monkey no
+longer looks like it is smoothly moving, instead it is jerking. That's not
+acceptable for a game, nobody wants to play with a jerking monkey.
+
+24 frames per second (FPS) is the rate used in feature films, and is generally 
+accepted as a minimum for video games.
+
+By calling clock.tick(60), we are asking the operating system to *block* this 
+process for 1/60th of a second.  When a process is blocked, it cannot 
+execute any further code, it just sits on a shelf, gathering nano-dust.
+When the requested duration is up, the operating system puts the process 
+back into the mix, and its code can start executing again.
+
+[[TODO: make sure this is technically accurate.  tick() may actually do better
+wall-clock FPS simulation by not blocking for 1/60th of a second, but rather
+1/60th minus the time it took since the last call to tick()]]
+
+So why stop at 60?  Why not go up to 120?  240?  2000? There are a couple
+reasons.  One is that the game gets too fast at those rates (try it and see).
+Another is that it heats up the CPU, which can be uncomfortable when using
+a laptop.
+]
