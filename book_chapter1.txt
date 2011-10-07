@@ -315,5 +315,28 @@ def main():
 
 ----
 
-This change adds a few lines of code, but it has carved out of main() the
-dependence
+This change adds a few lines of code, but it got the monkey off main()'s back.
+If we add 3 monkeys and 3 traps, no changes will be needed in main() (or in 
+draw_to_display(), for that matter).
+
+What we have just done is partially implemented the design pattern, 
+"Model View Controller" (MVC).  
+
+[ASIDE]
+[
+Design Patterns are a communication tool; they do not dictate design, they 
+inform the reading of the code. This book makes use of the design patterns 
+"Model View Controller" (MVC), "Mediator", and "Lazy Proxy". Time won't be 
+spent describing these patterns in detail, so if they sound foreign to you, 
+I recommend checking out the book "Design Patterns" by Gamma et al. or just 
+surfing the web for tutorials.
+]
+
+In our example, the Model is the "sprites" object, it holds the state of our
+game, any questions about the authoritative facts of the game will be directed
+there.  The View the draw_to_display() function, it shows a representation
+of the Model on a Pygame window.
+
+Identifying the Controller component is a bit trickier.  One might be tempted 
+to say that the mouse and keyboard are the Controllers.  These are indeed 
+Controllers in one sense, but

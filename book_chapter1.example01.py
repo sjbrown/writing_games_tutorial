@@ -55,14 +55,15 @@ def main():
     monkey = Monkey()
 
     while True:
-        clock.tick(60) # aim for 60 FPS
         for event in pygame.event.get():
             if event.type == c.QUIT:
                 return
             elif event.type == c.MOUSEBUTTONDOWN:
                 monkey.attemptPunch(event)
 
+        clock.tick(60) # aim for 60 FPS
         monkey.update()
+
         displayImg.fill(black)
         displayImg.blit(monkey.image, monkey.rect)
         pygame.display.flip()
