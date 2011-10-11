@@ -33,4 +33,11 @@ Code example
 ---- End Chapter 1 ----
 
 
-Should I do some kind of *radical* client-server
+Should I do some kind of *radical* client-server?
+Like, start the UI, the first thing it does is ask the EventManager, "Who are the players?", "What's the game state?", maybe even "Here are my capabilities".
+
+Hmm. the "here are my capabilities" part will probably mean more code. Scratch that.
+
+Anyway, the idea here is that the view should not respond to BoardBuiltEvent as much as it should broadcast a query (with a TTL) like "Hey guys, send me the board object"
+
+This approach keeps the data inside the messages, less in shared state.  Synchronization will turn into scaling issues.
