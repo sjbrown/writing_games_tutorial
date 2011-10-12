@@ -1,0 +1,57 @@
+Ok, now lets look at what will happen when we add some networking code. 
+We're writing a multiplayer game after all.
+
+Imagine this was a 2-player game, opponents are connected to each other over
+the internet, and when your opponent has a higher score than you, it makes
+your monkey move faster.
+
+It might look something like this:
+
+----
+
+def handle_events(clock):
+    monkeys = []
+    for sprite in sprites:
+        if isinstance(sprite, Monkey):
+            monkeys.append(sprite)
+
+    for event in pygame.event.get():
+        if event.type == c.QUIT:
+            return False
+        elif event.type == c.MOUSEBUTTONDOWN:
+            for monkey in monkeys:
+                monkey.attempt_punch(event.pos)
+
+    opponentScore = get_opponent_score()
+    difference = opponentScore - score
+    if difference > 0:
+        multiplier = 1.0 + difference/10.0
+    else:
+        multiplier = 1.0
+    for monkey in monkeys:
+        monkey.adjust_speed(multiplier)
+
+    clock.tick(60) # aim for 60 frames per second
+    for sprite in sprites:
+        sprite.update()
+
+    return True
+
+----
+
+This won't work.  An important fact to understand about sending and receiving
+information over the network is that the network is slow. (Even "high speed"
+networks still experience latency) Our screen won't be
+redrawn every 1/60th of a second if it takes get_opponent_score() 2 seconds to
+make a connection and pull down an integer from a remote host.
+
+As proof, try to run this example with the networking functions simulated by
+a sleep() of between 0 and 1 seconds.
+
+----
+----
+
+As you can see, the monkey randomly jerks his way across the screen.  Bad monkey.
+
+What do we do about these two opposing needs?  The display needs to be updated
+many times per second, but networking calls can take seconds to return.

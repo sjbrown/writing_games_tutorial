@@ -17,6 +17,7 @@ red   = (255,0,0)
 class Monkey(pygame.sprite.Sprite):
     def __init__(self):
         self.stunTimeout = None
+        self.origVelocity = 2
         self.velocity = 2
         super(Monkey, self).__init__()
         self.image = pygame.Surface((60,60))
@@ -44,6 +45,12 @@ class Monkey(pygame.sprite.Sprite):
             score += 1
             self.render(red)
 
+    def adjust_speed(self, multiplier):
+        if self.velocity > 0:
+            self.velocity = multiplier * self.origVelocity
+        if self.velocity < 0:
+            self.velocity = multiplier * -self.origVelocity
+
     def update(self):
         if self.stunTimeout:
             # If stunned, the monkey doesn't move
@@ -54,10 +61,9 @@ class Monkey(pygame.sprite.Sprite):
             # Move the monkey
             self.rect.x += self.velocity
             # Don't let the monkey run past the edge of the viewable area
-            if self.rect.right > screenDimensions.right:
-                self.velocity = -2
-            elif self.rect.left < screenDimensions.left:
-                self.velocity = 2
+            if (self.rect.right > screenDimensions.right or
+                self.rect.left < screenDimensions.left):
+                self.velocity = -self.velocity
 
 
 def init():
@@ -70,30 +76,35 @@ def init():
 
     return (clock, displayImg)
 
-def network_get_events():
+def get_opponent_score():
     time.sleep(random.random())
-    return []
-
-def network_send_events():
-    time.sleep(random.random())
+    return score # just for pretend
 
 def handle_events(clock):
+    monkeys = []
+    for sprite in sprites:
+        if isinstance(sprite, Monkey):
+            monkeys.append(sprite)
+
     for event in pygame.event.get():
         if event.type == c.QUIT:
             return False
         elif event.type == c.MOUSEBUTTONDOWN:
-            for sprite in sprites:
-                if isinstance(sprite, Monkey):
-                    sprite.attempt_punch(event.pos)
+            for monkey in monkeys:
+                monkey.attempt_punch(event.pos)
 
-    for event in network_get_events():
-        pass # TODO: actually do something here
+    opponentScore = get_opponent_score()
+    difference = opponentScore - score
+    if difference > 0:
+        multiplier = 1.0 + difference/10.0
+    else:
+        multiplier = 1.0
+    for monkey in monkeys:
+        monkey.adjust_speed(multiplier)
 
     clock.tick(60) # aim for 60 frames per second
     for sprite in sprites:
         sprite.update()
-
-    network_send_events()
 
     return True
 
