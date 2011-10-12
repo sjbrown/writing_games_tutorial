@@ -30,7 +30,7 @@ class Monkey(pygame.sprite.Sprite):
         pygame.draw.circle(self.image, white, (50,10), 10, 2)
         pygame.draw.circle(self.image, white, (30,60), 20, 2)
 
-    def attemptPunch(self, pos):
+    def attempt_punch(self, pos):
         '''If the given position (pos) is inside the monkey's rect, the monkey
         has been "punched".  A successful punch will stun the monkey and increment
         the global score.  The monkey cannot be punched if he is already stunned
@@ -80,11 +80,11 @@ def network_send_events():
 def handle_events(clock):
     for event in pygame.event.get():
         if event.type == c.QUIT:
-            return #TODO FIX THIS
+            return False
         elif event.type == c.MOUSEBUTTONDOWN:
             for sprite in sprites:
                 if isinstance(sprite, Monkey):
-                    sprite.attemptPunch(event.pos)
+                    sprite.attempt_punch(event.pos)
 
     for event in network_get_events():
         pass # TODO: actually do something here
@@ -95,6 +95,8 @@ def handle_events(clock):
 
     network_send_events()
 
+    return True
+
 def draw_to_display(displayImg):
     displayImg.fill(black)
     for sprite in sprites:
@@ -104,8 +106,10 @@ def draw_to_display(displayImg):
 def main():
     clock, displayImg = init()
 
-    while True:
-        handle_events(clock)
+    keepGoing = True
+
+    while keepGoing:
+        keepGoing = handle_events(clock)
         draw_to_display(displayImg)
 
 if __name__ == '__main__':
