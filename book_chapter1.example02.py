@@ -1,10 +1,13 @@
 import time
+import random
 import pygame
 import pygame.constants as c
 
 score = 0
 
-screenDimensions = pygame.Rect((0,0,400,100))
+screenDimensions = pygame.Rect((0,0,400,60))
+
+sprites = pygame.sprite.Group()
 
 black = (0,0,0)
 white = (255,255,255)
@@ -57,27 +60,53 @@ class Monkey(pygame.sprite.Sprite):
                 self.velocity = 2
 
 
-def main():
+def init():
+    # Necessary Pygame set-up...
     pygame.init()
     clock = pygame.time.Clock()
     displayImg = pygame.display.set_mode(screenDimensions.size)
     monkey = Monkey()
+    sprites.add(monkey)
+
+    return (clock, displayImg)
+
+def network_get_events():
+    time.sleep(random.random())
+    return []
+
+def network_send_events():
+    time.sleep(random.random())
+
+def handle_events(clock):
+    for event in pygame.event.get():
+        if event.type == c.QUIT:
+            return #TODO FIX THIS
+        elif event.type == c.MOUSEBUTTONDOWN:
+            for sprite in sprites:
+                if isinstance(sprite, Monkey):
+                    sprite.attemptPunch(event.pos)
+
+    for event in network_get_events():
+        pass # TODO: actually do something here
+
+    clock.tick(60) # aim for 60 frames per second
+    for sprite in sprites:
+        sprite.update()
+
+    network_send_events()
+
+def draw_to_display(displayImg):
+    displayImg.fill(black)
+    for sprite in sprites:
+        displayImg.blit(sprite.image, sprite.rect)
+    pygame.display.flip()
+
+def main():
+    clock, displayImg = init()
 
     while True:
-        for event in pygame.event.get():
-            if event.type == c.QUIT:
-                return
-            elif event.type == c.MOUSEBUTTONDOWN:
-                monkey.attemptPunch(event.pos)
-
-        clock.tick(60) # aim for 60 FPS
-        monkey.update()
-
-        displayImg.fill(black)
-        displayImg.blit(monkey.image, monkey.rect)
-        pygame.display.flip()
-
+        handle_events(clock)
+        draw_to_display(displayImg)
 
 if __name__ == '__main__':
     main()
-    print 'Your score was', score
