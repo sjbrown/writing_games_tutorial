@@ -34,7 +34,7 @@ class Monkey(pygame.sprite.Sprite):
         pygame.draw.circle(self.image, white, (50,10), 10, 2)
         pygame.draw.circle(self.image, white, (30,60), 20, 2)
 
-    def attemptPunch(self, pos):
+    def attempt_punch(self, pos):
         '''If the given position (pos) is inside the monkey's rect, the monkey
         has been "punched".  A successful punch will stun the monkey and increment
         the global score.  The monkey cannot be punched if he is already stunned
@@ -77,7 +77,7 @@ def main():
             if event.type == c.QUIT:
                 return
             elif event.type == c.MOUSEBUTTONDOWN:
-                monkey.attemptPunch(event.pos)
+                monkey.attempt_punch(event.pos)
 
         monkey.update()
         displayImg.fill(black)
@@ -235,12 +235,14 @@ def init():
 def handle_events(clock, monkey):
     for event in pygame.event.get():
         if event.type == c.QUIT:
-            return
+            return False
         elif event.type == c.MOUSEBUTTONDOWN:
-            monkey.attemptPunch(event.pos)
+            monkey.attempt_punch(event.pos)
 
     clock.tick(60) # aim for 60 frames per second
     monkey.update()
+
+    return True
 
 def draw_to_display(displayImg, monkey):
     displayImg.fill(black)
@@ -250,8 +252,10 @@ def draw_to_display(displayImg, monkey):
 def main():
     clock, displayImg, monkey = init()
 
-    while True:
-        handle_events(clock, monkey)
+    keepGoing = True
+
+    while keepGoing:
+        keepGoing = handle_events(clock, monkey)
         draw_to_display(displayImg, monkey)
 
 ----
@@ -294,7 +298,7 @@ def handle_events(clock):
         elif event.type == c.MOUSEBUTTONDOWN:
             for sprite in sprites:
                 if isinstance(sprite, Monkey):
-                    sprite.attemptPunch(event.pos)
+                    sprite.attempt_punch(event.pos)
 
     clock.tick(60) # aim for 60 frames per second
     for sprite in sprites:
@@ -309,8 +313,10 @@ def draw_to_display(displayImg):
 def main():
     clock, displayImg = init()
 
-    while True:
-        handle_events(clock)
+    keepGoing = True
+
+    while keepGoing:
+        keepGoing = handle_events(clock)
         draw_to_display(displayImg)
 
 ----
@@ -373,148 +379,59 @@ I contend, more readable code.
 ]
 
 Ok, now lets look at what will happen when we add some networking code. 
-We're writing a multiplayer game after all. Sending and receiving data over
-the network might look something like this:
+We're writing a multiplayer game after all.
+
+Imagine this was a 2-player game, opponents are connected to each other over
+the internet, and when your opponent has a higher score than you, it makes
+your monkey move faster.
+
+It might look something like this:
 
 ----
 
 def handle_events(clock):
+    monkeys = []
+    for sprite in sprites:
+        if isinstance(sprite, Monkey):
+            monkeys.append(sprite)
+
     for event in pygame.event.get():
         if event.type == c.QUIT:
-            return
+            return False
         elif event.type == c.MOUSEBUTTONDOWN:
-            for sprite in sprites:
-                if isinstance(sprite, Monkey):
-                    sprite.attemptPunch(event.pos)
+            for monkey in monkeys:
+                monkey.attempt_punch(event.pos)
 
-    for event in network_get_events():
-        pass # TODO: actually do something here
+    opponentScore = get_opponent_score()
+    difference = opponentScore - score
+    if difference > 0:
+        multiplier = 1.0 + difference/10.0
+    else:
+        multiplier = 1.0
+    for monkey in monkeys:
+        monkey.adjust_speed(multiplier)
 
     clock.tick(60) # aim for 60 frames per second
     for sprite in sprites:
         sprite.update()
 
-    network_send_events()
+    return True
 
 ----
 
 This won't work.  An important fact to understand about sending and receiving
-information over the network is that the network is slow.  Our screen won't be
-redrawn every 1/60th of a second if it takes network_get_events() 2 seconds to
-make a connection and pull down some data from a remote host.
+information over the network is that the network is slow. (Even "high speed"
+networks still experience latency) Our screen won't be
+redrawn every 1/60th of a second if it takes get_opponent_score() 2 seconds to
+make a connection and pull down an integer from a remote host.
 
 As proof, try to run this example with the networking functions simulated by
 a sleep() of between 0 and 1 seconds.
 
-
 ----
-import time
-import random
-import pygame
-import pygame.constants as c
-
-score = 0
-
-screenDimensions = pygame.Rect((0,0,400,60))
-
-sprites = pygame.sprite.Group()
-
-black = (0,0,0)
-white = (255,255,255)
-blue  = (0,0,255)
-red   = (255,0,0)
-
-class Monkey(pygame.sprite.Sprite):
-    def __init__(self):
-        self.stunTimeout = None
-        self.velocity = 2
-        super(Monkey, self).__init__()
-        self.image = pygame.Surface((60,60))
-        self.rect = self.image.get_rect()
-        self.render(blue)
-
-    def render(self, color):
-        '''draw onto self.image the face of a monkey in the specified color'''
-        self.image.fill(color)
-        pygame.draw.circle(self.image, white, (10,10), 10, 2)
-        pygame.draw.circle(self.image, white, (50,10), 10, 2)
-        pygame.draw.circle(self.image, white, (30,60), 20, 2)
-
-    def attemptPunch(self, pos):
-        '''If the given position (pos) is inside the monkey's rect, the monkey
-        has been "punched".  A successful punch will stun the monkey and increment
-        the global score.  The monkey cannot be punched if he is already stunned
-        '''
-        if self.stunTimeout:
-            return # already stunned
-        if self.rect.collidepoint(pos):
-            # Argh!  The punch intersected with my face!
-            self.stunTimeout = time.time() + 2 # 2 seconds from now
-            global score
-            score += 1
-            self.render(red)
-
-    def update(self):
-        if self.stunTimeout:
-            # If stunned, the monkey doesn't move
-            if time.time() > self.stunTimeout:
-                self.stunTimeout = None
-                self.render(blue)
-        else:
-            # Move the monkey
-            self.rect.x += self.velocity
-            # Don't let the monkey run past the edge of the viewable area
-            if self.rect.right > screenDimensions.right:
-                self.velocity = -2
-            elif self.rect.left < screenDimensions.left:
-                self.velocity = 2
-
-
-def init():
-    # Necessary Pygame set-up...
-    pygame.init()
-    clock = pygame.time.Clock()
-    displayImg = pygame.display.set_mode(screenDimensions.size)
-    monkey = Monkey()
-    sprites.add(monkey)
-
-    return (clock, displayImg)
-
-def network_get_events():
-    time.sleep(random.random())
-
-def network_send_events():
-    time.sleep(random.random())
-
-def handle_events(clock):
-    for event in pygame.event.get():
-        if event.type == c.QUIT:
-            return #TODO FIX THIS
-        elif event.type == c.MOUSEBUTTONDOWN:
-            for sprite in sprites:
-                if isinstance(sprite, Monkey):
-                    sprite.attemptPunch(event.pos)
-
-    for event in network_get_events():
-        pass # TODO: actually do something here
-
-    clock.tick(60) # aim for 60 frames per second
-    for sprite in sprites:
-        sprite.update()
-
-    network_send_events()
-
-def draw_to_display(displayImg):
-    displayImg.fill(black)
-    for sprite in sprites:
-        displayImg.blit(sprite.image, sprite.rect)
-    pygame.display.flip()
-
-def main():
-    clock, displayImg = init()
-
-    while True:
-        handle_events(clock)
-        draw_to_display(displayImg)
-
 ----
+
+As you can see, the monkey randomly jerks his way across the screen.  Bad monkey.
+
+What do we do about these two opposing needs?  The display needs to be updated
+many times per second, but networking calls can take seconds to return.
