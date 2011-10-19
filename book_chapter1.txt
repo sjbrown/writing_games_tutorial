@@ -345,13 +345,13 @@ of the Model on a Pygame window.
 
 We still have the issue of the event handling code growing wildly as more
 features are added, but at least we've isolated that problem to one place.
-We'l tackle the problem in depth in Chapter 2.
+We'll tackle the problem in depth in Chapter 2.
 
 If we want to be complete and formal about this MVC pattern, we may want to 
 also identify Controller components. Identifying a Controller component is 
 a bit trickier.  One might be tempted to say that the mouse and keyboard are 
 the Controllers.  These are indeed Controllers in one sense, but we don't 
-have objects in our code representing each.  (and one should't add classes to
+have objects in our code representing each.  (and one shouldn't add classes to
 the codebase just so we can have a more literal match to the Design Pattern)
 Instead, these literal devices are represented by the Pygame event queue.
 Also, the Pygame Clock object also serves as a Controller.
@@ -377,4 +377,3 @@ new views (file loggers, radars, HUDs, multiple zoom levels, ...), keep the
 Model code "cleaner" by decoupling it from the view and the controller, and 
 I contend, more readable code.
 ]
-

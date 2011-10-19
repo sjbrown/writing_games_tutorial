@@ -1,0 +1,58 @@
+As promised, let's now take a look at the problem of adding of features 
+causing our event handling function getting hairier than the warmest yeti.
+
+----
+
+def handle_events(clock):
+    for event in pygame.event.get():
+        if event.type == c.QUIT:
+            return
+        elif event.type == c.MOUSEBUTTONDOWN:
+            for sprite in sprites:
+                if isinstance(sprite, Monkey):
+                    sprite.attempt_punch(event.pos)
+
+    clock.tick(60) # aim for 60 frames per second
+    for sprite in sprites:
+        sprite.update()
+
+----
+
+We can see that this function grows in complexity as 3 other things increase:
+event sources (places that events come from)
+event sinks (places where events need to be sent)
+event types
+
+----
+
+def handle_events(clock):
+    for event in pygame.event.get():
+        if event.type == c.QUIT:
+            return
+        elif event.type == c.MOUSEBUTTONDOWN:
+            for sprite in sprites:
+                if isinstance(sprite, Monkey):
+                    sprite.attempt_punch(event.pos)
+        elif event.type == event_type_B:
+            for sprite in sprites:
+                if isinstance(sprite, Trap):
+                     ...
+        elif event.type == event_type_C:
+            ...
+        elif event.type == event_type_D:
+            ...
+
+    clock.tick(60) # aim for 60 frames per second
+    for sprite in sprites:
+        sprite.update()
+
+    for event in some_other_events():
+        ...
+
+    specialEvent = from_somewhere()
+    for sprite in sprites:
+        sprite.do_special()
+
+----
+
+
