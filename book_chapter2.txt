@@ -1,6 +1,10 @@
 As promised, let's now take a look at the problem of how adding of features 
 causes our event handling function to get hairier than the warmest yeti.
 
+[TODO: maybe a note about how if you're really looking for quick development
+and don't want see the steps or the rationale, you can skip to the end of 
+this chapter for a complete event manager module]
+
 ----
 
 def handle_events(clock):
@@ -20,8 +24,8 @@ def handle_events(clock):
 
 We can see that this function grows in complexity as 3 other things increase:
 event sources (places that events come from)
-event listeners (places where events need to be sent)
 event types
+event listeners (places where events need to be sent)
 
 ----
 
@@ -250,3 +254,79 @@ Complexity are truly cowering now.
 
 [TODO: Aside - discuss the possible infinite loop if some_other_events() was
 a generator that could get new events as listeners processed events]
+
+Next, let's address the growth of event listeners.  We've already taken care 
+of the addition of new sprites with our earlier changes, but what if we want
+other types of objects to listen to events?  For example, a log file object.
+Simply add a data structure that collects all the listeners.
+
+While making this change, let's also notice that our function, handle_events()
+is no longer doing any *handling* of the events. So it will be renamed
+dispatch_events() to more accurately reflect what it does.
+
+----
+listeners = []
+
+def init():
+    # Necessary Pygame set-up...
+    pygame.init()
+    clock = pygame.time.Clock()
+    displayImg = pygame.display.set_mode(screenDimensions.size)
+    monkey = Monkey()
+    sprites.add(monkey)
+    listeners += sprites
+
+    return (clock, displayImg)
+
+def dispatch_events(clock):
+    for eventTuple in generate_events(clock):
+        for listener in listeners:
+            methodName = 'on_' + eventTuple[0]
+            if hasattr(listener, methodName)
+                method = getattr(listener, methodName)
+                methodName(*eventTuple[1:])
+----
+
+Now hopefully your organizational instincts are telling you that with our
+handful of functions and a module-level data structure that are all
+inter-related, it is a good time to encapsulate them into their own module.
+[TODO: talk about Mediator pattern here?]
+
+Your instincts may also have been keeping you annoyed by the passing of the
+Pygame clock object two levels deep, from dispatch_events() to 
+generate_events().  The next change will address this as well.
+
+----
+#! /usr/bin/python
+'''Event module'''
+
+sources = []
+listeners = []
+
+def addSource(fn, eventTypeName=None):
+    '''fn must be callable, and must return a list when called.
+    eventTypeName is optional.  If included, it should be a string that will
+    be added to "on_" to create method names to be searched for in the
+    listeners
+    '''
+    sources.append((fn, eventTypeName))
+
+def addListener(listener):
+    listeners.append(listener)
+
+def generate_events():
+    for sourceFn, eventTypeName in sources:
+        for event in sourceFn():
+            if eventTypeName:
+                typeName = eventTypeName
+            else:
+                typeName = event.__class__.__name__
+            yield (typeName, event)
+
+def dispatch_events():
+    for eventTuple in generate_events():
+        for listener in listeners:
+            methodName = 'on_' + eventTuple[0]
+            if hasattr(listener, methodName)
+                method = getattr(listener, methodName)
+                methodName(*eventTuple[1:])
