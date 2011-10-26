@@ -1,12 +1,12 @@
-As promised, let's now take a look at the problem of adding of features 
-causing our event handling function getting hairier than the warmest yeti.
+As promised, let's now take a look at the problem of how adding of features 
+causes our event handling function to get hairier than the warmest yeti.
 
 ----
 
 def handle_events(clock):
     for event in pygame.event.get():
         if event.type == c.QUIT:
-            return
+            return False
         elif event.type == c.MOUSEBUTTONDOWN:
             for sprite in sprites:
                 if isinstance(sprite, Monkey):
@@ -20,7 +20,7 @@ def handle_events(clock):
 
 We can see that this function grows in complexity as 3 other things increase:
 event sources (places that events come from)
-event sinks (places where events need to be sent)
+event listeners (places where events need to be sent)
 event types
 
 ----
@@ -28,7 +28,7 @@ event types
 def handle_events(clock):
     for event in pygame.event.get():
         if event.type == c.QUIT:
-            return
+            return False
         elif event.type == c.MOUSEBUTTONDOWN:
             for sprite in sprites:
                 if isinstance(sprite, Monkey):
@@ -55,4 +55,198 @@ def handle_events(clock):
 
 ----
 
+Remember our two tools when faced with complexity: organization and abstraction.
+Let's use some abstraction.  We can move from handling each sink, source,
+or event type in it's own specific block of code to a single block of code that
+treats them generally.
 
+Start with the event sources.  We can see 4 different sources above, two
+we've seen before, pygame.event.get(), and clock.tick()/sprite.update(), as
+well as two new ones that exist just to provide an example of how the event
+sources might grow, some_other_events() and from_somewhere()/do_special().
+
+In general, all 4 do the same thing: generate events that must be sent
+to the listeners.  So let's group them into a function.
+
+----
+def generate_events(clock):
+    for event in pygame.event.get():
+        yield event
+
+    clock.tick(60) # aim for 60 frames per second
+    yield 'ClockTick'
+
+    for event in some_other_events():
+        yield event
+
+    specialEvent = from_somewhere()
+    yield 'SpecialEvent'
+
+
+def handle_events(clock):
+    for event in generate_events(clock):
+        if event == 'ClockTick'
+            for sprite in sprites:
+                sprite.update()
+        elif event == 'SpecialEvent'
+            for sprite in sprites:
+                sprite.do_special()
+        ... # handle those events that came from some_other_events()
+        elif event.type == c.QUIT:
+            return False
+        elif event.type == c.MOUSEBUTTONDOWN:
+            for sprite in sprites:
+                if isinstance(sprite, Monkey):
+                    sprite.attempt_punch(event.pos)
+        elif event.type == event_type_B:
+            for sprite in sprites:
+                if isinstance(sprite, Trap):
+                     ...
+        elif event.type == event_type_C:
+            ...
+        elif event.type == event_type_D:
+            ...
+----
+
+This generate_events() function is a little ugly, because it returns two types
+of object and relies on the caller to know how to handle them.  So let's 
+address the complexity caused by multiplying event types next.  Here's how
+to treate each event type in a general way:
+
+----
+class Monkey(pygame.sprite.Sprite):
+    ...
+    def on_event(self, event):
+        if event == 'ClockTick'
+            self.update()
+        elif event == 'SpecialEvent'
+            self.do_special()
+        ... # handle those events that came from some_other_events()
+        elif event.type == c.MOUSEBUTTONDOWN:
+            self.attempt_punch(event.pos)
+        # notice that Monkey doesn't do anything on event_type_B
+        elif event.type == event_type_C:
+            ...
+        elif event.type == event_type_D:
+            ...
+
+class Trap(pygame.sprite.Sprite):
+    ...
+    def on_event(self, event):
+        if event == 'ClockTick'
+            self.update()
+        elif event == 'SpecialEvent'
+            self.do_special()
+        ... # handle those events that came from some_other_events()
+        # notice that Trap doesn't do anything on MOUSEBUTTONDOWN
+        elif event.type == event_type_B:
+            self.add_some_honey()
+        elif event.type == event_type_C:
+            ...
+        elif event.type == event_type_D:
+            ...
+
+def handle_events(clock):
+    for event in generate_events(clock):
+        for sprite in sprites:
+            sprite.on_event(event)
+
+----
+
+Now we have *more* lines of code.  Have we gone backwards?  Not really.  
+Remember, we are trying to come up with a good way to deal with increasing
+complexity.  If we add 10 more events that only affect Monkeys, the only
+place we need to add more code will be in the Monkey class.  The Trap class
+and the handle_events() function will be unaffected.
+
+So the increase of event types destined for specific classes has been
+addressed, but what about event types that apply to many classes.  An example
+of such an event is what is now the 'ClockTick' string.  Every sprite will
+conceivably need to call update() when it receives a 'ClockTick'.
+
+We can use some of the language features that make Python so joyous to 
+solve this issue:
+[TODO: talk about the features we're about to use in a general sense, and address possible resistance]
+
+----
+class EventHandlingSprite(pygame.sprite.Sprite):
+    def on_ClockTick(self):
+        self.update()
+    def on_Special(self):
+        ...
+
+class Monkey(EventHandlingSprite):
+    ...
+    def on_PygameEvent(self, event):
+        if event.type == c.MOUSEBUTTONDOWN:
+            self.attempt_punch(event.pos)
+        elif event.type == event_type_C:
+            ...
+        elif event.type == event_type_D:
+            ...
+
+class Trap(EventHandlingSprite):
+    ...
+    def on_PygameEvent(self, event):
+        if event.type == event_type_B:
+            self.add_some_honey()
+        elif event.type == event_type_C:
+            ...
+        elif event.type == event_type_D:
+            ...
+
+def generate_events(clock):
+    for event in pygame.event.get():
+        yield ('PygameEvent', event)
+
+    clock.tick(60) # aim for 60 frames per second
+    yield ('ClockTick', )
+
+    for event in some_other_events():
+        yield (event.__class__.__name__, event)
+
+    specialEvent = from_somewhere()
+    yield ('SpecialEvent', )
+
+def handle_events(clock):
+    for eventTuple in generate_events(clock):
+        for sprite in sprites:
+            methodName = 'on_' + eventTuple[0]
+            if hasattr(sprite, methodName)
+                method = getattr(sprite, methodName)
+                methodName(*eventTuple[1:])
+----
+
+This was a big change, so let's examine it step by step.  First, look at the
+generate_events() function.  Now, instead of yielding two different types,
+either a string or some event instance, it consistently yields tuples.
+Every tuple has a string as its first argument. The string is a somewhat
+descriptive name for the event.
+
+This name gets consumed by the handle_events() function, which prefixes it
+with "on_".  For example, it takes "ClockTick" and creates the string
+"on_ClockTick".  It then looks for a method matching that name in every sprite.
+If it finds one, it calls the method, using the remaining items inside the
+tuple as arguments.  For example, when it calls on_PygameEvent(), it uses 
+the event as an argument.
+
+We see that on_PygameEvent() has been implemented in both the Monkey and
+Trap classes.
+
+Since on_ClockTick() and on_Special() will do the same thing to
+either a Monkey or a Trap, a new superclass is created to avoid duplicating
+those methods in both the Monkey and Trap classes.
+
+One change remains, the treatment of events that come from some_other_events().
+Let's assume that such events are proper Python instances and we can access
+their magic __class__ attribute (we can't do this with Pygame events).  When
+this is the case, we don't need to come up with our own descriptive string,
+we can just use __class__.__name__.
+
+So if some_other_events() is extended to return events of a new class, "Foo",
+we don't need to change generate_events() or handle_events(), we just need to
+add a on_Foo() method to one of our sprite classes.  The dark forces of 
+Complexity are truly cowering now.
+
+[TODO: Aside - discuss the possible infinite loop if some_other_events() was
+a generator that could get new events as listeners processed events]
