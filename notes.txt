@@ -12,6 +12,12 @@ But let's use Twisted at both ends because we're trying to do it rapidly
 Ok, which chapter should be first?
 I tried considering the "Messages across the wire" as the first chapter, but I think my brain wants to do first things first.
 
+---- Chapter 0 ----
+
+Talk about Rapid Development
+
+---- End Chapter 0 ----
+
 ---- Chapter 1 ----
 First:
 simple pygame example - Chimp
@@ -28,9 +34,49 @@ Model / view / controller with Event-driven can solve these two design problems
 Explain MVC
 Code example
 
+Then we will also need to handle multiple Views and Controllers.
+
 Explain Event-driven
 Code example
 ---- End Chapter 1 ----
+
+---- Chapter 2 ----
+
+Strategy A: consumers can nullify events
+case 1:
+event comes in
+click on blank part of screen
+traps each get a crack at it, but do nothing
+some 'other' entity must turn it into a new trap placement AFTER traps have a crack
+
+case 2:
+event comes in
+click on trap
+traps each get a crack at it, one catches it
+this trap must change event.removeMe = True otherwise the 'other' entity will 
+add a trap to the blank part of the screen
+
+Pros: 
+Cons: the "AFTER" is tricky and requires complexity in the events module
+
+Strategy B: event gets classified by an outside entity, then gets put on the front
+of the queue.
+case 1:
+event comes in
+click on blank part of screen
+traps don't handle raw mouseclicks
+outside entity catches mouseclick, goes through each trap, sees if it collides, it doesn't, so post_at_front() a 'ScreenClick' event.
+
+case 2:
+event comes in
+click on trap
+traps don't handle raw mouseclicks
+outside entity catches mouseclick, goes through each trap, sees if it collides, it does, so post_at_front() a 'TrapClick' event.
+
+Pros: sets the design up for a separate GUI Model
+Cons: multiplies the kinds of events there are, requires an events module API addition, post_at_front()
+
+---- End Chapter 2 ----
 
 
 Should I do some kind of *radical* client-server?
