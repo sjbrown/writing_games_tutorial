@@ -168,7 +168,7 @@ addressed, but what about event types that apply to many classes.  An example
 of such an event is what is now the 'ClockTick' string.  Every sprite will
 conceivably need to call update() when it receives a 'ClockTick'.
 
-We can use some of the language features that make Python so joyous to 
+We can use some of the language features that make Python so joyous to use to 
 solve this issue:
 [TODO: talk about the features we're about to use in a general sense, and address possible resistance]
 
@@ -292,7 +292,7 @@ handful of functions and a module-level data structure that are all
 inter-related, it is a good time to encapsulate them into their own module.
 [TODO: talk about Mediator pattern here?]
 
-Your instincts may also have been keeping you annoyed by the passing of the
+Your instincts have perhaps also been keeping you annoyed by the passing of the
 Pygame clock object two levels deep, from dispatch_events() to 
 generate_events().  The next change will address this as well.
 
@@ -300,19 +300,25 @@ generate_events().  The next change will address this as well.
 #! /usr/bin/python
 '''Event module'''
 
-sources = []
 listeners = []
+sources = []
 
-def addSource(fn, eventTypeName=None):
-    '''fn must be callable, and must return a list when called.
+def addListener(listener):
+    listeners.append(listener)
+
+def addSource(sourceFn, eventTypeName=None):
+    '''Add an "event source".
+    sourceFn must be callable, and must return a list when called.
+    Note: not an iterable, but an actual, fixed-length list.
+    It is recommended that this function be used by foreign modules.  The foreign
+    module should provide a sourceFn that returns all the local events that 
+    have happened since it was last called
+
     eventTypeName is optional.  If included, it should be a string that will
     be added to "on_" to create method names to be searched for in the
     listeners
     '''
-    sources.append((fn, eventTypeName))
-
-def addListener(listener):
-    listeners.append(listener)
+    sources.append((sourceFn, eventTypeName))
 
 def generate_events():
     for sourceFn, eventTypeName in sources:
@@ -324,9 +330,89 @@ def generate_events():
             yield (typeName, event)
 
 def dispatch_events():
-    for eventTuple in generate_events():
+    for typeName, event in generate_events():
         for listener in listeners:
-            methodName = 'on_' + eventTuple[0]
+            methodName = 'on_' + typeName
             if hasattr(listener, methodName)
                 method = getattr(listener, methodName)
-                methodName(*eventTuple[1:])
+                methodName(event)
+
+----
+
+Now to make this nice for our rapid develompent goal.
+Some modules don't want to be so sophisticated with their own sourceFn and 
+diamond earrings and tophats.  Let's provide a simple way for them to just
+post events into the queue, a single function called post() that doesn't 
+need to take any arguments fancier than a simple string.  (Though it is
+flexible enough to handle more arguments)
+
+----
+localEvents = []
+
+def getLocalEvents():
+    global localEvents
+    localEventsCopy = localEvents[:]
+    localEvents = []
+    return localEventsCopy
+
+addSource(getLocalEvents)
+
+def post(evName, *extraArgs, **kwargs):
+    class AnonymousEvent(object): pass
+    AnonymousEvent.__name__ = evName
+    event = AnonymousEvent()
+    event.name = evName
+    event.args = extraArgs
+    event.kwargs = kwargs
+    localEvents.append(event)
+
+----
+
+Now let's integrate our new events.py module into our main loop.
+
+----
+
+import events
+
+sprites = pygame.sprite.Group()
+keepGoing = True
+
+def init():
+    # Necessary Pygame set-up...
+    pygame.init()
+    clock = pygame.time.Clock()
+    displayImg = pygame.display.set_mode(screenDimensions.size)
+    monkey = Monkey()
+    sprites.add(monkey)
+
+    return (clock, displayImg)
+
+def draw_to_display(displayImg):
+    displayImg.fill(black)
+    for sprite in sprites:
+        displayImg.blit(sprite.image, sprite.rect)
+    pygame.display.flip()
+
+class QuitListener(object):
+    def __init__(self):
+        self.quit = False
+    def on_PygameEvent(self, event):
+        if event.type == c.QUIT:
+            self.quit = True
+
+def main():
+    clock, displayImg = init()
+    events.addSource(pygame.event.get, 'PygameEvent')
+
+    quitter = QuitListener()
+    events.addListener(quitter)
+
+    while not quitter.quit:
+        events.dispatch_events()
+        draw_to_display(displayImg)
+        clock.tick(60) # aim for 60 frames per second
+        events.post('ClockTick')
+
+----
+
+[TODO: what about the issue of getting things in order when there's a mix of eventSourceFunctions and just calls to post()?  Maybe we don't have to worry about it - let them shoot themselves in the foot]
