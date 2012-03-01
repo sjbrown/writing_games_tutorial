@@ -20,6 +20,8 @@ def handle_events(clock):
     for sprite in sprites:
         sprite.update()
 
+    return True
+
 ----
 
 We can see that this function grows in complexity as 3 other things increase:
@@ -89,10 +91,10 @@ def generate_events(clock):
 
 def handle_events(clock):
     for event in generate_events(clock):
-        if event == 'ClockTick'
+        if event == 'ClockTick':
             for sprite in sprites:
                 sprite.update()
-        elif event == 'SpecialEvent'
+        elif event == 'SpecialEvent':
             for sprite in sprites:
                 sprite.do_special()
         ... # handle those events that came from some_other_events()
@@ -110,6 +112,7 @@ def handle_events(clock):
             ...
         elif event.type == event_type_D:
             ...
+    return True
 ----
 
 This generate_events() function is a little ugly, because it returns two types
@@ -121,9 +124,9 @@ to treate each event type in a general way:
 class Monkey(pygame.sprite.Sprite):
     ...
     def on_event(self, event):
-        if event == 'ClockTick'
+        if event == 'ClockTick':
             self.update()
-        elif event == 'SpecialEvent'
+        elif event == 'SpecialEvent':
             self.do_special()
         ... # handle those events that came from some_other_events()
         elif event.type == c.MOUSEBUTTONDOWN:
@@ -137,9 +140,9 @@ class Monkey(pygame.sprite.Sprite):
 class Trap(pygame.sprite.Sprite):
     ...
     def on_event(self, event):
-        if event == 'ClockTick'
+        if event == 'ClockTick':
             self.update()
-        elif event == 'SpecialEvent'
+        elif event == 'SpecialEvent':
             self.do_special()
         ... # handle those events that came from some_other_events()
         # notice that Trap doesn't do anything on MOUSEBUTTONDOWN
@@ -152,8 +155,12 @@ class Trap(pygame.sprite.Sprite):
 
 def handle_events(clock):
     for event in generate_events(clock):
+        if hasattr(event, 'type') and event.type == c.QUIT:
+            return False
         for sprite in sprites:
             sprite.on_event(event)
+    return True
+
 
 ----
 
@@ -214,11 +221,15 @@ def generate_events(clock):
 
 def handle_events(clock):
     for eventTuple in generate_events(clock):
+        if eventTuple[0] == 'PygameEvent' and eventTuple[1].type == c.QUIT:
+            return False
         for sprite in sprites:
             methodName = 'on_' + eventTuple[0]
-            if hasattr(sprite, methodName)
+            if hasattr(sprite, methodName):
                 method = getattr(sprite, methodName)
-                methodName(*eventTuple[1:])
+                method(*eventTuple[1:])
+    return True
+
 ----
 
 This was a big change, so let's examine it step by step.  First, look at the

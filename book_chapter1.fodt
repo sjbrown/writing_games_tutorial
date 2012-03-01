@@ -1,0 +1,1818 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<office:document xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
+                 xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0"
+                 xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
+                 xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0"
+                 xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0"
+                 xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0"
+                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                 xmlns:dc="http://purl.org/dc/elements/1.1/"
+                 xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0"
+                 xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0"
+                 xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0"
+                 xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0"
+                 xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0"
+                 xmlns:math="http://www.w3.org/1998/Math/MathML"
+                 xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0"
+                 xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0"
+                 xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0"
+                 xmlns:ooo="http://openoffice.org/2004/office"
+                 xmlns:ooow="http://openoffice.org/2004/writer"
+                 xmlns:oooc="http://openoffice.org/2004/calc"
+                 xmlns:dom="http://www.w3.org/2001/xml-events"
+                 xmlns:xforms="http://www.w3.org/2002/xforms"
+                 xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:rpt="http://openoffice.org/2005/report"
+                 xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2"
+                 xmlns:xhtml="http://www.w3.org/1999/xhtml"
+                 xmlns:grddl="http://www.w3.org/2003/g/data-view#"
+                 xmlns:tableooo="http://openoffice.org/2009/table"
+                 xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0"
+                 xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0"
+                 xmlns:css3t="http://www.w3.org/TR/css3-text/"
+                 office:version="1.2"
+                 grddl:transformation="http://docs.oasis-open.org/office/1.2/xslt/odf2rdf.xsl"
+                 office:mimetype="application/vnd.oasis.opendocument.text">
+   <office:meta>
+      <meta:document-statistic meta:character-count="14544" meta:image-count="0" meta:object-count="0"
+                               meta:page-count="11"
+                               meta:paragraph-count="282"
+                               meta:table-count="0"
+                               meta:word-count="2123"/>
+      <dc:date>2011-10-17T18:25:28</dc:date>
+      <dc:creator>Shandy </dc:creator>
+      <meta:generator>LibreOffice/3.3$Unix LibreOffice_project/330m19$Build-401</meta:generator>
+   </office:meta>
+   <office:settings>
+      <config:config-item-set config:name="ooo:view-settings">
+         <config:config-item config:name="ViewAreaTop" config:type="long">234527</config:config-item>
+         <config:config-item config:name="ViewAreaLeft" config:type="long">0</config:config-item>
+         <config:config-item config:name="ViewAreaWidth" config:type="long">35006</config:config-item>
+         <config:config-item config:name="ViewAreaHeight" config:type="long">15427</config:config-item>
+         <config:config-item config:name="ShowRedlineChanges" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="InBrowseMode" config:type="boolean">false</config:config-item>
+         <config:config-item-map-indexed config:name="Views">
+            <config:config-item-map-entry>
+               <config:config-item config:name="ViewId" config:type="string">view2</config:config-item>
+               <config:config-item config:name="ViewLeft" config:type="long">19318</config:config-item>
+               <config:config-item config:name="ViewTop" config:type="long">293434</config:config-item>
+               <config:config-item config:name="VisibleLeft" config:type="long">0</config:config-item>
+               <config:config-item config:name="VisibleTop" config:type="long">234527</config:config-item>
+               <config:config-item config:name="VisibleRight" config:type="long">35004</config:config-item>
+               <config:config-item config:name="VisibleBottom" config:type="long">249952</config:config-item>
+               <config:config-item config:name="ZoomType" config:type="short">0</config:config-item>
+               <config:config-item config:name="ViewLayoutColumns" config:type="short">0</config:config-item>
+               <config:config-item config:name="ViewLayoutBookMode" config:type="boolean">false</config:config-item>
+               <config:config-item config:name="ZoomFactor" config:type="short">100</config:config-item>
+               <config:config-item config:name="IsSelectedFrame" config:type="boolean">false</config:config-item>
+            </config:config-item-map-entry>
+         </config:config-item-map-indexed>
+      </config:config-item-set>
+      <config:config-item-set config:name="ooo:configuration-settings">
+         <config:config-item config:name="AllowPrintJobCancel" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="PrintPaperFromSetup" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="AddFrameOffsets" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="PrintLeftPages" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="IsKernAsianPunctuation" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="PrintReversed" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="PrintTables" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="ProtectForm" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="LinkUpdateMode" config:type="short">1</config:config-item>
+         <config:config-item config:name="PrintControls" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="PrinterSetup" config:type="base64Binary"/>
+         <config:config-item config:name="PrintEmptyPages" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="PrintSingleJobs" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="CurrentDatabaseCommand" config:type="string"/>
+         <config:config-item config:name="ConsiderTextWrapOnObjPos" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="ApplyUserData" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="AddParaTableSpacing" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="ChartAutoUpdate" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="IgnoreFirstLineIndentInNumbering" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="CurrentDatabaseDataSource" config:type="string"/>
+         <config:config-item config:name="LoadReadonly" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="AddParaTableSpacingAtStart" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="FieldAutoUpdate" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="TabsRelativeToIndent" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="IgnoreTabsAndBlanksForLineCalculation" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="PrintAnnotationMode" config:type="short">0</config:config-item>
+         <config:config-item config:name="TableRowKeep" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="PrintFaxName" config:type="string"/>
+         <config:config-item config:name="PrintTextPlaceholder" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="DoNotJustifyLinesWithManualBreak" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="UseFormerTextWrapping" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="IsLabelDocument" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="UseOldPrinterMetrics" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="CurrentDatabaseCommandType" config:type="int">0</config:config-item>
+         <config:config-item config:name="PrinterName" config:type="string"/>
+         <config:config-item config:name="InvertBorderSpacing" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="UnxForceZeroExtLeading" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="PrintProspect" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="PrintRightPages" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="CharacterCompressionType" config:type="short">0</config:config-item>
+         <config:config-item config:name="PrintGraphics" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="AlignTabStopPosition" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="PrintHiddenText" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="DoNotResetParaAttrsForNumFont" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="UseFormerLineSpacing" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="PrintPageBackground" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="AddExternalLeading" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="OutlineLevelYieldsNumbering" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="UseFormerObjectPositioning" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="SaveGlobalDocumentLinks" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="PrintProspectRTL" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="ClipAsCharacterAnchoredWriterFlyFrames" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="CollapseEmptyCellPara" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="PrinterIndependentLayout" config:type="string">high-resolution</config:config-item>
+         <config:config-item config:name="RedlineProtectionKey" config:type="base64Binary"/>
+         <config:config-item config:name="UseOldNumbering" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="PrintBlackFonts" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="AddParaSpacingToTableCells" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="PrintDrawings" config:type="boolean">true</config:config-item>
+         <config:config-item config:name="DoNotCaptureDrawObjsOnPage" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="TabAtLeftIndentForParagraphsInList" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="SaveVersionOnClose" config:type="boolean">false</config:config-item>
+         <config:config-item config:name="UpdateFromTemplate" config:type="boolean">true</config:config-item>
+      </config:config-item-set>
+   </office:settings>
+   <office:scripts>
+      <office:script script:language="ooo:Basic">
+         <ooo:libraries/>
+      </office:script>
+   </office:scripts>
+   <office:font-face-decls>
+      <style:font-face style:name="Webdings" svg:font-family="Webdings"
+                       style:font-family-generic="roman"
+                       style:font-pitch="variable"
+                       style:font-charset="x-symbol"/>
+      <style:font-face style:name="Wingdings 2" svg:font-family="'Wingdings 2'"
+                       style:font-family-generic="roman"
+                       style:font-pitch="variable"
+                       style:font-charset="x-symbol"/>
+      <style:font-face style:name="Lohit Hindi1" svg:font-family="'Lohit Hindi'"/>
+      <style:font-face style:name="Courier" svg:font-family="Courier"
+                       style:font-family-generic="modern"/>
+      <style:font-face style:name="DejaVu Sans Mono" svg:font-family="'DejaVu Sans Mono'"
+                       style:font-family-generic="modern"
+                       style:font-pitch="fixed"/>
+      <style:font-face style:name="WenQuanYi Micro Hei1" svg:font-family="'WenQuanYi Micro Hei'"
+                       style:font-family-generic="modern"
+                       style:font-pitch="fixed"/>
+      <style:font-face style:name="Times New Roman" svg:font-family="'Times New Roman'"
+                       style:font-family-generic="roman"
+                       style:font-pitch="variable"/>
+      <style:font-face style:name="Arial" svg:font-family="Arial" style:font-family-generic="swiss"
+                       style:font-pitch="variable"/>
+      <style:font-face style:name="Futura-Book" svg:font-family="Futura-Book"
+                       style:font-family-generic="swiss"
+                       style:font-pitch="variable"/>
+      <style:font-face style:name="Liberation Sans" svg:font-family="'Liberation Sans'"
+                       style:font-family-generic="swiss"
+                       style:font-pitch="variable"/>
+      <style:font-face style:name="Lohit Hindi" svg:font-family="'Lohit Hindi'"
+                       style:font-family-generic="system"
+                       style:font-pitch="variable"/>
+      <style:font-face style:name="Lucida Sans Unicode" svg:font-family="'Lucida Sans Unicode'"
+                       style:font-family-generic="system"
+                       style:font-pitch="variable"/>
+      <style:font-face style:name="Tahoma" svg:font-family="Tahoma" style:font-family-generic="system"
+                       style:font-pitch="variable"/>
+      <style:font-face style:name="WenQuanYi Micro Hei" svg:font-family="'WenQuanYi Micro Hei'"
+                       style:font-family-generic="system"
+                       style:font-pitch="variable"/>
+   </office:font-face-decls>
+   <office:styles>
+      <style:default-style style:family="graphic">
+         <style:graphic-properties draw:shadow-offset-x="0.1181in" draw:shadow-offset-y="0.1181in"
+                                   draw:start-line-spacing-horizontal="0.1114in"
+                                   draw:start-line-spacing-vertical="0.1114in"
+                                   draw:end-line-spacing-horizontal="0.1114in"
+                                   draw:end-line-spacing-vertical="0.1114in"
+                                   style:flow-with-text="false"/>
+         <style:paragraph-properties style:text-autospace="ideograph-alpha" style:line-break="strict"
+                                     style:writing-mode="lr-tb"
+                                     style:font-independent-line-spacing="false">
+            <style:tab-stops/>
+         </style:paragraph-properties>
+         <style:text-properties style:use-window-font-color="true" fo:font-size="12pt" fo:language="en"
+                                fo:country="US"
+                                style:font-size-asian="12pt"
+                                style:language-asian="en"
+                                style:country-asian="US"
+                                style:font-size-complex="12pt"
+                                style:language-complex="en"
+                                style:country-complex="US"/>
+      </style:default-style>
+      <style:default-style style:family="paragraph">
+         <style:paragraph-properties fo:hyphenation-ladder-count="no-limit" style:text-autospace="ideograph-alpha"
+                                     style:punctuation-wrap="hanging"
+                                     style:line-break="strict"
+                                     style:tab-stop-distance="0.4925in"
+                                     style:writing-mode="page"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Times New Roman"
+                                fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Lucida Sans Unicode"
+                                style:font-size-asian="12pt"
+                                style:language-asian="en"
+                                style:country-asian="US"
+                                style:font-name-complex="Tahoma"
+                                style:font-size-complex="12pt"
+                                style:language-complex="en"
+                                style:country-complex="US"
+                                fo:hyphenate="false"
+                                fo:hyphenation-remain-char-count="2"
+                                fo:hyphenation-push-char-count="2"/>
+      </style:default-style>
+      <style:default-style style:family="table">
+         <style:table-properties table:border-model="collapsing"/>
+      </style:default-style>
+      <style:default-style style:family="table-row">
+         <style:table-row-properties fo:keep-together="auto"/>
+      </style:default-style>
+      <style:style style:name="Standard" style:family="paragraph" style:class="text"/>
+      <style:style style:name="Heading" style:family="paragraph"
+                   style:parent-style-name="Standard"
+                   style:next-style-name="Text_20_body"
+                   style:class="text">
+         <style:paragraph-properties fo:margin-top="0.1665in" fo:margin-bottom="0.0835in" fo:keep-with-next="always"/>
+         <style:text-properties style:font-name="Liberation Sans" fo:font-size="14pt"
+                                style:font-name-asian="WenQuanYi Micro Hei"
+                                style:font-size-asian="14pt"
+                                style:font-name-complex="Lohit Hindi"
+                                style:font-size-complex="14pt"/>
+      </style:style>
+      <style:style style:name="Text_20_body" style:display-name="Text body"
+                   style:family="paragraph"
+                   style:parent-style-name="Standard"
+                   style:class="text">
+         <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0.0835in"/>
+      </style:style>
+      <style:style style:name="List" style:family="paragraph"
+                   style:parent-style-name="Text_20_body"
+                   style:class="list">
+         <style:text-properties style:font-size-asian="12pt" style:font-name-complex="Lohit Hindi1"/>
+      </style:style>
+      <style:style style:name="Caption" style:family="paragraph"
+                   style:parent-style-name="Standard"
+                   style:class="extra">
+         <style:paragraph-properties fo:margin-top="0.0835in" fo:margin-bottom="0.0835in" text:number-lines="false"
+                                     text:line-number="0"/>
+         <style:text-properties fo:font-size="12pt" fo:font-style="italic" style:font-size-asian="12pt"
+                                style:font-style-asian="italic"
+                                style:font-name-complex="Lohit Hindi1"
+                                style:font-size-complex="12pt"
+                                style:font-style-complex="italic"/>
+      </style:style>
+      <style:style style:name="Index" style:family="paragraph" style:parent-style-name="Standard"
+                   style:class="index">
+         <style:paragraph-properties text:number-lines="false" text:line-number="0"/>
+         <style:text-properties style:font-size-asian="12pt" style:font-name-complex="Lohit Hindi1"/>
+      </style:style>
+      <style:style style:name="Preformatted_20_Text" style:display-name="Preformatted Text"
+                   style:family="paragraph"
+                   style:parent-style-name="Standard"
+                   style:class="html">
+         <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0in"/>
+         <style:text-properties style:font-name="DejaVu Sans Mono" fo:font-size="10pt"
+                                style:font-name-asian="WenQuanYi Micro Hei1"
+                                style:font-size-asian="10pt"
+                                style:font-name-complex="DejaVu Sans Mono"
+                                style:font-size-complex="10pt"/>
+      </style:style>
+      <style:style style:name="Footnote" style:family="paragraph" style:class="extra">
+         <style:paragraph-properties fo:line-height="150%" fo:orphans="2" fo:widows="2"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Times New Roman"
+                                fo:font-size="8pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="8pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="Bibliography_20_1" style:display-name="Bibliography 1"
+                   style:family="paragraph"
+                   style:parent-style-name="Index"
+                   style:class="index">
+         <style:paragraph-properties fo:margin-left="0in" fo:margin-right="0in" fo:text-indent="0in"
+                                     style:auto-text-indent="false">
+            <style:tab-stops>
+               <style:tab-stop style:position="6.9252in" style:type="right" style:leader-style="dotted"
+                               style:leader-text="."/>
+            </style:tab-stops>
+         </style:paragraph-properties>
+      </style:style>
+      <style:style style:name="ChapterStart" style:family="paragraph"
+                   style:next-style-name="ChapterTitle">
+         <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" fo:orphans="2"
+                                     fo:widows="2"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Times New Roman"
+                                fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                fo:font-weight="bold"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-weight-asian="bold"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="ChapterTitle" style:family="paragraph"
+                   style:next-style-name="_31_st_20_Para">
+         <style:paragraph-properties fo:line-height="150%" fo:orphans="2" fo:widows="2"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Times New Roman"
+                                fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                fo:font-weight="bold"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-weight-asian="bold"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="_31_st_20_Para" style:display-name="1st Para"
+                   style:family="paragraph"
+                   style:next-style-name="Body">
+         <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0.028in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Times New Roman"
+                                fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="Body" style:family="paragraph">
+         <style:paragraph-properties fo:margin-left="0in" fo:margin-right="0in" fo:line-height="150%" fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0.25in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Times New Roman"
+                                fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="BodyFirst" style:family="paragraph" style:next-style-name="Body">
+         <style:paragraph-properties fo:line-height="150%" fo:orphans="2" fo:widows="2"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Times New Roman"
+                                fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="HeadA" style:family="paragraph" style:next-style-name="BodyFirst">
+         <style:paragraph-properties fo:margin-top="0.0835in" fo:margin-bottom="0.0835in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Arial" fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                fo:font-weight="bold"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-weight-asian="bold"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="HeadB" style:family="paragraph" style:next-style-name="BodyFirst">
+         <style:paragraph-properties fo:margin-top="0.0835in" fo:margin-bottom="0.0835in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Arial" fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                fo:font-style="italic"
+                                fo:font-weight="bold"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-style-asian="italic"
+                                style:font-weight-asian="bold"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="HeadC" style:family="paragraph" style:next-style-name="BodyFirst">
+         <style:paragraph-properties fo:margin-top="0.0835in" fo:margin-bottom="0.0835in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Arial" fo:font-size="10pt"
+                                fo:language="en"
+                                fo:country="US"
+                                fo:font-weight="bold"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="10pt"
+                                style:font-weight-asian="bold"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="CodeA" style:family="paragraph" style:next-style-name="CodeB">
+         <style:paragraph-properties fo:margin-top="0.0835in" fo:margin-bottom="0in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:padding="0.05in"
+                                     fo:border-left="none"
+                                     fo:border-right="none"
+                                     fo:border-top="0.0071in solid #000000"
+                                     fo:border-bottom="none"
+                                     style:shadow="none"
+                                     style:join-border="false"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Courier"
+                                fo:font-size="10pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="10pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="CodeB" style:family="paragraph">
+         <style:paragraph-properties fo:line-height="150%" fo:orphans="2" fo:widows="2"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Courier"
+                                fo:font-size="10pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="10pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="CodeC" style:family="paragraph" style:next-style-name="Body">
+         <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0.0835in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:padding="0.05in"
+                                     fo:border-left="none"
+                                     fo:border-right="none"
+                                     fo:border-top="none"
+                                     fo:border-bottom="0.0071in solid #000000"
+                                     style:shadow="none"
+                                     style:join-border="false"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Courier"
+                                fo:font-size="10pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="10pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="CodeSingle" style:family="paragraph" style:next-style-name="Body">
+         <style:paragraph-properties fo:margin-top="0.0835in" fo:margin-bottom="0.0835in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:padding="0.05in"
+                                     fo:border-left="none"
+                                     fo:border-right="none"
+                                     fo:border-top="0.0071in solid #000000"
+                                     fo:border-bottom="0.0071in solid #000000"
+                                     style:shadow="none"
+                                     style:join-border="false"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Courier"
+                                fo:font-size="10pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="10pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="CodeA_20_Wide" style:display-name="CodeA Wide"
+                   style:family="paragraph"
+                   style:next-style-name="CodeB_20_Wide">
+         <style:paragraph-properties fo:margin-top="0.0835in" fo:margin-bottom="0in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:padding="0.05in"
+                                     fo:border-left="none"
+                                     fo:border-right="none"
+                                     fo:border-top="0.0071in solid #000000"
+                                     fo:border-bottom="none"
+                                     style:shadow="none"
+                                     style:join-border="false"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Courier" fo:font-size="8pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="8pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="CodeB_20_Wide" style:display-name="CodeB Wide"
+                   style:family="paragraph">
+         <style:paragraph-properties fo:line-height="150%" fo:orphans="2" fo:widows="2"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Courier" fo:font-size="8pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="8pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="CodeC_20_Wide" style:display-name="CodeC Wide"
+                   style:family="paragraph"
+                   style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0.0835in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:padding="0.05in"
+                                     fo:border-left="none"
+                                     fo:border-right="none"
+                                     fo:border-top="none"
+                                     fo:border-bottom="0.0071in solid #000000"
+                                     style:shadow="none"
+                                     style:join-border="false"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Courier" fo:font-size="8pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="8pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="CodeSingle_20_Wide" style:display-name="CodeSingle Wide"
+                   style:family="paragraph"
+                   style:next-style-name="Body">
+         <style:paragraph-properties fo:margin-top="0.0835in" fo:margin-bottom="0.0835in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:padding="0.05in"
+                                     fo:border-left="none"
+                                     fo:border-right="none"
+                                     fo:border-top="0.0071in solid #000000"
+                                     fo:border-bottom="0.0071in solid #000000"
+                                     style:shadow="none"
+                                     style:join-border="false"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Courier" fo:font-size="8pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="8pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="Note" style:family="paragraph" style:next-style-name="Body">
+         <style:paragraph-properties fo:margin-left="0.5in" fo:margin-right="0in" fo:margin-top="0.0835in"
+                                     fo:margin-bottom="0.0835in"
+                                     fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="-0.5in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Times New Roman"
+                                fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                fo:font-style="italic"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-style-asian="italic"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="List_20_Plain" style:display-name="List Plain"
+                   style:family="paragraph">
+         <style:paragraph-properties fo:margin-left="0.25in" fo:margin-right="0in" fo:margin-top="0.0417in"
+                                     fo:margin-bottom="0.0417in"
+                                     fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Times New Roman"
+                                fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="ListHead" style:family="paragraph" style:next-style-name="ListBody">
+         <style:paragraph-properties fo:margin-top="0.0835in" fo:margin-bottom="0in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Times New Roman"
+                                fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                fo:font-weight="bold"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-weight-asian="bold"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="ListBody" style:family="paragraph" style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-left="0.25in" fo:margin-right="0in" fo:margin-top="0in"
+                                     fo:margin-bottom="0.0835in"
+                                     fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Times New Roman"
+                                fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="NumListA" style:family="paragraph" style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-left="0.5in" fo:margin-right="0in" fo:margin-top="0.0835in"
+                                     fo:margin-bottom="0in"
+                                     fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties fo:color="#003300" style:font-name="Times New Roman" fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="NumListB" style:family="paragraph" style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-left="0.5in" fo:margin-right="0in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties fo:color="#003300" style:font-name="Times New Roman" fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="NumListC" style:family="paragraph" style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-left="0.5in" fo:margin-right="0in" fo:margin-top="0in"
+                                     fo:margin-bottom="0.0835in"
+                                     fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties fo:color="#003300" style:font-name="Times New Roman" fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="SubNumberA" style:family="paragraph"
+                   style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-left="0.75in" fo:margin-right="0in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties fo:color="#003300" style:font-name="Times New Roman" fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="SubNumberB" style:family="paragraph"
+                   style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-left="0.75in" fo:margin-right="0in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties fo:color="#003300" style:font-name="Times New Roman" fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="ListSimple" style:family="paragraph"
+                   style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-left="0.25in" fo:margin-right="0in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0.25in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Times New Roman"
+                                fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="CodeA_20_Indent" style:display-name="CodeA Indent"
+                   style:family="paragraph"
+                   style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-left="0.25in" fo:margin-right="0in" fo:margin-top="0.0835in"
+                                     fo:margin-bottom="0in"
+                                     fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0in"
+                                     style:auto-text-indent="false"
+                                     fo:padding="0.05in"
+                                     fo:border-left="none"
+                                     fo:border-right="none"
+                                     fo:border-top="0.0071in solid #000000"
+                                     fo:border-bottom="none"
+                                     style:shadow="none"
+                                     style:join-border="false"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Courier"
+                                fo:font-size="10pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="10pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="CodeB_20_Indent" style:display-name="CodeB Indent"
+                   style:family="paragraph"
+                   style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-left="0.25in" fo:margin-right="0in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Courier"
+                                fo:font-size="10pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="10pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="CodeC_20_Indent" style:display-name="CodeC Indent"
+                   style:family="paragraph"
+                   style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-left="0.25in" fo:margin-right="0in" fo:margin-top="0in"
+                                     fo:margin-bottom="0.0835in"
+                                     fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0in"
+                                     style:auto-text-indent="false"
+                                     fo:padding="0.05in"
+                                     fo:border-left="none"
+                                     fo:border-right="none"
+                                     fo:border-top="none"
+                                     fo:border-bottom="0.0071in solid #000000"
+                                     style:shadow="none"
+                                     style:join-border="false"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Courier"
+                                fo:font-size="10pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="10pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="CodeSingle_20_Indent" style:display-name="CodeSingle Indent"
+                   style:family="paragraph"
+                   style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-left="0.25in" fo:margin-right="0in" fo:margin-top="0.0835in"
+                                     fo:margin-bottom="0.0835in"
+                                     fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0in"
+                                     style:auto-text-indent="false"
+                                     fo:padding="0.05in"
+                                     fo:border-left="none"
+                                     fo:border-right="none"
+                                     fo:border-top="0.0071in solid #000000"
+                                     fo:border-bottom="0.0071in solid #000000"
+                                     style:shadow="none"
+                                     style:join-border="false"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Courier"
+                                fo:font-size="10pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="10pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="BulletA" style:family="paragraph" style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-left="0.5in" fo:margin-right="0in" fo:margin-top="0.0835in"
+                                     fo:margin-bottom="0in"
+                                     fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties fo:color="#003366" style:font-name="Times New Roman" fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="BulletB" style:family="paragraph" style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-left="0.5in" fo:margin-right="0in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties fo:color="#003366" style:font-name="Times New Roman" fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="BulletC" style:family="paragraph" style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-left="0.5in" fo:margin-right="0in" fo:margin-top="0in"
+                                     fo:margin-bottom="0.0835in"
+                                     fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties fo:color="#003366" style:font-name="Times New Roman" fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="SubBullet" style:family="paragraph"
+                   style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-left="0.75in" fo:margin-right="0in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties fo:color="#003366" style:font-name="Times New Roman" fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="Block_20_Quote" style:display-name="Block Quote"
+                   style:family="paragraph"
+                   style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-left="1in" fo:margin-right="1in" fo:margin-top="0.0835in"
+                                     fo:margin-bottom="0.0835in"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Times New Roman"
+                                fo:font-size="10pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="10pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="Listing" style:family="paragraph" style:next-style-name="Body">
+         <style:paragraph-properties fo:margin-top="0in" fo:margin-bottom="0.0835in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"/>
+         <style:text-properties fo:color="#800000" style:font-name="Arial" fo:font-size="10pt" fo:language="en"
+                                fo:country="US"
+                                fo:font-style="italic"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="10pt"
+                                style:font-style-asian="italic"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"
+                                style:font-weight-complex="bold"/>
+      </style:style>
+      <style:style style:name="Table_20_Title" style:display-name="Table Title"
+                   style:family="paragraph"
+                   style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-top="0.0835in" fo:margin-bottom="0.0835in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Arial" fo:font-size="10pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="10pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="Table_20_Header" style:display-name="Table Header"
+                   style:family="paragraph"
+                   style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-top="0.0417in" fo:margin-bottom="0.0417in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Futura-Book"
+                                fo:font-size="10pt"
+                                fo:language="en"
+                                fo:country="US"
+                                fo:font-weight="bold"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="10pt"
+                                style:font-weight-asian="bold"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="Table_20_Body" style:display-name="Table Body"
+                   style:family="paragraph">
+         <style:paragraph-properties fo:line-height="150%" fo:orphans="2" fo:widows="2"/>
+         <style:text-properties style:use-window-font-color="true" style:font-name="Futura-Book"
+                                fo:font-size="10pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="10pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="Author_20_Query" style:display-name="Author Query"
+                   style:family="paragraph">
+         <style:paragraph-properties fo:margin-left="1in" fo:margin-right="1in" fo:margin-top="0.0835in"
+                                     fo:margin-bottom="0.0835in"
+                                     fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="0in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties fo:color="#ff0000" style:font-name="Times New Roman" fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="Production_20_Directive" style:display-name="Production Directive"
+                   style:family="paragraph"
+                   style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-top="0.0835in" fo:margin-bottom="0.0835in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"/>
+         <style:text-properties fo:font-variant="small-caps" fo:color="#008000"
+                                style:font-name="Times New Roman"
+                                fo:font-size="10pt"
+                                fo:language="en"
+                                fo:country="US"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="10pt"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="HeadANum" style:family="paragraph"
+                   style:next-style-name="BodyFirst">
+         <style:paragraph-properties fo:margin-top="0.0835in" fo:margin-bottom="0.0835in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"/>
+         <style:text-properties fo:color="#800000" style:font-name="Arial" fo:font-size="12pt" fo:language="en"
+                                fo:country="US"
+                                fo:font-weight="bold"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-weight-asian="bold"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="HeadBNum" style:family="paragraph"
+                   style:next-style-name="BodyFirst">
+         <style:paragraph-properties fo:margin-top="0.0835in" fo:margin-bottom="0.0835in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"/>
+         <style:text-properties fo:color="#800000" style:font-name="Arial" fo:font-size="12pt" fo:language="en"
+                                fo:country="US"
+                                fo:font-style="italic"
+                                fo:font-weight="bold"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-style-asian="italic"
+                                style:font-weight-asian="bold"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="HeadCNum" style:family="paragraph"
+                   style:next-style-name="BodyFirst">
+         <style:paragraph-properties fo:margin-top="0.0835in" fo:margin-bottom="0.0835in" fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"/>
+         <style:text-properties fo:color="#800000" style:font-name="Arial" fo:font-size="10pt" fo:language="en"
+                                fo:country="US"
+                                fo:font-weight="bold"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="10pt"
+                                style:font-weight-asian="bold"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="Note_20_Warning" style:display-name="Note Warning"
+                   style:family="paragraph"
+                   style:next-style-name="Standard">
+         <style:paragraph-properties fo:margin-left="0.5in" fo:margin-right="0in" fo:margin-top="0.0835in"
+                                     fo:margin-bottom="0.0835in"
+                                     fo:line-height="150%"
+                                     fo:orphans="2"
+                                     fo:widows="2"
+                                     fo:text-indent="-0.5in"
+                                     style:auto-text-indent="false"/>
+         <style:text-properties fo:color="#800000" style:font-name="Times New Roman" fo:font-size="12pt"
+                                fo:language="en"
+                                fo:country="US"
+                                fo:font-style="italic"
+                                style:font-name-asian="Times New Roman"
+                                style:font-size-asian="12pt"
+                                style:font-style-asian="italic"
+                                style:font-name-complex="Times New Roman"
+                                style:font-size-complex="10pt"
+                                style:language-complex="ar"
+                                style:country-complex="SA"/>
+      </style:style>
+      <style:style style:name="Default_20_Paragraph_20_Font"
+                   style:display-name="Default Paragraph Font"
+                   style:family="text"/>
+      <style:style style:name="EmphasisBold" style:family="text"
+                   style:parent-style-name="Default_20_Paragraph_20_Font">
+         <style:text-properties fo:color="#0000ff" fo:font-weight="bold" style:font-weight-asian="bold"/>
+      </style:style>
+      <style:style style:name="EmphasisItalic" style:family="text"
+                   style:parent-style-name="Default_20_Paragraph_20_Font">
+         <style:text-properties fo:color="#0000ff" fo:font-style="italic" style:font-style-asian="italic"/>
+      </style:style>
+      <style:style style:name="EmphasisBoldItal" style:family="text"
+                   style:parent-style-name="Default_20_Paragraph_20_Font">
+         <style:text-properties fo:color="#0000ff" fo:font-style="italic" fo:font-weight="bold"
+                                style:font-style-asian="italic"
+                                style:font-weight-asian="bold"/>
+      </style:style>
+      <style:style style:name="EmphasisRevItal" style:family="text"
+                   style:parent-style-name="Default_20_Paragraph_20_Font">
+         <style:text-properties fo:color="#0000ff"/>
+      </style:style>
+      <style:style style:name="Keycap" style:family="text"
+                   style:parent-style-name="Default_20_Paragraph_20_Font">
+         <style:text-properties fo:font-variant="small-caps" fo:color="#0000ff"/>
+      </style:style>
+      <style:style style:name="Literal" style:family="text"
+                   style:parent-style-name="Default_20_Paragraph_20_Font">
+         <style:text-properties fo:color="#0000ff" style:font-name="Courier" fo:font-size="10pt"
+                                style:font-size-asian="10pt"/>
+      </style:style>
+      <style:style style:name="LiteralBold" style:family="text"
+                   style:parent-style-name="Default_20_Paragraph_20_Font">
+         <style:text-properties fo:color="#0000ff" style:font-name="Courier" fo:font-size="10pt"
+                                fo:font-weight="bold"
+                                style:font-size-asian="10pt"
+                                style:font-weight-asian="bold"/>
+      </style:style>
+      <style:style style:name="LiteralItal" style:family="text"
+                   style:parent-style-name="Default_20_Paragraph_20_Font">
+         <style:text-properties fo:color="#0000ff" style:font-name="Courier" fo:font-size="10pt"
+                                fo:font-style="italic"
+                                style:font-size-asian="10pt"
+                                style:font-style-asian="italic"/>
+      </style:style>
+      <style:style style:name="LiteralBoldItal" style:family="text"
+                   style:parent-style-name="Default_20_Paragraph_20_Font">
+         <style:text-properties fo:color="#0000ff" style:font-name="Courier" fo:font-size="10pt"
+                                fo:font-style="italic"
+                                fo:font-weight="bold"
+                                style:font-size-asian="10pt"
+                                style:font-style-asian="italic"
+                                style:font-weight-asian="bold"/>
+      </style:style>
+      <style:style style:name="MenuArrow" style:family="text"
+                   style:parent-style-name="Default_20_Paragraph_20_Font">
+         <style:text-properties fo:color="#0000ff" style:font-name="Webdings"/>
+      </style:style>
+      <style:style style:name="Wingdings" style:family="text"
+                   style:parent-style-name="Default_20_Paragraph_20_Font">
+         <style:text-properties fo:color="#0000ff" style:font-name="Wingdings 2" fo:font-size="12pt"
+                                style:font-size-asian="12pt"/>
+      </style:style>
+      <text:outline-style style:name="Outline">
+         <text:outline-level-style text:level="1" style:num-format="">
+            <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+               <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="0.3in"
+                                                 fo:text-indent="-0.3in"
+                                                 fo:margin-left="0.3in"/>
+            </style:list-level-properties>
+         </text:outline-level-style>
+         <text:outline-level-style text:level="2" style:num-format="">
+            <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+               <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="0.4in"
+                                                 fo:text-indent="-0.4in"
+                                                 fo:margin-left="0.4in"/>
+            </style:list-level-properties>
+         </text:outline-level-style>
+         <text:outline-level-style text:level="3" style:num-format="">
+            <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+               <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="0.5in"
+                                                 fo:text-indent="-0.5in"
+                                                 fo:margin-left="0.5in"/>
+            </style:list-level-properties>
+         </text:outline-level-style>
+         <text:outline-level-style text:level="4" style:num-format="">
+            <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+               <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="0.6in"
+                                                 fo:text-indent="-0.6in"
+                                                 fo:margin-left="0.6in"/>
+            </style:list-level-properties>
+         </text:outline-level-style>
+         <text:outline-level-style text:level="5" style:num-format="">
+            <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+               <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="0.7in"
+                                                 fo:text-indent="-0.7in"
+                                                 fo:margin-left="0.7in"/>
+            </style:list-level-properties>
+         </text:outline-level-style>
+         <text:outline-level-style text:level="6" style:num-format="">
+            <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+               <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="0.8in"
+                                                 fo:text-indent="-0.8in"
+                                                 fo:margin-left="0.8in"/>
+            </style:list-level-properties>
+         </text:outline-level-style>
+         <text:outline-level-style text:level="7" style:num-format="">
+            <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+               <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="0.9in"
+                                                 fo:text-indent="-0.9in"
+                                                 fo:margin-left="0.9in"/>
+            </style:list-level-properties>
+         </text:outline-level-style>
+         <text:outline-level-style text:level="8" style:num-format="">
+            <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+               <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="1in"
+                                                 fo:text-indent="-1in"
+                                                 fo:margin-left="1in"/>
+            </style:list-level-properties>
+         </text:outline-level-style>
+         <text:outline-level-style text:level="9" style:num-format="">
+            <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+               <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="1.1in"
+                                                 fo:text-indent="-1.1in"
+                                                 fo:margin-left="1.1in"/>
+            </style:list-level-properties>
+         </text:outline-level-style>
+         <text:outline-level-style text:level="10" style:num-format="">
+            <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+               <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="1.2in"
+                                                 fo:text-indent="-1.2in"
+                                                 fo:margin-left="1.2in"/>
+            </style:list-level-properties>
+         </text:outline-level-style>
+      </text:outline-style>
+      <text:notes-configuration text:note-class="footnote" style:num-format="1" text:start-value="0"
+                                text:footnotes-position="page"
+                                text:start-numbering-at="document"/>
+      <text:notes-configuration text:note-class="endnote" style:num-format="i" text:start-value="0"/>
+      <text:linenumbering-configuration text:number-lines="false" text:offset="0.1965in" style:num-format="1"
+                                        text:number-position="left"
+                                        text:increment="5"/>
+   </office:styles>
+   <office:automatic-styles>
+      <style:style style:name="P1" style:family="paragraph" style:parent-style-name="Body">
+         <style:paragraph-properties fo:margin-left="0in" fo:margin-right="0in" fo:text-indent="0in"
+                                     style:auto-text-indent="false"/>
+      </style:style>
+      <style:page-layout style:name="pm1">
+         <style:page-layout-properties fo:page-width="8.5in" fo:page-height="11in" style:num-format="1"
+                                       style:print-orientation="portrait"
+                                       fo:margin-top="0.7874in"
+                                       fo:margin-bottom="0.7874in"
+                                       fo:margin-left="0.7874in"
+                                       fo:margin-right="0.7874in"
+                                       style:writing-mode="lr-tb"
+                                       style:footnote-max-height="0in">
+            <style:footnote-sep style:width="0.0071in" style:distance-before-sep="0.0398in"
+                                style:distance-after-sep="0.0398in"
+                                style:adjustment="left"
+                                style:rel-width="25%"
+                                style:color="#000000"/>
+         </style:page-layout-properties>
+         <style:header-style/>
+         <style:footer-style/>
+      </style:page-layout>
+   </office:automatic-styles>
+   <office:master-styles>
+      <style:master-page style:name="Standard" style:page-layout-name="pm1"/>
+   </office:master-styles>
+   <office:body>
+      <office:text text:use-soft-page-breaks="true">
+         <text:sequence-decls>
+            <text:sequence-decl text:display-outline-level="0" text:name="Illustration"/>
+            <text:sequence-decl text:display-outline-level="0" text:name="Table"/>
+            <text:sequence-decl text:display-outline-level="0" text:name="Text"/>
+            <text:sequence-decl text:display-outline-level="0" text:name="Drawing"/>
+         </text:sequence-decls>
+         <text:p text:style-name="HeadA">Chapter 1</text:p>
+         <text:p text:style-name="_31_st_20_Para">Let's start with a very simple example of a game. This will be a game in which</text:p>
+         <text:p text:style-name="_31_st_20_Para">a monkey's face travels back and forth across the screen, and the player must</text:p>
+         <text:p text:style-name="_31_st_20_Para">try to "punch" the monkey by clicking on it. The gameplay will be familiar to</text:p>
+         <text:p text:style-name="_31_st_20_Para">anyone who has gone through the "Chimp Line by Line" [TODO: link] tutorial or</text:p>
+         <text:p text:style-name="_31_st_20_Para">those who have endured annoying banner ads in the early 2000s.</text:p>
+         <text:p text:style-name="_31_st_20_Para"/>
+         <text:p text:style-name="CodeB">import time</text:p>
+         <text:p text:style-name="CodeB">import pygame</text:p>
+         <text:p text:style-name="CodeB">import pygame.constants as c</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">score = 0</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">screenDimensions = pygame.Rect((0,0,400,60))</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">black = (0,0,0)</text:p>
+         <text:p text:style-name="CodeB">white = (255,255,255)</text:p>
+         <text:p text:style-name="CodeB">blue <text:s/>= (0,0,255)</text:p>
+         <text:p text:style-name="CodeB">red <text:s text:c="2"/>= (255,0,0)</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">class Monkey(pygame.sprite.Sprite):</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>def __init__(self):</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>self.stunTimeout = None</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>self.velocity = 2</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>super(Monkey, self).__init__()</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>self.image = pygame.Surface((60,60))</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>self.rect = self.image.get_rect()</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>self.render(blue)</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>def render(self, color):</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>'''draw onto self.image the face of a monkey in the specified color'''</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>self.image.fill(color)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>pygame.draw.circle(self.image, white, (10,10), 10, 2)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>pygame.draw.circle(self.image, white, (50,10), 10, 2)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>pygame.draw.circle(self.image, white, (30,60), 20, 2)</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>def attempt_punch(self, pos):</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>'''If the given position (pos) is inside the monkey's rect, the monkey</text:p>
+         <text:p text:style-name="CodeB">
+            <text:soft-page-break/>
+            <text:s text:c="8"/>has been "punched". <text:s/>A successful punch will stun the monkey and increment</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>the global score. <text:s/>The monkey cannot be punched if he is already stunned</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>'''</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>if self.stunTimeout:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>return # already stunned</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>if self.rect.collidepoint(pos):</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/># Argh! <text:s/>The punch intersected with my face!</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>self.stunTimeout = time.time() + 2 # 2 seconds from now</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>global score</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>score += 1</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>self.render(red)</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>def update(self):</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>if self.stunTimeout:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/># If stunned, the monkey doesn't move</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>if time.time() &gt; self.stunTimeout:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="16"/>self.stunTimeout = None</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="16"/>self.render(blue)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>else:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/># Move the monkey</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>self.rect.x += self.velocity</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/># Don't let the monkey run past the edge of the viewable area</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>if self.rect.right &gt; screenDimensions.right:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="16"/>self.velocity = -2</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>elif self.rect.left &lt; screenDimensions.left:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="16"/>self.velocity = 2</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">def main():</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/># Necessary Pygame set-up...</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>pygame.init()</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>clock = pygame.time.Clock()</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>displayImg = pygame.display.set_mode(screenDimensions.size)</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>monkey = Monkey()</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>while True:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>clock.tick(60) # aim for 60 frames per second</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>for event in pygame.event.get():</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>if event.type == c.QUIT:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="16"/>return</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>elif event.type == c.MOUSEBUTTONDOWN:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:soft-page-break/>
+            <text:s text:c="16"/>monkey.attempt_punch(event.pos)</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>monkey.update()</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>displayImg.fill(black)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>displayImg.blit(monkey.image, monkey.rect)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>pygame.display.flip()</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">if __name__ == '__main__':</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>main()</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>print 'Your score was', score</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="Body">So with that we have a (very simple, but complete) game. It may not be the most</text:p>
+         <text:p text:style-name="Body">fun game ever written, but that can be fixed by slick box art and a major motion</text:p>
+         <text:p text:style-name="Body">picture tie-in. Let's leave those concerns for the marketing department and </text:p>
+         <text:p text:style-name="Body">instead look at the technical details.</text:p>
+         <text:p text:style-name="Body"/>
+         <text:p text:style-name="Body">What we have above is a minimal game. As we add features to it, the code will</text:p>
+         <text:p text:style-name="Body">grow in complexity. As humans, we are bad at holding and manipulating complex</text:p>
+         <text:p text:style-name="Body">systems in our brains. </text:p>
+         <text:p text:style-name="Body"/>
+         <text:p text:style-name="Body">Consider what would happen if instead of just punching one monkey, we wanted to set</text:p>
+         <text:p text:style-name="Body">traps for 3 monkeys. A click of the mouse would either drop down a trap at the</text:p>
+         <text:p text:style-name="Body">clicked location or reset a sprung trap if one was already there. What might</text:p>
+         <text:p text:style-name="Body">our main() function look like?</text:p>
+         <text:p text:style-name="CodeB">def main():</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/># Necessary Pygame set-up...</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>pygame.init()</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>clock = pygame.time.Clock()</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>displayImg = pygame.display.set_mode(screenDimensions.size)</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>monkeys = [Monkey(), Monkey(), Monkey()]</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>traps = [Trap(), Trap(), Trap()]</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>trapCycle = itertools.cycle(traps)</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>while True:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>clock.tick(60) # aim for 60 FPS</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>for event in pygame.event.get():</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>if event.type == c.QUIT:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:soft-page-break/>
+            <text:s text:c="16"/>return</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>elif event.type == c.MOUSEBUTTONDOWN:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="16"/>wasTrapClick = False</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="16"/>for trap in traps:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="20"/>if trap.rect.collidepoint(event.pos):</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="24"/>trap.reset()</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="24"/>wasTrapClick = True</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="24"/>break</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="16"/>if not wasTrapClick:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="20"/># if the user didn't click on a trap, then they</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="20"/># intended to place the next one here.</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="20"/>trap = trapCycle.next()</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="20"/>trap.place_at(event.pos)</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>for monkey in monkeys:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>monkey.update(traps)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>displayImg.fill(black)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>for sprite in monkeys + traps:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>displayImg.blit(sprite.image, sprite.rect)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>pygame.display.flip()</text:p>
+         <text:p text:style-name="Preformatted_20_Text"/>
+         <text:p text:style-name="Body">So what happened? <text:s/>Significantly, the block of code that starts with </text:p>
+         <text:p text:style-name="Body">"for event in pygame.event.get():" has grown. <text:s/>I'm going to call this the event</text:p>
+         <text:p text:style-name="Body">handling block. <text:s/>Now it's about 10 lines longer. <text:s/>It contains one new loop, </text:p>
+         <text:p text:style-name="Body">and two new branches (if statements). Imagine what will happen to</text:p>
+         <text:p text:style-name="Body">the event handling block as each new feature is added. <text:s/>If your imagination</text:p>
+         <text:p text:style-name="Body">is summoning images of a single skyscraping ladder of an if / elif, ridden with</text:p>
+         <text:p text:style-name="Body">deep sub-blocks of loops and branches, countless and tentacle-like, then you</text:p>
+         <text:p text:style-name="Body">are two things: accurate, and likely on the same medication as myself.</text:p>
+         <text:p text:style-name="Body"/>
+         <text:p text:style-name="Body">Not only will complex code be difficult to hold in your brain, it also gets</text:p>
+         <text:p text:style-name="Body">in the way of a critical goal - Rapid Development. Developing software always</text:p>
+         <text:p text:style-name="Body">involves going back to code you've written in the past to make changes. If the</text:p>
+         <text:p text:style-name="Body">code is complex, you are going to pay greater time costs for both searching </text:p>
+         <text:p text:style-name="Body">for the code to change, and for the change itself because it will need to be</text:p>
+         <text:p text:style-name="Body">made in more places.</text:p>
+         <text:p text:style-name="Body"/>
+         <text:p text:style-name="Body">
+            <text:soft-page-break/>Because we humans have trouble with complex systems, we have developed </text:p>
+         <text:p text:style-name="Body">the techniques of organization and abstraction.</text:p>
+         <text:p text:style-name="Body">We organize so that we only need to deal with one thing at a time, and</text:p>
+         <text:p text:style-name="Body">we abstract so that we can manipulate a simple system that is "similar</text:p>
+         <text:p text:style-name="Body">enough" to the complex system.</text:p>
+         <text:p text:style-name="Body"/>
+         <text:p text:style-name="Body">How can we organize and/or abstract this code to address the problem of</text:p>
+         <text:p text:style-name="Body">growing complexity as we add more game features? (And while we're solving</text:p>
+         <text:p text:style-name="Body">that, can we also do ourselves some favours along the way to make it faster</text:p>
+         <text:p text:style-name="Body">to develop our game?)</text:p>
+         <text:p text:style-name="Body"/>
+         <text:p text:style-name="Body">Luckily for us humans, our brains are *built* for this task.</text:p>
+         <text:p text:style-name="Body">They are Automatic Abstraction Apparati. <text:s/>We make abstractions every time </text:p>
+         <text:p text:style-name="Body">we think, and especially when we talk.</text:p>
+         <text:p text:style-name="Body">So one exercise to do is to simply talk about code. If somebody asked, </text:p>
+         <text:p text:style-name="Body">"What does this main() function do?", a reply might go something like</text:p>
+         <text:p text:style-name="Body">"Well, it does some initialization of the important objects, then it starts</text:p>
+         <text:p text:style-name="Body">this infinite 'while True:' loop, see? <text:s/>Inside the loop it does this</text:p>
+         <text:p text:style-name="Body">clock.tick() thing, I'm not really sure what that's for. <text:s/>Anyway, then it goes</text:p>
+         <text:p text:style-name="Body">through all the 'pygame' events and handles them. <text:s/>After all that, it calls</text:p>
+         <text:p text:style-name="Body">monkey.update() (we've got to update the monkey every frame so that it moves),</text:p>
+         <text:p text:style-name="Body">and then it draws everything to the screen."</text:p>
+         <text:p text:style-name="Preformatted_20_Text"/>
+         <text:p text:style-name="Note">Ok, did you catch that? <text:s/>Here you are talking about this great monkey-punching</text:p>
+         <text:p text:style-name="Note">game you wrote, and you don't even know what clock.tick() does?</text:p>
+         <text:p text:style-name="Note"/>
+         <text:p text:style-name="Note">clock.tick() is used to get a target *frame rate*. We want the game to look </text:p>
+         <text:p text:style-name="Note">"smooth". Animation works because if we see a series of images in quick</text:p>
+         <text:p text:style-name="Note">succession, we are tricked into thinking we are seeing a moving thing.</text:p>
+         <text:p text:style-name="Note">
+            <text:soft-page-break/>
+         </text:p>
+         <text:p text:style-name="Note">Try the example code with 5 as the argument to clock.tick(). <text:s/>The monkey no</text:p>
+         <text:p text:style-name="Note">longer looks like it is smoothly moving, instead it is jerking. That's not</text:p>
+         <text:p text:style-name="Note">acceptable for a game, nobody wants to play with a jerking monkey.</text:p>
+         <text:p text:style-name="Note"/>
+         <text:p text:style-name="Note">24 frames per second (FPS) is the rate used in feature films, and is generally </text:p>
+         <text:p text:style-name="Note">accepted as a minimum for video games.</text:p>
+         <text:p text:style-name="Note"/>
+         <text:p text:style-name="Note">By calling clock.tick(60), we are asking the operating system to *block* this </text:p>
+         <text:p text:style-name="Note">process for 1/60th of a second. <text:s/>When a process is blocked, it cannot </text:p>
+         <text:p text:style-name="Note">execute any further code, it just sits on a shelf, gathering nano-dust.</text:p>
+         <text:p text:style-name="Note">When the requested duration is up, the operating system puts the process </text:p>
+         <text:p text:style-name="Note">back into the mix, and its code can start executing again.</text:p>
+         <text:p text:style-name="Note"/>
+         <text:p text:style-name="Note">[[TODO: make sure this is technically accurate. <text:s/>tick() may actually do better</text:p>
+         <text:p text:style-name="Note">wall-clock FPS simulation by not blocking for 1/60th of a second, but rather</text:p>
+         <text:p text:style-name="Note">1/60th minus the time it took since the last call to tick()]]</text:p>
+         <text:p text:style-name="Note"/>
+         <text:p text:style-name="Note">So why stop at 60? <text:s/>Why not go up to 120? <text:s/>240? <text:s/>2000? There are a couple</text:p>
+         <text:p text:style-name="Note">reasons. <text:s/>One is that the game gets too fast at those rates (try it and see).</text:p>
+         <text:p text:style-name="Note">Another is that it heats up the CPU, which can be uncomfortable when using</text:p>
+         <text:p text:style-name="Note">
+            <text:soft-page-break/>a laptop.</text:p>
+         <text:p text:style-name="Note"/>
+         <text:p text:style-name="Note">Now that you know that clock.tick() is to block the process for 1/60th of a </text:p>
+         <text:p text:style-name="Note">second, think about what monkey.update() does. <text:s/>It's basically just a call to</text:p>
+         <text:p text:style-name="Note">inform the monkey object that 1/60th of a second has passed.</text:p>
+         <text:p text:style-name="Body">So to summarize what we said, the code is at the base level, initialization </text:p>
+         <text:p text:style-name="Body">then an infinite loop. <text:s/>Inside that loop there is an event handling block</text:p>
+         <text:p text:style-name="Body">(here, we include the call to monkey.update() as part of the event handling </text:p>
+         <text:p text:style-name="Body">block), and then a section where images are drawn to the screen. <text:s/>Use that</text:p>
+         <text:p text:style-name="Body">summary to organize the code like so:</text:p>
+         <text:p text:style-name="CodeB">def init():</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/># Necessary Pygame set-up...</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>pygame.init()</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>clock = pygame.time.Clock()</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>displayImg = pygame.display.set_mode(screenDimensions.size)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>monkey = Monkey()</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>return (clock, displayImg, monkey)</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">def handle_events(clock, monkey):</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>for event in pygame.event.get():</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>if event.type == c.QUIT:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>return False</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>elif event.type == c.MOUSEBUTTONDOWN:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>monkey.attempt_punch(event.pos)</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>clock.tick(60) # aim for 60 frames per second</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>monkey.update()</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>return True</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">def draw_to_display(displayImg, monkey):</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>displayImg.fill(black)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>displayImg.blit(monkey.image, monkey.rect)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>pygame.display.flip()</text:p>
+         <text:p text:style-name="CodeB">
+            <text:soft-page-break/>
+         </text:p>
+         <text:p text:style-name="CodeB">def main():</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>clock, displayImg, monkey = init()</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>keepGoing = True</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>while keepGoing:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>keepGoing = handle_events(clock, monkey)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>draw_to_display(displayImg, monkey)</text:p>
+         <text:p text:style-name="Body">Look at that code. <text:s/>It's ever so organized. <text:s/>Therefore, problem solved. </text:p>
+         <text:p text:style-name="Body">We are now great coders who deserve a cookie and a pat on the back.</text:p>
+         <text:p text:style-name="Body">Don't choke on that cookie. <text:s/>First, ask yourself whether this change has </text:p>
+         <text:p text:style-name="Body">actually done anything worthwhile.</text:p>
+         <text:p text:style-name="Body"/>
+         <text:p text:style-name="Body">The code has definitely been broken into chunks that have a semantic distinction</text:p>
+         <text:p text:style-name="Body">for the reader. <text:s/>The functions are named descriptively, and the lines of code </text:p>
+         <text:p text:style-name="Body">in each function are fewer. <text:s/>These are all good things.</text:p>
+         <text:p text:style-name="Body"/>
+         <text:p text:style-name="Body">What if we add the 3 traps, 3 monkeys feature discussed above? <text:s/>We will have to</text:p>
+         <text:p text:style-name="Body">change the code as before *plus* we'll have to change all the argument passing.</text:p>
+         <text:p text:style-name="Body">Using function arguments as a river to move your little boats downstream should</text:p>
+         <text:p text:style-name="Body">raise a red flag.</text:p>
+         <text:p text:style-name="Body"/>
+         <text:p text:style-name="Body">Let's start abstracting. <text:s/>See what the code looks like if we add a </text:p>
+         <text:p text:style-name="Body">module-level variable to contain any and all sprites.</text:p>
+         <text:p text:style-name="Body">[[TODO: justify module-level variables to the no-globals-kneejerk]]</text:p>
+         <text:p text:style-name="Body"/>
+         <text:p text:style-name="CodeB">sprites = pygame.sprite.Group()</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">def init():</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/># Necessary Pygame set-up...</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>pygame.init()</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>clock = pygame.time.Clock()</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>displayImg = pygame.display.set_mode(screenDimensions.size)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>monkey = Monkey()</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>sprites.add(monkey)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:soft-page-break/>
+         </text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>return (clock, displayImg)</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">def handle_events(clock):</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>for event in pygame.event.get():</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>if event.type == c.QUIT:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>return</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>elif event.type == c.MOUSEBUTTONDOWN:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="12"/>for sprite in sprites:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="16"/>if isinstance(sprite, Monkey):</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="20"/>sprite.attempt_punch(event.pos)</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>clock.tick(60) # aim for 60 frames per second</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>for sprite in sprites:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>sprite.update()</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">def draw_to_display(displayImg):</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>displayImg.fill(black)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>for sprite in sprites:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>displayImg.blit(sprite.image, sprite.rect)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>pygame.display.flip()</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">def main():</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>clock, displayImg = init()</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>keepGoing = True</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="4"/>while keepGoing:</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>keepGoing = handle_events(clock)</text:p>
+         <text:p text:style-name="CodeB">
+            <text:s text:c="8"/>draw_to_display(displayImg)</text:p>
+         <text:p text:style-name="CodeB"/>
+         <text:p text:style-name="Body">This change adds a few lines of code, but it got the monkey off main()'s back.</text:p>
+         <text:p text:style-name="Body">If we add 3 monkeys and 3 traps, no changes will be needed in main() (or in </text:p>
+         <text:p text:style-name="Body">draw_to_display(), for that matter).</text:p>
+         <text:p text:style-name="Body"/>
+         <text:p text:style-name="Body">What we have just done is partially implemented the design pattern, </text:p>
+         <text:p text:style-name="Body">"Model View Controller" (MVC). <text:s/>
+         </text:p>
+         <text:p text:style-name="Note">Design Patterns are a communication tool; they do not dictate design, they </text:p>
+         <text:p text:style-name="Note">
+            <text:soft-page-break/>inform the reading of the code. This book makes use of the design patterns </text:p>
+         <text:p text:style-name="Note">"Model View Controller" (MVC), "Mediator", and "Lazy Proxy". Time won't be </text:p>
+         <text:p text:style-name="Note">spent describing these patterns in detail, so if they sound foreign to you, </text:p>
+         <text:p text:style-name="Note">I recommend checking out the book "Design Patterns" by Gamma et al. or just </text:p>
+         <text:p text:style-name="Note">surfing the web for tutorials.</text:p>
+         <text:p text:style-name="Preformatted_20_Text"/>
+         <text:p text:style-name="Body">In our example, the Model is the "sprites" object, it holds the state of our</text:p>
+         <text:p text:style-name="Body">game, any questions about the authoritative facts of the game will be directed</text:p>
+         <text:p text:style-name="Body">there. <text:s/>The View the draw_to_display() function, it shows a representation</text:p>
+         <text:p text:style-name="Body">of the Model on a Pygame window.</text:p>
+         <text:p text:style-name="Body"/>
+         <text:p text:style-name="Body">We still have the issue of the event handling code growing wildly as more</text:p>
+         <text:p text:style-name="Body">features are added, but at least we've isolated that problem to one place.</text:p>
+         <text:p text:style-name="Body">We'l tackle the problem in depth in Chapter 2.</text:p>
+         <text:p text:style-name="Body"/>
+         <text:p text:style-name="Body">If we want to be complete and formal about this MVC pattern, we may want to </text:p>
+         <text:p text:style-name="Body">also identify Controller components. Identifying a Controller component is </text:p>
+         <text:p text:style-name="Body">a bit trickier. <text:s/>One might be tempted to say that the mouse and keyboard are </text:p>
+         <text:p text:style-name="Body">the Controllers. <text:s/>These are indeed Controllers in one sense, but we don't </text:p>
+         <text:p text:style-name="Body">have objects in our code representing each. <text:s/>(and one should't add classes to the codebase just so we can have a more literal match to the Design Pattern)</text:p>
+         <text:p text:style-name="Body">Instead, these literal devices are represented by the Pygame event queue.</text:p>
+         <text:p text:style-name="Body">Also, the Pygame Clock object also serves as a Controller.</text:p>
+         <text:p text:style-name="Body"/>
+         <text:p text:style-name="Body">[[TODO: do I make the claim here that all event handling is a Controller? Come back to this]]</text:p>
+         <text:p text:style-name="P1"/>
+         <text:p text:style-name="HeadB">Rationale</text:p>
+         <text:p text:style-name="Note">Readers with some experience writing games may be balking at this point, thinking that a MVC architecture is too abstract, and that it will add unneeded overhead, especially those whose goal is to create a simple, arcade-style game.</text:p>
+         <text:p text:style-name="Note">
+            <text:soft-page-break/>
+         </text:p>
+         <text:p text:style-name="Note">Now, historically, arcade games were just that, games written for arcade machines. The code ran "close to the metal", and would squeeze all the resources of the machine just to get a 3-color ghost to flash blue every other frame. In the 21st century, we have resource-rich personal computers (and phones!) where applications run a couple layers above the metal. Hence, organizing your code into a pattern has a small relative cost. For that small cost, you get the following advantages: more easily add networking, easily add new views (file loggers, radars, HUDs, multiple zoom levels, ...), keep the Model code "cleaner" by decoupling it from the view and the controller, and I contend, more readable code.</text:p>
+      </office:text>
+   </office:body>
+</office:document>

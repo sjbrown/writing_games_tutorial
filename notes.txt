@@ -87,3 +87,10 @@ Hmm. the "here are my capabilities" part will probably mean more code. Scratch t
 Anyway, the idea here is that the view should not respond to BoardBuiltEvent as much as it should broadcast a query (with a TTL) like "Hey guys, send me the board object"
 
 This approach keeps the data inside the messages, less in shared state.  Synchronization will turn into scaling issues.
+
+
+----
+
+I should have a section on terminology like "main loop"
+
+I should have a section on what "rapid development" means -- chosing from alternatives the one which gives us the highest coding speed result, often over program efficiency.

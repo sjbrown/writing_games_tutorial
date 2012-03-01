@@ -36,8 +36,9 @@ class Monkey(pygame.sprite.Sprite):
 
     def attempt_punch(self, pos):
         '''If the given position (pos) is inside the monkey's rect, the monkey
-        has been "punched".  A successful punch will stun the monkey and increment
-        the global score.  The monkey cannot be punched if he is already stunned
+        has been "punched".  A successful punch will stun the monkey and
+        increment the global score.
+        The monkey cannot be punched if he is already stunned
         '''
         if self.stunTimeout:
             return # already stunned
@@ -294,7 +295,7 @@ def init():
 def handle_events(clock):
     for event in pygame.event.get():
         if event.type == c.QUIT:
-            return
+            return False
         elif event.type == c.MOUSEBUTTONDOWN:
             for sprite in sprites:
                 if isinstance(sprite, Monkey):
@@ -303,6 +304,8 @@ def handle_events(clock):
     clock.tick(60) # aim for 60 frames per second
     for sprite in sprites:
         sprite.update()
+
+    return True
 
 def draw_to_display(displayImg):
     displayImg.fill(black)
