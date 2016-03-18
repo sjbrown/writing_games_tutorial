@@ -1,0 +1,398 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="LibreOffice 3.3  (Unix)">
+	<META NAME="CREATED" CONTENT="0;0">
+	<META NAME="CHANGED" CONTENT="0;0">
+	<STYLE TYPE="text/css">
+	<!--
+		PRE.cjk { font-family: "WenQuanYi Micro Hei", monospace }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" DIR="LTR">
+<P>Let's start with a very simple example of a game. This will be a
+game in which a monkey's face travels back and forth across the
+screen, and the player must try to &quot;punch&quot; the monkey by
+clicking on it. The gameplay will be familiar to anyone who has gone
+through the &quot;Chimp Line by Line&quot; [TODO: link] tutorial or
+those who have endured annoying banner ads in the early 2000s. 
+</P>
+<PRE CLASS="western">import time
+import pygame
+import pygame.constants as c
+
+score = 0
+
+screenDimensions = pygame.Rect((0,0,400,60))
+
+black = (0,0,0)
+white = (255,255,255)
+blue  = (0,0,255)
+red   = (255,0,0)
+
+class Monkey(pygame.sprite.Sprite):
+    def __init__(self):
+        self.stunTimeout = None
+        self.velocity = 2
+        super(Monkey, self).__init__()
+        self.image = pygame.Surface((60,60))
+        self.rect = self.image.get_rect()
+        self.render(blue)
+
+    def render(self, color):
+        '''draw onto self.image the face of a monkey in the specified color'''
+        self.image.fill(color)
+        pygame.draw.circle(self.image, white, (10,10), 10, 2)
+        pygame.draw.circle(self.image, white, (50,10), 10, 2)
+        pygame.draw.circle(self.image, white, (30,60), 20, 2)
+
+    def attempt_punch(self, pos):
+        '''If the given position (pos) is inside the monkey's rect, the monkey
+        has been &quot;punched&quot;.  A successful punch will stun the monkey and increment
+        the global score.  The monkey cannot be punched if he is already stunned
+        '''
+        if self.stunTimeout:
+            return # already stunned
+        if self.rect.collidepoint(pos):
+            # Argh!  The punch intersected with my face!
+            self.stunTimeout = time.time() + 2 # 2 seconds from now
+            global score
+            score += 1
+            self.render(red)
+
+    def update(self):
+        if self.stunTimeout:
+            # If stunned, the monkey doesn't move
+            if time.time() &gt; self.stunTimeout:
+                self.stunTimeout = None
+                self.render(blue)
+        else:
+            # Move the monkey
+            self.rect.x += self.velocity
+            # Don't let the monkey run past the edge of the viewable area
+            if self.rect.right &gt; screenDimensions.right:
+                self.velocity = -2
+            elif self.rect.left &lt; screenDimensions.left:
+                self.velocity = 2
+
+def main():
+    # Necessary Pygame set-up...
+    pygame.init()
+    clock = pygame.time.Clock()
+    displayImg = pygame.display.set_mode(screenDimensions.size)
+
+    monkey = Monkey()
+
+    while True:
+        clock.tick(60) # aim for 60 frames per second
+        for event in pygame.event.get():
+            if event.type == c.QUIT:
+                return
+            elif event.type == c.MOUSEBUTTONDOWN:
+                monkey.attempt_punch(event.pos)
+
+        monkey.update()
+        displayImg.fill(black)
+        displayImg.blit(monkey.image, monkey.rect)
+        pygame.display.flip()
+
+if __name__ == '__main__':
+    main()
+    print 'Your score was', score
+
+
+</PRE><P>
+So with that we have a (very simple, but complete) game. It may not
+be the most fun game ever written, but that can be fixed by slick box
+art and a major motion picture tie-in. Let's leave those concerns for
+the marketing department and instead look at the technical details. 
+</P>
+<P>What we have above is a minimal game. As we add features to it,
+the code will grow in complexity. As humans, we are bad at holding
+and manipulating complex systems in our brains. 
+</P>
+<P>Consider what would happen if instead of just punching one monkey,
+we wanted to set traps for 3 monkeys. A click of the mouse would
+either drop down a trap at the clicked location or reset a sprung
+trap if one was already there. What might our main() function look
+like? 
+</P>
+<PRE CLASS="western">def main():
+    # Necessary Pygame set-up...
+    pygame.init()
+    clock = pygame.time.Clock()
+    displayImg = pygame.display.set_mode(screenDimensions.size)
+
+    monkeys = [Monkey(), Monkey(), Monkey()]
+    traps = [Trap(), Trap(), Trap()]
+    trapCycle = itertools.cycle(traps)
+
+    while True:
+        clock.tick(60) # aim for 60 FPS
+        for event in pygame.event.get():
+            if event.type == c.QUIT:
+                return
+            elif event.type == c.MOUSEBUTTONDOWN:
+                wasTrapClick = False
+                for trap in traps:
+                    if trap.rect.collidepoint(event.pos):
+                        trap.reset()
+                        wasTrapClick = True
+                        break
+                if not wasTrapClick:
+                    # if the user didn't click on a trap, then they
+                    # intended to place the next one here.
+                    trap = trapCycle.next()
+                    trap.place_at(event.pos)
+
+        for monkey in monkeys:
+            monkey.update(traps)
+        displayImg.fill(black)
+        for sprite in monkeys + traps:
+            displayImg.blit(sprite.image, sprite.rect)
+        pygame.display.flip()
+
+</PRE><P>
+So what happened? Significantly, the block of code that starts with
+&quot;for event in pygame.event.get():&quot; has grown. I'm going to
+call this the event handling block. Now it's about 10 lines longer.
+It contains one new loop, and two new branches (if statements).
+Imagine what will happen to the event handling block as each new
+feature is added. If your imagination is summoning images of a single
+skyscraping ladder of an if / elif, ridden with deep sub-blocks of
+loops and branches, countless and tentacle-like, then you are two
+things: accurate, and likely on the same medication as myself. 
+</P>
+<P>Not only will complex code be difficult to hold in your brain, it
+also gets in the way of a critical goal - Rapid Development.
+Developing software always involves going back to code you've written
+in the past to make changes. If the code is complex, you are going to
+pay greater time costs for both searching for the code to change, and
+for the change itself because it will need to be made in more places.
+</P>
+<P>Because we humans have trouble with complex systems, we have
+developed the techniques of organization and abstraction. We organize
+so that we only need to deal with one thing at a time, and we
+abstract so that we can manipulate a simple system that is &quot;similar
+enough&quot; to the complex system. 
+</P>
+<P>How can we organize and/or abstract this code to address the
+problem of growing complexity as we add more game features? (And
+while we're solving that, can we also do ourselves some favours along
+the way to make it faster to develop our game?) 
+</P>
+<P>Luckily for us humans, our brains are *built* for this task. They
+are Automatic Abstraction Apparati. We make abstractions every time
+we think, and especially when we talk. So one exercise to do is to
+simply talk about code. If somebody asked, &quot;What does this
+main() function do?&quot;, a reply might go something like &quot;Well,
+it does some initialization of the important objects, then it starts
+this infinite 'while True:' loop, see? Inside the loop it does this
+clock.tick() thing, I'm not really sure what that's for. Anyway, then
+it goes through all the 'pygame' events and handles them. After all
+that, it calls monkey.update() (we've got to update the monkey every
+frame so that it moves), and then it draws everything to the screen.&quot;
+</P>
+<BLOCKQUOTE>Ok, did you catch that? Here you are talking about this
+great monkey-punching game you wrote, and you don't even know what
+clock.tick() does? 
+</BLOCKQUOTE>
+<BLOCKQUOTE>clock.tick() is used to get a target *frame rate*. We
+want the game to look &quot;smooth&quot;. Animation works because if
+we see a series of images in quick succession, we are tricked into
+thinking we are seeing a moving thing. 
+</BLOCKQUOTE>
+<BLOCKQUOTE>Try the example code with 5 as the argument to
+clock.tick(). The monkey no longer looks like it is smoothly moving,
+instead it is jerking. That's not acceptable for a game, nobody wants
+to play with a jerking monkey. 
+</BLOCKQUOTE>
+<BLOCKQUOTE>24 frames per second (FPS) is the rate used in feature
+films, and is generally accepted as a minimum for video games. 
+</BLOCKQUOTE>
+<BLOCKQUOTE>By calling clock.tick(60), we are asking the operating
+system to *block* this process for 1/60th of a second. When a process
+is blocked, it cannot execute any further code, it just sits on a
+shelf, gathering nano-dust. When the requested duration is up, the
+operating system puts the process back into the mix, and its code can
+start executing again. 
+</BLOCKQUOTE>
+<BLOCKQUOTE>[[TODO: make sure this is technically accurate. tick()
+may actually do better wall-clock FPS simulation by not blocking for
+1/60th of a second, but rather 1/60th minus the time it took since
+the last call to tick()]] 
+</BLOCKQUOTE>
+<BLOCKQUOTE>So why stop at 60? Why not go up to 120? 240? 2000? There
+are a couple reasons. One is that the game gets too fast at those
+rates (try it and see). Another is that it heats up the CPU, which
+can be uncomfortable when using a laptop. 
+</BLOCKQUOTE>
+<BLOCKQUOTE>Now that you know that clock.tick() is to block the
+process for 1/60th of a second, think about what monkey.update()
+does. It's basically just a call to inform the monkey object that
+1/60th of a second has passed. 
+</BLOCKQUOTE>
+<P>So to summarize what we said, the code is at the base level,
+initialization then an infinite loop. Inside that loop there is an
+event handling block (here, we include the call to monkey.update() as
+part of the event handling block), and then a section where images
+are drawn to the screen. Use that summary to organize the code like
+so: 
+</P>
+<PRE CLASS="western">def init():
+    # Necessary Pygame set-up...
+    pygame.init()
+    clock = pygame.time.Clock()
+    displayImg = pygame.display.set_mode(screenDimensions.size)
+    monkey = Monkey()
+
+    return (clock, displayImg, monkey)
+
+def handle_events(clock, monkey):
+    for event in pygame.event.get():
+        if event.type == c.QUIT:
+            return False
+        elif event.type == c.MOUSEBUTTONDOWN:
+            monkey.attempt_punch(event.pos)
+
+    clock.tick(60) # aim for 60 frames per second
+    monkey.update()
+
+    return True
+
+def draw_to_display(displayImg, monkey):
+    displayImg.fill(black)
+    displayImg.blit(monkey.image, monkey.rect)
+    pygame.display.flip()
+
+def main():
+    clock, displayImg, monkey = init()
+
+    keepGoing = True
+
+    while keepGoing:
+        keepGoing = handle_events(clock, monkey)
+        draw_to_display(displayImg, monkey)
+
+</PRE><P>
+Look at that code. It's ever so organized. Therefore, problem solved.
+We are now great coders who deserve a cookie and a pat on the back.
+Don't choke on that cookie. First, ask yourself whether this change
+has actually done anything worthwhile. 
+</P>
+<P>The code has definitely been broken into chunks that have a
+semantic distinction for the reader. The functions are named
+descriptively, and the lines of code in each function are fewer.
+These are all good things. 
+</P>
+<P>What if we add the 3 traps, 3 monkeys feature discussed above? We
+will have to change the code as before *plus* we'll have to change
+all the argument passing. Using function arguments as a river to move
+your little boats downstream should raise a red flag. 
+</P>
+<P>Let's start abstracting. See what the code looks like if we add a
+module-level variable to contain any and all sprites. [[TODO: justify
+module-level variables to the no-globals-kneejerk]] 
+</P>
+<PRE CLASS="western">sprites = pygame.sprite.Group()
+
+def init():
+    # Necessary Pygame set-up...
+    pygame.init()
+    clock = pygame.time.Clock()
+    displayImg = pygame.display.set_mode(screenDimensions.size)
+    monkey = Monkey()
+    sprites.add(monkey)
+
+    return (clock, displayImg)
+
+def handle_events(clock):
+    for event in pygame.event.get():
+        if event.type == c.QUIT:
+            return
+        elif event.type == c.MOUSEBUTTONDOWN:
+            for sprite in sprites:
+                if isinstance(sprite, Monkey):
+                    sprite.attempt_punch(event.pos)
+
+    clock.tick(60) # aim for 60 frames per second
+    for sprite in sprites:
+        sprite.update()
+
+def draw_to_display(displayImg):
+    displayImg.fill(black)
+    for sprite in sprites:
+        displayImg.blit(sprite.image, sprite.rect)
+    pygame.display.flip()
+
+def main():
+    clock, displayImg = init()
+
+    keepGoing = True
+
+    while keepGoing:
+        keepGoing = handle_events(clock)
+        draw_to_display(displayImg)
+
+</PRE><P>
+This change adds a few lines of code, but it got the monkey off
+main()'s back. If we add 3 monkeys and 3 traps, no changes will be
+needed in main() (or in draw_to_display(), for that matter). 
+</P>
+<P>What we have just done is partially implemented the design
+pattern, &quot;Model View Controller&quot; (MVC). 
+</P>
+<BLOCKQUOTE>Design Patterns are a communication tool; they do not
+dictate design, they inform the reading of the code. This book makes
+use of the design patterns &quot;Model View Controller&quot; (MVC),
+&quot;Mediator&quot;, and &quot;Lazy Proxy&quot;. Time won't be spent
+describing these patterns in detail, so if they sound foreign to you,
+I recommend checking out the book &quot;Design Patterns&quot; by
+Gamma et al. or just surfing the web for tutorials. 
+</BLOCKQUOTE>
+<P>In our example, the Model is the &quot;sprites&quot; object, it
+holds the state of our game, any questions about the authoritative
+facts of the game will be directed there. The View the
+draw_to_display() function, it shows a representation of the Model on
+a Pygame window. 
+</P>
+<P>We still have the issue of the event handling code growing wildly
+as more features are added, but at least we've isolated that problem
+to one place. We'l tackle the problem in depth in Chapter 2. 
+</P>
+<P>If we want to be complete and formal about this MVC pattern, we
+may want to also identify Controller components. Identifying a
+Controller component is a bit trickier. One might be tempted to say
+that the mouse and keyboard are the Controllers. These are indeed
+Controllers in one sense, but we don't have objects in our code
+representing each. (and one should't add classes to the codebase just
+so we can have a more literal match to the Design Pattern) Instead,
+these literal devices are represented by the Pygame event queue.
+Also, the Pygame Clock object also serves as a Controller. 
+</P>
+<P>[[TODO: do I make the claim here that all event handling is a
+Controller? Come back to this]] 
+</P>
+<BLOCKQUOTE>Rationale Readers with some experience writing games may
+be balking at this point, thinking that a MVC architecture is too
+abstract, and that it will add unneeded overhead, especially those
+whose goal is to create a simple, arcade-style game. 
+</BLOCKQUOTE>
+<BLOCKQUOTE>Now, historically, arcade games were just that, games
+written for arcade machines. The code ran &quot;close to the metal&quot;,
+and would squeeze all the resources of the machine just to get a
+3-color ghost to flash blue every other frame. In the 21st century,
+we have resource-rich personal computers (and phones!) where
+applications run a couple layers above the metal. Hence, organizing
+your code into a pattern has a small relative cost. For that small
+cost, you get the following advantages: more easily add networking,
+easily add new views (file loggers, radars, HUDs, multiple zoom
+levels, ...), keep the Model code &quot;cleaner&quot; by decoupling
+it from the view and the controller, and I contend, more readable
+code. 
+</BLOCKQUOTE>
+</BODY>
+</HTML>
